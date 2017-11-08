@@ -1,0 +1,57 @@
+/* selection panel style */
+
+.choice-panel {
+    height: 120px;
+}
+
+.choice-label span {
+  display: block;
+  width: 21.94px;
+}
+
+.icon-hidden {
+  visibility:hidden
+}
+
+.mrate {
+  display: inline-block; 
+  padding: 0;
+  margin: 0;
+  font-size: 26px;
+}
+
+.mrate li {
+  list-style-type: none;
+  float: left;
+  position: relative;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+}
+
+.choice-result {
+  display: inline-block;
+  width: 250px;
+  list-style-type: none;
+  text-align: center;
+  padding: 0;
+  margin: 0 15px 0 0;
+  font-size: 16px;
+}
+
+.diff {
+  float: left;
+  border-style: solid;
+  border-width: 2px;
+  border-color: transparent;
+  /*border-color: red;*/
+}
+
+.same {
+  float: right;
+  font: bold;
+  border-style: solid;
+  border-width: 2px;
+  /*border-color: green;*/
+  border-color: transparent;
+}

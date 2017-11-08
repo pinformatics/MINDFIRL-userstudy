@@ -1,0 +1,197 @@
+/*
+    stylesheet for the record linkage page.
+*/
+
+#wrapper {
+    width: 1850px;
+    margin: 20px 50px 20px 50px;
+}
+
+#title {
+    width: 1800px;
+    text-align: center;
+    margin-bottom: 18px;
+}
+
+#table {
+    width: 1800px;
+}
+
+#table_head {
+    height: 24px;
+    line-height: 24px;
+    overflow: hidden;
+    background-color: #ADD8E6;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: bold;
+    font-stretch: normal;
+    font-size: 16px;
+    font-family: Monaco;
+    text-align: center;
+}
+
+.table_col1 {
+    width: 100px;
+    float: left;
+}
+
+.table_col2 {
+    width: 190px;
+    float: left;
+}
+
+.table_col3 {
+    width: 100px;
+    float: left;
+}
+
+.table_col4 {
+    width: 190px;
+    float: left;
+}
+
+.table_col5 {
+    width: 190px;
+    float: left;
+}
+
+.table_col6 {
+    width: 100px;
+    float: left;
+}
+
+.table_col7 {
+    width: 165px;
+    float: left;
+}
+
+.table_col8 {
+    width: 100px;
+    float: left;
+}
+
+.table_col9 {
+    width: 100px;
+    float: left;
+}
+
+.table_col10 {
+    width: 560px;
+    float: left;
+}
+
+#table_content {
+
+}
+
+.table_row {
+    height: 120px;
+    color: #333;
+    font-style: normal;
+    font-variant: normal;
+    font-stretch: normal;
+    font-size: 16px;
+    font-family: Consolas, monaco, monospace;
+    font-weight: bold;
+    text-align: center;
+    overflow: hidden;
+}
+
+.table_row_odd {
+    background-color: #FFFFFF;
+}
+
+.table_row_even {
+    background-color: #EAF2FF;
+}
+
+.pair_number {
+    line-height: 120px;
+    color: #808080;
+}
+
+.sub_row1 {
+    width: inherit;
+    height: 42px;
+    display: table-cell;
+    vertical-align: bottom;
+}
+
+.sub_row2 {
+    height: 36px;
+    line-height: 36px;
+    vertical-align: middle;
+}
+
+.sub_row3 {
+    width: inherit;
+    height: 42px;
+    display: table-cell;
+    vertical-align: top;
+}
+
+.diff_icon {
+    width: 35px;
+    height: 35px;
+}
+
+.replace_icon {
+    width: 9px;
+    height: 9px;
+}
+
+.indel_icon {
+    width: 9px;
+    height: 9px;
+}
+
+.freq_icon {
+    width: 20px;
+    height: 20px;
+}
+
+.missing_icon {
+    width: 20px;
+    height: 20px;
+}
+
+.swap_date_row {
+    text-align: left;
+    padding-left: 41px;
+}
+
+.swap_date_icon {
+    width: 35px;
+    height: 35px;
+}
+
+.table_names {
+    text-align: left;
+}
+
+.hidden_element {
+    visibility: hidden;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+.submit_div {
+    width: 1800px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.submit_button {
+    background-color: #30819C;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+}
