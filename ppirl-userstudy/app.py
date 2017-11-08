@@ -43,3 +43,10 @@ def show_instruction_base_mode():
 @app.route('/practice/base_mode')
 def show_pratice_base_mode():
     return render_template('practice_base_mode.html')
+
+@app.route('/display_modes')
+def show_display_modes():
+    pairs = list()
+    pairs.append(['1','','206','NELSON','MITCHELL','1459','03/13/1975','M','B','','******','********___','03/13/1975','*','*','34','6','0'])
+    pairs.append(['1','1000142704','174','NELSON','MITCHELL SR','1314','07/03/1949','M','B','1000142704','******','******** SR','07/03/1949','*','*','34','6','0'])
+    return render_template('display_mode.html', pairs=pairs)
