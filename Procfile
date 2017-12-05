@@ -1,1 +1,1 @@
-web: export FLASK_APP=ppirl-userstudy/app.py; flask run
+web: cd ppirl-userstudy; gunicorn app:app
