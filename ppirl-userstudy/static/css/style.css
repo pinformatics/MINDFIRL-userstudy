@@ -42,12 +42,18 @@
 }
 
 .table_col3 {
-    width: 100px;
+    width: 80px;
     float: left;
 }
 
 .table_col4 {
     width: 190px;
+    float: left;
+}
+
+.table_col4_5 {
+    width: 80px;
+    height: 120px;
     float: left;
 }
 
@@ -57,7 +63,7 @@
 }
 
 .table_col6 {
-    width: 100px;
+    width: 80px;
     float: left;
 }
 
@@ -67,12 +73,12 @@
 }
 
 .table_col8 {
-    width: 100px;
+    width: 80px;
     float: left;
 }
 
 .table_col9 {
-    width: 100px;
+    width: 80px;
     float: left;
 }
 
@@ -146,6 +152,11 @@
     height: 9px;
 }
 
+.transpose_icon {
+    width: 20px;
+    height: 20px;
+}
+
 .freq_icon {
     width: 20px;
     height: 20px;
@@ -164,6 +175,23 @@
 .swap_date_icon {
     width: 35px;
     height: 35px;
+}
+
+.name_swap_icon {
+    width: 70px;
+    height: 110px;
+}
+
+.transpose_text {
+    color: #2196F3;
+}
+
+.indel_text {
+    color: #008000;
+}
+
+.replace_text {
+    color: #990000;
 }
 
 .table_names {

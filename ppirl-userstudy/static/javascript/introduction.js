@@ -9,11 +9,11 @@ $(document).ready(function(){
     $('#checkbox_1').change(function() {
         if($(this).is(":checked")) {
             $('#button_1').attr("disabled", false);
-            $('.checkboxP').find('label').css("background", "#30819C")
+            //$('.checkboxP').find('label').css("background", "#30819C")
         }
         else {
             $('#button_1').attr("disabled", "disabled");
-            $('.checkboxP').find('label').css("background", "#eee")
+            //$('.checkboxP').find('label').css("background", "#eee")
         }
     });
 });

@@ -11,8 +11,8 @@
         <script src="../static/javascript/jquery-3.2.1.min.js"></script>
         <script src="../static/javascript/popper.min.js"></script>
         <script src="../static/javascript/bootstrap.min.js"></script>
-        <script src="../static/javascript/site.js"></script>
         <script src="../static/javascript/instructions.js"></script>
+        <script src="../static/javascript/site.js"></script>
     </head>
 
     <body>
@@ -21,18 +21,33 @@
                 <h3>Instructions</h3>
             </div>
             <div id="content">
-                <div class="module_intros">
-                    <img src="../static/images/module_intros/recap_1.PNG" alt="base mode"/>
+                <div>
+Important instructions:<br/>
+<br/>
+Once you begin,
+<ul style="margin-bottom: 0px">
+    <li><strong>Do NOT refresh</strong> (Do not hit F5 or the refresh icon or right click)</li>
+    <li><strong>Do NOT press the back button</strong> (Do not press the back button or right click)</li>
+    <li><strong>Do NOT take the study on IE.</strong></li>
+</ul>
+This means that you are requested to preferably use only the left mouse button and only on the actual web page to navigate.<br/>
+Should you run into any technical problems during the study, please stand up and ask any of the volunteers for help.<br/>
+<br/>
+<strong style="font-size: 28px">Overview</strong><br/>
+The study has 3 sections:<br/>
+<ol>
+    <li>Introduction to Record Linkage</li>
+    <li>Introduction to Privacy Modes</li>
+    <li>PPIRL - Clickable Interface</li>
+</ol>
                 </div>
-
                 <div class="submit_div">
                     <form>
-                        <button formaction="http://localhost:5000/next" class="submit_button">Ready to answer questions?</button>
+                    <button formaction="http://localhost:5000/next" id="button_0" class="submit_button">Next</button>
                     </form>
                 </div>
             </div>
         </div>
-        <div id="footer_filler"></div>
         <footer class="footer">
             <div class="container">
                 <span class="text-muted">Copyright © 2017 • Population Informatics Research Group • Texas A&M University</span>
