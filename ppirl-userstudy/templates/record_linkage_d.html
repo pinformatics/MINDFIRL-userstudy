@@ -13,9 +13,14 @@
         <link rel="stylesheet" href="../static/css/footer.css" type="text/css">
         
         <script src="../static/javascript/jquery-3.2.1.min.js"></script>
+        <script src="../static/javascript/popper.min.js"></script>
         <script src="../static/javascript/bootstrap.min.js"></script>
         <script src="../static/javascript/site.js"></script>
         <script src="../static/javascript/choice_panel.js"></script>
+        <script src="../static/javascript/grading.js"></script>
+        <script type=text/javascript>
+            $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+        </script>
     </head>
 
     <body>
@@ -155,17 +160,17 @@
                                     <br/>
                                     <ul class="mrate choice-button">
                                         <li class="ion-android-arrow-back"></li>
-                                        <li class="ion-android-radio-button-off input_radio pair1" id="q1a1"></li>
+                                        <li class="ion-android-radio-button-off input_radio pair1" id="q{{ loop.index }}a1"></li>
                                         <li class="ion-android-remove"></li>
-                                        <li class="ion-android-radio-button-off input_radio pair1" id="q1a2"></li>
+                                        <li class="ion-android-radio-button-off input_radio pair1" id="q{{ loop.index }}a2"></li>
                                         <li class="ion-android-remove"></li>
-                                        <li class="ion-android-radio-button-off input_radio pair1" id="q1a3"></li>
+                                        <li class="ion-android-radio-button-off input_radio pair1" id="q{{ loop.index }}a3"></li>
                                         <li class="ion-android-add"></li>
-                                        <li class="ion-android-radio-button-off input_radio pair1" id="q1a4"></li>
+                                        <li class="ion-android-radio-button-off input_radio pair1" id="q{{ loop.index }}a4"></li>
                                         <li class="ion-android-remove"></li>
-                                        <li class="ion-android-radio-button-off input_radio pair1" id="q1a5"></li>
+                                        <li class="ion-android-radio-button-off input_radio pair1" id="q{{ loop.index }}a5"></li>
                                         <li class="ion-android-remove"></li>
-                                        <li class="ion-android-radio-button-off input_radio pair1" id="q1a6"></li>
+                                        <li class="ion-android-radio-button-off input_radio pair1" id="q{{ loop.index }}a6"></li>
                                         <li class="ion-android-arrow-forward"></li>
                                     </ul>
                                     <br/>
@@ -180,7 +185,11 @@
                     </div>
                 </div>
 
+                <div id="feedback">
+                </div>
+
                 <div class="submit_div">
+                    <button id="submit_btn">Attemp</button>
                     <form>
                         <button formaction="{{ url_for('next') }}" id="button_1" class="submit_button">Submit</button>
                     </form>

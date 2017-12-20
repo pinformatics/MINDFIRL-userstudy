@@ -1,12 +1,10 @@
-from flask import Flask, render_template, redirect, url_for, session
+from flask import Flask, render_template, redirect, url_for, session, jsonify, request
 from functools import wraps
 import time
 from random import *
 import data_loader as dl
 import data_display as dd
 app = Flask(__name__)
-
-#adksj
 
 
 CONFIG = {
@@ -135,7 +133,29 @@ def show_pratice_full_mode():
     pairs_formatted = dd.format_data(pairs, 'full')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = dd.generate_icon(pairs)
-    return render_template('record_linkage_d.html', data=data, icons=icons, title='Full mode')
+    return render_template('record_linkage_d.html', data=data, icons=icons, title='Full mode', thisurl='/practice/full_mode')
+
+
+@app.route('/practice/full_mode/grading')
+def grade_pratice_full_mode():
+    ret = list()
+    responses = request.args.get('response').split(',')
+    pairs = dl.load_data_from_csv('data/practice_full_mode.csv')
+    j = 0
+    for i in range(0, len(pairs), 2):
+        result = False
+        if j < len(responses):
+            r = str(responses[j])
+            print(r)
+            j += 1
+            answer = pairs[i][17]
+            if answer == '1' and ('a4' in r or 'a5' in r or 'a6' in r):
+                result = True
+            if answer == '0' and ('a1' in r or 'a2' in r or 'a3' in r):
+                result = True
+        if not result:
+            ret.append('<div>' + pairs[i][18] + '</div>')
+    return jsonify(result=ret)
 
 
 @app.route('/practice/masked_mode')
