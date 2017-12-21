@@ -1,9 +1,11 @@
-from flask import Flask, render_template, redirect, url_for, session, jsonify, request
+from flask import Flask, render_template, redirect, url_for, session, jsonify, request, g
 from functools import wraps
 import time
 from random import *
 import data_loader as dl
 import data_display as dd
+
+
 app = Flask(__name__)
 
 
@@ -123,7 +125,7 @@ def show_pratice_base_mode():
     pairs_formatted = dd.format_data(pairs, 'base')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = (len(pairs)/2)*[7*['']]
-    return render_template('record_linkage_d.html', data=data, icons=icons, title='Base mode')
+    return render_template('record_linkage_d.html', data=data, icons=icons, title='Base mode', thisurl='/practice/base_mode')
 
 
 @app.route('/practice/full_mode')
@@ -136,28 +138,6 @@ def show_pratice_full_mode():
     return render_template('record_linkage_d.html', data=data, icons=icons, title='Full mode', thisurl='/practice/full_mode')
 
 
-@app.route('/practice/full_mode/grading')
-def grade_pratice_full_mode():
-    ret = list()
-    responses = request.args.get('response').split(',')
-    pairs = dl.load_data_from_csv('data/practice_full_mode.csv')
-    j = 0
-    for i in range(0, len(pairs), 2):
-        result = False
-        if j < len(responses):
-            r = str(responses[j])
-            print(r)
-            j += 1
-            answer = pairs[i][17]
-            if answer == '1' and ('a4' in r or 'a5' in r or 'a6' in r):
-                result = True
-            if answer == '0' and ('a1' in r or 'a2' in r or 'a3' in r):
-                result = True
-        if not result:
-            ret.append('<div>' + pairs[i][18] + '</div>')
-    return jsonify(result=ret)
-
-
 @app.route('/practice/masked_mode')
 @state_machine('show_pratice_masked_mode')
 def show_pratice_masked_mode():
@@ -165,7 +145,7 @@ def show_pratice_masked_mode():
     pairs_formatted = dd.format_data(pairs, 'masked')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = dd.generate_icon(pairs)
-    return render_template('record_linkage_d.html', data=data, icons=icons, title='Masked mode')
+    return render_template('record_linkage_d.html', data=data, icons=icons, title='Masked mode', thisurl='/practice/masked_mode')
 
 
 @app.route('/practice/minimum_mode')
@@ -175,7 +155,7 @@ def show_pratice_minimum_mode():
     pairs_formatted = dd.format_data(pairs, 'minimum')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = dd.generate_icon(pairs)
-    return render_template('record_linkage_d.html', data=data, icons=icons, title='Minimum mode')
+    return render_template('record_linkage_d.html', data=data, icons=icons, title='Minimum mode', thisurl='/practice/minimum_mode')
 
 
 @app.route('/practice/moderate_mode')
@@ -185,7 +165,32 @@ def show_pratice_moderate_mode():
     pairs_formatted = dd.format_data(pairs, 'moderate')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = dd.generate_icon(pairs)
-    return render_template('record_linkage_d.html', data=data, icons=icons, title='Moderate mode')
+    return render_template('record_linkage_d.html', data=data, icons=icons, title='Moderate mode', thisurl='/practice/moderate_mode')
+
+
+@app.route('/practice/<table_mode>/grading')
+def grade_pratice_full_mode(table_mode):
+    data_file = 'practice_' + str(table_mode) + '.csv'
+    ret = list()
+    responses = request.args.get('response').split(',')
+    pairs = dl.load_data_from_csv('data/' + data_file)
+    j = 0
+    all_correct = True
+    for i in range(0, len(pairs), 2):
+        result = False
+        j += 1
+        q = 'q' + str(j)
+        answer = pairs[i][17]
+        if answer == '1' and (q+'a4' in responses or q+'a5' in responses or q+'a6' in responses):
+            result = True
+        if answer == '0' and (q+'a1' in responses or q+'a2' in responses or q+'a3' in responses):
+            result = True
+        if not result:
+            ret.append('<div>' + pairs[i][18] + '</div>')
+            all_correct = False
+    if all_correct:
+        ret.append('<div>Good job!</div>')
+    return jsonify(result=ret)
 
 
 @app.route('/record_linkage')

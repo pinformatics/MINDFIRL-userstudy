@@ -1,6 +1,4 @@
-4,,859,SHAWN,KELLEY,297,11/28/1965,M,W,,*****,KELLEY,**/**/****,*,W,28,5,0,please review question 1
-4,2000186328,794,SHAWN,BARKLEY,116,11/28/1965,M,B,2000186328,*****,BARKLEY,**/**/****,*,B,28,5,0
-5,2000090005,1872,BRANDON,RATCLIFT,1,07/24/1973,M,W,2000090005,*******,RATCLIFT,**/**/****,*,W,16,3,0,please review question 2
-5,2000149073,1449,BRANDON,DRAWZ,2,07/24/1973,M,,2000149073,*******,DRAWZ,**/**/****,*,,16,3,0
-6,1530042971,356,NORMAN,RICHARDS,331,09/09/1933,M,W,*53**4**7*,******,********___,09/09/1933,*,W,18,3,0,please review question 3
-6,1350082931,355,NORMAN,RICHARDS JR,294,,M,B,*35**8**3*,******,******** JR,,*,B,18,3,0
+230,1000259807,2,CY,BAHAKEL,2,03/18/1921,M,W,1000259807,CY,BAHAKEL,**/**/****,*,*,33,6,1,Please review QUESTION 1: The first and last names have been swapped and the id is missing but they have the same birthdays. Likely represent the same person
+230,,1,BAHAKEL,CY,1,03/18/1921,M,W,,BAHAKEL,CY,**/**/****,*,*,33,6,1
+240,1000232844,121,DAN,HOOVER,264,06/01/1956,M,W,1000232844,***,******___,06/01/1956,*,*,22,4,0,Please review QUESTION 2: Notice the difference in age and the jr/sr post-fix. It's likely that they represent father and son.
+240,1000050792,117,DAN,HOOVER SR,267,11/16/1923,M,W,1000050792,***,****** SR,11/16/1923,*,*,22,4,0

@@ -20,6 +20,7 @@
         <script src="../static/javascript/grading.js"></script>
         <script type=text/javascript>
             $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+            $THIS_URL = "{{ thisurl }}";
         </script>
     </head>
 
@@ -189,9 +190,11 @@
                 </div>
 
                 <div class="submit_div">
-                    <button id="submit_btn">Attemp</button>
-                    <form>
-                        <button formaction="{{ url_for('next') }}" id="button_1" class="submit_button">Submit</button>
+                    {% if title != 'PPIRL Framework' %}
+                        <button id="submit_btn" class="submit_button">Submit</button>
+                    {% endif %}
+                    <form id="next_button_form" {% if title != 'PPIRL Framework' %} style="display: none;"{% endif %}>
+                        <button formaction="{{ url_for('next') }}" id="button_1" class="submit_button">Next</button>
                     </form>
                 </div>
             </div>

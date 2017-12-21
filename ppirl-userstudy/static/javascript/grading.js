@@ -20,8 +20,10 @@ function get_response() {
 
 $(function() {
     $('#submit_btn').bind('click', function() {
-        $.getJSON($SCRIPT_ROOT + '/practice/full_mode/grading', get_response(), function(data) {
-            $("#feedback").innerHTML(data.result);
+        $.getJSON($SCRIPT_ROOT + $THIS_URL + '/grading', get_response(), function(data) {
+            $("#feedback").html(data.result);
+            $("#submit_btn").css({"display": "none"});
+            $("#next_button_form").css({"display": "inline"})
         });
         return false;
     });
