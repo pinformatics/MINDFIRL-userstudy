@@ -1,6 +1,8 @@
 #! /usr/bin/python
 # encoding=utf-8
 
+import json
+
 
 def load_data_from_csv(filename):
     data = list()
@@ -9,6 +11,12 @@ def load_data_from_csv(filename):
         record = line.split(',')
         data.append(record)
     return data
+
+
+def save_data_to_json(filename, data):
+    fileout = open(filename, 'w+')
+    fileout.write(json.dumps(data, ensure_ascii=False))
+    fileout.close()
 
 
 def get_data_filename_by_url(url):

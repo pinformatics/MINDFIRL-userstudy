@@ -4,6 +4,7 @@ import time
 from random import *
 import data_loader as dl
 import data_display as dd
+import json
 
 
 app = Flask(__name__)
@@ -48,6 +49,10 @@ def state_machine(function_name):
 
 @app.route('/')
 def show_record_linkages():
+    session['user'] = str(time.time()) + '.' + str(randint(1,10000))
+    session['data'] = dict()
+    session['data']['practice'] = ''
+    session['data']['start_time'] = time.time()
     return redirect(url_for('show_introduction'))
     #return render_template('record_linkage.html')
 
@@ -172,6 +177,9 @@ def show_pratice_moderate_mode():
 def grade_pratice_full_mode(table_mode):
     data_file = 'practice_' + str(table_mode) + '.csv'
     ret = list()
+    print(session['data'])
+    session['data']['practice'] = session['data']['practice'] +  request.args.get('response') + '\n'
+    print(session['data'])
     responses = request.args.get('response').split(',')
     pairs = dl.load_data_from_csv('data/' + data_file)
     j = 0
@@ -206,6 +214,9 @@ def show_record_linkage_task():
 @app.route('/thankyou')
 @state_machine('show_thankyou')
 def show_thankyou():
+    session['data']['end_time'] = time.time()
+    print(session['data'])
+    dl.save_data_to_json('data/saved/'+str(session['user'])+'.json', session['data'])
     return render_template('thankyou.html')
 
 
