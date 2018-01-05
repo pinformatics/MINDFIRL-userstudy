@@ -5,6 +5,7 @@ from random import *
 import data_loader as dl
 import data_display as dd
 import json
+import hashlib
 
 
 app = Flask(__name__)
@@ -49,7 +50,8 @@ def state_machine(function_name):
 
 @app.route('/')
 def show_record_linkages():
-    session['user'] = str(time.time()) + '.' + str(randint(1,10000))
+    session['user_cookie'] = hashlib.sha224("salt12138" + str(time.time()) + '.' + str(randint(1,10000))).hexdigest()
+    print(session['user_cookie'])
     session['data'] = dict()
     session['data']['practice'] = ''
     session['data']['start_time'] = time.time()
@@ -208,7 +210,9 @@ def show_record_linkage_task():
     pairs_formatted = dd.format_data(pairs, 'masked')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = dd.generate_icon(pairs)
-    return render_template('record_linkage_d.html', data=data, icons=icons, title='PPIRL Framework')
+    ids = dd.get_attribute_id(pairs)
+    ids = zip(ids[0::2], ids[1::2])
+    return render_template('record_linkage_d.html', data=data, icons=icons, ids=ids, title='PPIRL Framework', thisurl='/record_linkage')
 
 
 @app.route('/thankyou')
@@ -218,6 +222,13 @@ def show_thankyou():
     print(session['data'])
     dl.save_data_to_json('data/saved/'+str(session['user'])+'.json', session['data'])
     return render_template('thankyou.html')
+
+
+@app.route('/open_cell', methods=['GET', 'POST'])
+def open_cell():
+    ids = request.form['ids']
+    print(ids)
+    return ids
 
 
 @app.route('/select')

@@ -639,6 +639,29 @@ def generate_icon(data):
     return ret
 
 
+def get_attribute_id(data):
+    """
+    generate id for each attribute with the following format:
+    pair_number-row_number-attribute_number
+    for example:
+        data = [
+            ['1','','206','NELSON','MITCHELL','1459','03/13/1975','M','B','','******','********___','03/13/1975','*','*','34','6','0'],
+            ['1','1000142704,174','NELSON','MITCHELL SR','1314','07/03/1949','M','B','1000142704','******','******** SR','07/03/1949','*','*','34','6','0']
+        ]
+        The attribute 'NELSON' in the first column is 1-1-3
+    """
+    ret = []
+    for i in range(0, len(data), 2):
+        ids1 = list()
+        ids2 = list()
+        for j in range(0, len(data[i])):
+            ids1.append(data[i][0] + '-1-' + str(j))
+            ids2.append(data[i+1][0] + '-2-' + str(j))
+        ret.append(ids1)
+        ret.append(ids2)
+    return ret
+
+
 if __name__ == '__main__':
     attr1 = 'AUSTIN'
     attr2 = 'AUTWELL'
@@ -760,4 +783,5 @@ if __name__ == '__main__':
     data = format_data(pairs, 'full')
     print data
     print data[0][2]
+
 
