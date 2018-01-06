@@ -177,9 +177,6 @@ def show_pratice_moderate_mode():
 def grade_pratice_full_mode(table_mode):
     data_file = 'practice_' + str(table_mode) + '.csv'
     ret = list()
-    print(session['data'])
-    session['data']['practice'] = session['data']['practice'] +  request.args.get('response') + '\n'
-    print(session['data'])
     responses = request.args.get('response').split(',')
     pairs = dl.load_data_from_csv('data/' + data_file)
     j = 0
@@ -215,9 +212,15 @@ def show_record_linkage_task():
 @state_machine('show_thankyou')
 def show_thankyou():
     session['data']['end_time'] = time.time()
-    print(session['data'])
     dl.save_data_to_json('data/saved/'+str(session['user'])+'.json', session['data'])
     return render_template('thankyou.html')
+
+
+@app.route('/save_data', methods=['GET', 'POST'])
+def save_data():
+    print(request.form['user_data'])
+    session['data']['practice'] = session['data']['practice'] + request.form['user_data']
+    return ''
 
 
 @app.route('/select')
@@ -230,7 +233,7 @@ def test():
     return render_template('bootstrap_test.html')
 
 
-@app.route('/next')
+@app.route('/next', methods=['GET', 'POST'])
 def next():
     sequence = CONFIG['sequence']
     state = session['state'] + 1
