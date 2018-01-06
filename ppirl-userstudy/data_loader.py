@@ -30,3 +30,16 @@ def get_data_filename_by_url(url):
         return 'practice_minimum_mode.csv'
     elif 'moderate_mode' in url:
         return 'practice_moderate_mode.csv'
+
+
+def get_pair(filename, pair_num):
+    filein = open(filename, 'r')
+    ret = list()
+    for line in filein:
+        record = line.split(',')
+        if record[0] == pair_num:
+            ret.append(record)
+            if len(ret) == 2:
+                break
+    return ret
+

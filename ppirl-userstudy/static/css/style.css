@@ -49,6 +49,7 @@
 .table_col4 {
     width: 190px;
     float: left;
+    padding-left: 5px;
 }
 
 .table_col4_5 {
@@ -60,6 +61,7 @@
 .table_col5 {
     width: 190px;
     float: left;
+    padding-left: 5px;
 }
 
 .table_col6 {
@@ -92,7 +94,7 @@
 }
 
 .table_row {
-    height: 120px;
+    height: 124px;
     color: #333;
     font-style: normal;
     font-variant: normal;
@@ -223,3 +225,26 @@ input[type="radio"] {
     font-size: 16px;
     cursor: pointer;
 }
+
+.clickable_cell {
+    border-style: outset;
+    border-width: 2px;
+    border-color: transparent;
+}
+
+.table_row_odd .clickable_cell:hover {
+    background-color: #f2f2f2;
+    border-style: outset;
+    border-width: 2px;
+    border-color: hsl(0, 0%, 87%);
+    cursor: pointer;
+}
+
+.table_row_even .clickable_cell:hover {
+    background-color: #cce0ff;
+    border-style: outset;
+    border-width: 2px;
+    border-color: hsl(217, 100%, 87%);
+    cursor: pointer;
+}
+

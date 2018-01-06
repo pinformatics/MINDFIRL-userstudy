@@ -5,6 +5,7 @@ from random import *
 import data_loader as dl
 import data_display as dd
 import json
+import hashlib
 
 
 app = Flask(__name__)
@@ -49,7 +50,8 @@ def state_machine(function_name):
 
 @app.route('/')
 def show_record_linkages():
-    session['user'] = str(time.time()) + '.' + str(randint(1,10000))
+    session['user_cookie'] = hashlib.sha224("salt12138" + str(time.time()) + '.' + str(randint(1,10000))).hexdigest()
+    print(session['user_cookie'])
     session['data'] = dict()
     session['data']['practice'] = ''
     session['data']['start_time'] = time.time()
@@ -205,7 +207,9 @@ def show_record_linkage_task():
     pairs_formatted = dd.format_data(pairs, 'masked')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = dd.generate_icon(pairs)
-    return render_template('record_linkage_d.html', data=data, icons=icons, title='PPIRL Framework')
+    ids = dd.get_attribute_id(pairs)
+    ids = zip(ids[0::2], ids[1::2])
+    return render_template('record_linkage_d.html', data=data, icons=icons, ids=ids, title='PPIRL Framework', thisurl='/record_linkage')
 
 
 @app.route('/thankyou')
@@ -221,6 +225,66 @@ def save_data():
     print(request.form['user_data'])
     session['data']['practice'] = session['data']['practice'] + request.form['user_data']
     return ''
+
+
+@app.route('/get_cell', methods=['GET', 'POST'])
+def open_cell():
+    id1 = request.args.get('id1')
+    id2 = request.args.get('id2')
+    mode = request.args.get('mode')
+
+    pair_num = str(id1.split('-')[0])
+    attr_num = str(id1.split('-')[2])
+
+    pair = dl.get_pair('data/ppirl.csv', pair_num)
+    record1 = pair[0]
+    record2 = pair[1]
+
+    attr1 = record1[int(attr_num)]
+    attr2 = record2[int(attr_num)]
+
+    if attr_num == '1':
+        # id
+        helper1 = record1[9]
+        helper2 = record2[9]
+        get_display = dd.get_string_display
+    elif attr_num == '3':
+        # first name
+        helper1 = record1[10]
+        helper2 = record2[10]
+        get_display = dd.get_string_display
+    elif attr_num == '4':
+        # last name
+        helper1 = record1[11]
+        helper2 = record2[11]
+        get_display = dd.get_string_display
+    elif attr_num == '6':
+        # DoB
+        helper1 = record1[12]
+        helper2 = record2[12]
+        get_display = dd.get_date_display
+    elif attr_num == '7':
+        # sex
+        helper1 = record[13]
+        helper2 = record[13]
+        get_display = dd.get_character_display
+    elif attr_num == '8':
+        # race
+        helper1 = record[14]
+        helper2 = record[14]
+        get_display = dd.get_character_display
+
+    attr_full = get_display(attr1, attr2, helper1, helper2, 'full')
+    attr_partial = get_display(attr1, attr2, helper1, helper2, 'partial')
+    attr_masked = get_display(attr1, attr2, helper1, helper2, 'masked')
+
+    ret = dict()
+    if mode == 'masked':
+        ret = {"value1": attr_partial[0], "value2": attr_partial[1], "mode": "partial"}
+    elif mode == 'partial':
+        ret = {"value1": attr_full[0], "value2": attr_full[1], "mode": "full"}
+
+    return jsonify(ret)
 
 
 @app.route('/select')
