@@ -209,7 +209,7 @@ def show_record_linkage_task():
     icons = dd.generate_icon(pairs)
     ids = dd.get_attribute_id(pairs)
     ids = zip(ids[0::2], ids[1::2])
-    return render_template('record_linkage_d.html', data=data, icons=icons, ids=ids, title='PPIRL Framework', thisurl='/record_linkage')
+    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='MINDFIL Framework', thisurl='/record_linkage')
 
 
 @app.route('/thankyou')
@@ -265,22 +265,25 @@ def open_cell():
         get_display = dd.get_date_display
     elif attr_num == '7':
         # sex
-        helper1 = record[13]
-        helper2 = record[13]
+        helper1 = record1[13]
+        helper2 = record2[13]
         get_display = dd.get_character_display
     elif attr_num == '8':
         # race
-        helper1 = record[14]
-        helper2 = record[14]
+        helper1 = record1[14]
+        helper2 = record2[14]
         get_display = dd.get_character_display
 
-    attr_full = get_display(attr1, attr2, helper1, helper2, 'full')
-    attr_partial = get_display(attr1, attr2, helper1, helper2, 'partial')
-    attr_masked = get_display(attr1, attr2, helper1, helper2, 'masked')
+    attr_full = get_display(attr1=attr1, attr2=attr2, helper1=helper1, helper2=helper2, attribute_mode='full')
+    attr_partial = get_display(attr1=attr1, attr2=attr2, helper1=helper1, helper2=helper2, attribute_mode='partial')
+    attr_masked = get_display(attr1=attr1, attr2=attr2, helper1=helper1, helper2=helper2, attribute_mode='masked')
 
     ret = dict()
     if mode == 'masked':
-        ret = {"value1": attr_partial[0], "value2": attr_partial[1], "mode": "partial"}
+        if(attr_partial[0] == attr_masked[0] and attr_partial[1] == attr_masked[1]):
+            ret = {"value1": attr_full[0], "value2": attr_full[1], "mode": "full"}
+        else:
+            ret = {"value1": attr_partial[0], "value2": attr_partial[1], "mode": "partial"}
     elif mode == 'partial':
         ret = {"value1": attr_full[0], "value2": attr_full[1], "mode": "full"}
 

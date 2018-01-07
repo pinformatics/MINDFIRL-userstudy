@@ -357,13 +357,12 @@ def get_date_display(attr1, attr2, helper1, helper2, attribute_mode):
                         k += 1
         return [attr1_display, attr2_display]
 
-
-def get_character_display(attr1, attr2, attribute_mode):
+def get_character_display(attr1, attr2,  helper1, helper2, attribute_mode):
     """
     """
     if attribute_mode == 'base' or attribute_mode == 'full':
         return [attr1, attr2]
-    elif attribute_mode == 'masked':
+    else:
         if not attr1 or not attr2:
             if not attr1:
                 attr1_display = '<img src="../static/images/site/missing.png" alt="missing" class="missing_icon">'
@@ -463,12 +462,12 @@ def format_pair(p1, p2, data_mode):
     result2.append(DoB_format[1])
 
     # gender
-    gender_format = get_character_display(p1[7], p2[7], mode[4])
+    gender_format = get_character_display(attr1=p1[7], attr2=p2[7], helper1='', helper2='', attribute_mode=mode[4])
     result1.append(gender_format[0])
     result2.append(gender_format[1])
 
     # race
-    race_format = get_character_display(p1[8], p2[8], mode[5])
+    race_format = get_character_display(attr1=p1[8], attr2=p2[8], helper1='', helper2='', attribute_mode=mode[5])
     result1.append(race_format[0])
     result2.append(race_format[1])
     

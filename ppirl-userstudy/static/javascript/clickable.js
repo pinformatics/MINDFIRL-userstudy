@@ -22,8 +22,14 @@ $(function() {
     $('.clickable_cell').bind('click', function() {
         var current_cell = this;
         $.getJSON($SCRIPT_ROOT + '/get_cell', get_response(current_cell), function(data) {
-            current_cell.children[0].innerHTML = data.value1;
-            current_cell.children[2].innerHTML = data.value2;
+            if(data.value1 && data.value2 && data.mode) {
+                current_cell.children[0].innerHTML = data.value1;
+                current_cell.children[2].innerHTML = data.value2;
+                current_cell.setAttribute("mode", data.mode);
+                if(data.mode == "full") {
+                    current_cell.classList.remove("clickable_cell");
+                }
+            }
         });
         return false;
     });
