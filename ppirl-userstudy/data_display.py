@@ -661,6 +661,33 @@ def get_attribute_id(data):
     return ret
 
 
+def get_total_characters(data):
+    """
+        data - list
+        example: 
+        data = [
+            [16,1027791027,993,GLORIA,MASTON,9,09/22/1938,F,W,*********7,*L**IA,******,**/**/****,F,*,8,2,0],
+            [16,1027791028,2412,GEORGE,MASTON,10,09/22/1938,M,W,*********8,*E**GE,******,**/**/****,M,*,8,2,0]
+        ]
+    """
+    total_characters = 0
+    for row in data:
+        for i in [1,3,4,6,7,8]:
+            total_characters += len(row[i])
+    return total_characters
+
+
+def get_character_disclosed_num(value):
+    """
+    the character disclosed num
+    """
+    character_disclosed_num = 0
+    for c in value:
+        if c not in ['*', '_']:
+            character_disclosed_num += 1
+    return character_disclosed_num
+
+
 if __name__ == '__main__':
     attr1 = 'AUSTIN'
     attr2 = 'AUTWELL'

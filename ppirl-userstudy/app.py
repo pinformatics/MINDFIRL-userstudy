@@ -6,6 +6,7 @@ import data_loader as dl
 import data_display as dd
 import json
 import hashlib
+import collections
 
 
 app = Flask(__name__)
@@ -34,6 +35,9 @@ CONFIG = {
 }
 
 
+session_data = collections.defaultdict(dict)
+
+
 def state_machine(function_name):
     def wrapper(f):
         @wraps(f)
@@ -51,10 +55,10 @@ def state_machine(function_name):
 @app.route('/')
 def show_record_linkages():
     session['user_cookie'] = hashlib.sha224("salt12138" + str(time.time()) + '.' + str(randint(1,10000))).hexdigest()
-    print(session['user_cookie'])
     session['data'] = dict()
     session['data']['practice'] = ''
     session['data']['start_time'] = time.time()
+
     return redirect(url_for('show_introduction'))
     #return render_template('record_linkage.html')
 
@@ -209,6 +213,11 @@ def show_record_linkage_task():
     icons = dd.generate_icon(pairs)
     ids = dd.get_attribute_id(pairs)
     ids = zip(ids[0::2], ids[1::2])
+
+    total_characters = dd.get_total_characters(pairs)
+    session_data[session['user_cookie']]['total_characters'] = total_characters
+    session_data[session['user_cookie']]['disclosed_chrarcters'] = 0
+
     return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='MINDFIL Framework', thisurl='/record_linkage')
 
 
@@ -216,7 +225,7 @@ def show_record_linkage_task():
 @state_machine('show_thankyou')
 def show_thankyou():
     session['data']['end_time'] = time.time()
-    dl.save_data_to_json('data/saved/'+str(session['user'])+'.json', session['data'])
+    dl.save_data_to_json('data/saved/'+str(session['user_cookie'])+'.json', session['data'])
     return render_template('thankyou.html')
 
 
@@ -286,6 +295,23 @@ def open_cell():
             ret = {"value1": attr_partial[0], "value2": attr_partial[1], "mode": "partial"}
     elif mode == 'partial':
         ret = {"value1": attr_full[0], "value2": attr_full[1], "mode": "full"}
+
+    # get character disclosed percentage
+    cdp_previous_attr1 = 0
+    cdp_previous_attr2 = 0
+    if mode == 'partial':
+        cdp_previous_attr1 = dd.get_character_disclosed_num(helper1)
+        cdp_previous_attr2 = dd.get_character_disclosed_num(helper2)
+
+    cdp_post_attr1 = len(attr1)
+    cdp_post_attr2 = len(attr2)
+    if ret['mode'] == 'partial':
+        cdp_post_attr1 = dd.get_character_disclosed_num(helper1)
+        cdp_post_attr2 = dd.get_character_disclosed_num(helper2)
+    cdp_increment = (cdp_post_attr1 - cdp_previous_attr1) + (cdp_post_attr2 - cdp_previous_attr2)
+    session_data[session['user_cookie']]['disclosed_chrarcters'] += cdp_increment
+    cdp = 100.0*session_data[session['user_cookie']]['disclosed_chrarcters']/session_data[session['user_cookie']]['total_characters']
+    ret['cdp'] = cdp
 
     return jsonify(ret)
 

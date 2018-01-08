@@ -18,19 +18,37 @@ function get_response(clicked_object) {
     };
 }
 
+function get_cell_ajax(current_cell) {
+    $.getJSON($SCRIPT_ROOT + '/get_cell', get_response(current_cell), function(data) {
+        if(data.value1 && data.value2 && data.mode) {
+            current_cell.children[0].innerHTML = data.value1;
+            current_cell.children[2].innerHTML = data.value2;
+            current_cell.setAttribute("mode", data.mode);
+            if(data.mode == "full") {
+                current_cell.classList.remove("clickable_cell");
+            }
+
+            var bar_style = 'width:' + data.cdp + '%';
+            $("#privacy-budget-bar").attr("style", bar_style);
+            $("#privacy-budget-value").html(data.cdp + "%")
+        }
+    });
+}
+
 $(function() {
     $('.clickable_cell').bind('click', function() {
         var current_cell = this;
-        $.getJSON($SCRIPT_ROOT + '/get_cell', get_response(current_cell), function(data) {
-            if(data.value1 && data.value2 && data.mode) {
-                current_cell.children[0].innerHTML = data.value1;
-                current_cell.children[2].innerHTML = data.value2;
-                current_cell.setAttribute("mode", data.mode);
-                if(data.mode == "full") {
-                    current_cell.classList.remove("clickable_cell");
-                }
-            }
-        });
+        get_cell_ajax(current_cell);
+        return false;
+    });
+
+    $('.clickable_big_cell').bind('click', function() {
+        var first_name_cell = this.children[0];
+        var last_name_cell = this.children[2];
+        get_cell_ajax(first_name_cell);
+        get_cell_ajax(last_name_cell);
+        this.classList.remove("clickable_big_cell");
         return false;
     });
 });
+

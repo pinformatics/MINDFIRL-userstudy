@@ -35,10 +35,10 @@
             </div>
             <div id="content">
                 <div class="privacy-budget-div">
-                    Privacy risk: 
+                    <div>Privacy risk: <span id="privacy-budget-value">0%</span></div>
                     <div class="progress">
-                        <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 40%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">40%</div>
-                        <div class="progress-bar bg-warning" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">10%</div>
+                        <div id="privacy-budget-bar" class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 0%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: 0%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                 </div>
                 <div id="table">
@@ -84,7 +84,9 @@
                                     {{ r[1][2]|safe }}
                                 </div>
                             </div>
-                            <div class="table_col4 table_names clickable_cell" mode="masked">
+                            
+                            <div class="{% if 'svg' in icons[loop.index0][2] %}names_big_cell clickable_big_cell{% endif %}">
+                            <div class="table_col4 table_names {% if 'svg' not in icons[loop.index0][2] %}clickable_cell{% endif %}" mode="masked">
                                 <div class="sub_row1" id="{{ ids[loop.index0][0][3] }}">
                                     {{ r[0][3]|safe }}
                                 </div>
@@ -98,7 +100,7 @@
                             <div class="table_col4_5">
                                 {{ icons[loop.index0][2]|safe }}
                             </div>
-                            <div class="table_col5 table_names clickable_cell" mode="masked">
+                            <div class="table_col5 table_names {% if 'svg' not in icons[loop.index0][2] %}clickable_cell{% endif %}" mode="masked">
                                 <div class="sub_row1" id="{{ ids[loop.index0][0][4] }}">
                                     {{ r[0][4]|safe }}
                                 </div>
@@ -108,6 +110,7 @@
                                 <div class="sub_row3" id="{{ ids[loop.index0][1][4] }}">
                                     {{ r[1][4]|safe }}
                                 </div>
+                            </div>
                             </div>
                             <div class="table_col6">
                                 <div class="sub_row1">
@@ -193,6 +196,7 @@
                                 </div>
                             </div>
                         </div>
+                        <div style="clear:both"></div>
                         {% endfor %}
                     </div>
                 </div>
@@ -201,10 +205,7 @@
                 </div>
 
                 <div class="submit_div">
-                    {% if title != 'PPIRL Framework' %}
-                        <button id="submit_btn" class="submit_button">Submit</button>
-                    {% endif %}
-                    <button id="button_next" class="submit_button" {% if title != 'PPIRL Framework' %} style="display: none;"{% endif %}>Next</button>
+                    <button id="button_next" class="submit_button">Next</button>
                 </div>
             </div>
             <!-- End of div content -->
