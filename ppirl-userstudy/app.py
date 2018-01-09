@@ -215,8 +215,10 @@ def show_record_linkage_task():
     ids = zip(ids[0::2], ids[1::2])
 
     total_characters = dd.get_total_characters(pairs)
-    session_data[session['user_cookie']]['total_characters'] = total_characters
-    session_data[session['user_cookie']]['disclosed_chrarcters'] = 0
+    #session_data[session['user_cookie']]['total_characters'] = total_characters
+    #session_data[session['user_cookie']]['disclosed_chrarcters'] = 0
+    session['mindfil_total_characters'] = total_characters
+    session['mindfil_disclosed_characters'] = 0
 
     return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='MINDFIL Framework', thisurl='/record_linkage')
 
@@ -318,9 +320,9 @@ def open_cell():
         cdp_post_attr1 = dd.get_character_disclosed_num(helper1)
         cdp_post_attr2 = dd.get_character_disclosed_num(helper2)
     cdp_increment = (cdp_post_attr1 - cdp_previous_attr1) + (cdp_post_attr2 - cdp_previous_attr2)
-    session_data[session['user_cookie']]['disclosed_chrarcters'] += cdp_increment
-    cdp = 100.0*session_data[session['user_cookie']]['disclosed_chrarcters']/session_data[session['user_cookie']]['total_characters']
-    ret['cdp'] = cdp
+    session['mindfil_disclosed_characters'] += cdp_increment
+    cdp = 100.0*session['mindfil_disclosed_characters']/session['mindfil_total_characters']
+    ret['cdp'] = round(cdp, 2)
     print("needle 324")
 
     print("returning: ")
