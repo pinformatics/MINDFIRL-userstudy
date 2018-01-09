@@ -249,12 +249,16 @@ input[type="radio"] {
 }
 
 .names_big_cell {
-    width: 466px;
+    width: 460px;
     height: 124px;
     float: left;
     border-style: outset;
     border-width: 2px;
     border-color: transparent;
+}
+
+.names_big_cell .table_col5 {
+    width: 184px;
 }
 
 .table_row_odd .clickable_big_cell:hover {
