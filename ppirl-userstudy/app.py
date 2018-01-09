@@ -238,6 +238,7 @@ def save_data():
 
 @app.route('/get_cell', methods=['GET', 'POST'])
 def open_cell():
+    print("in get_cell")
     id1 = request.args.get('id1')
     id2 = request.args.get('id2')
     mode = request.args.get('mode')
