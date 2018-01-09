@@ -314,6 +314,9 @@ def open_cell():
     cdp = 100.0*session_data[session['user_cookie']]['disclosed_chrarcters']/session_data[session['user_cookie']]['total_characters']
     ret['cdp'] = cdp
 
+    print("returning: ")
+    print(ret)
+
     return jsonify(ret)
 
 
