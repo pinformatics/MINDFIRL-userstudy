@@ -8,6 +8,7 @@ import data_display as dd
 import json
 import hashlib
 import collections
+import redis
 
 
 app = Flask(__name__)
