@@ -19,6 +19,9 @@ app.config.from_object(__name__)
 Session(app)
 """
 
+ENV = 'production'
+
+
 CONFIG = {
     'sequence': [
         'show_introduction',
@@ -42,7 +45,10 @@ CONFIG = {
 }
 
 
-r = redis.from_url(os.environ.get("REDIS_URL"))
+if ENV == 'production':
+    r = redis.from_url(os.environ.get("REDIS_URL"))
+elif ENV == 'development':
+    r = redis.Redis(host='localhost', port=6379, db=0)
 
 
 def state_machine(function_name):
@@ -227,10 +233,11 @@ def show_record_linkage_task():
     ids = zip(ids[0::2], ids[1::2])
 
     total_characters = dd.get_total_characters(pairs)
-    #session_data[session['user_cookie']]['total_characters'] = total_characters
-    #session_data[session['user_cookie']]['disclosed_chrarcters'] = 0
-    session['mindfil_total_characters'] = total_characters
-    session['mindfil_disclosed_characters'] = 0
+
+    mindfil_total_characters_key = session['user_cookie'] + '_mindfil_total_characters'
+    r.set(mindfil_total_characters_key, total_characters)
+    mindfil_disclosed_characters_key = session['user_cookie'] + '_mindfil_disclosed_characters'
+    r.set(mindfil_disclosed_characters_key, 0)
 
     return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='MINDFIL Framework', thisurl='/record_linkage')
 
@@ -245,7 +252,7 @@ def show_thankyou():
 
 @app.route('/save_data', methods=['GET', 'POST'])
 def save_data():
-    print(request.form['user_data'])
+    #print(request.form['user_data'])
     session['data']['practice'] = session['data']['practice'] + request.form['user_data']
     return ''
 
@@ -323,12 +330,13 @@ def open_cell():
         cdp_post_attr1 = dd.get_character_disclosed_num(helper1)
         cdp_post_attr2 = dd.get_character_disclosed_num(helper2)
     cdp_increment = (cdp_post_attr1 - cdp_previous_attr1) + (cdp_post_attr2 - cdp_previous_attr2)
-    session['mindfil_disclosed_characters'] += cdp_increment
-    cdp = 100.0*session['mindfil_disclosed_characters']/session['mindfil_total_characters']
-    ret['cdp'] = round(cdp, 2)
 
-    print('disclosed: ' + str(session['mindfil_disclosed_characters']))
-    print('total: ' + str(session['mindfil_total_characters']))
+    # atom operation!
+    mindfil_disclosed_characters_key = session['user_cookie'] + '_mindfil_disclosed_characters'
+    r.incrby(mindfil_disclosed_characters_key, cdp_increment)
+    mindfil_total_characters_key = session['user_cookie'] + '_mindfil_total_characters'
+    cdp = 100.0*int(r.get(mindfil_disclosed_characters_key))/int(r.get(mindfil_total_characters_key))
+    ret['cdp'] = round(cdp, 1)
 
     return jsonify(ret)
 
