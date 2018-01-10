@@ -8,6 +8,7 @@ import data_display as dd
 import json
 import hashlib
 import collections
+import os
 import redis
 
 
@@ -41,7 +42,7 @@ CONFIG = {
 }
 
 
-session_data = collections.defaultdict(dict)
+r = redis.from_url(os.environ.get("REDIS_URL"))
 
 
 def state_machine(function_name):
@@ -60,6 +61,11 @@ def state_machine(function_name):
 
 @app.route('/')
 def show_record_linkages():
+    #debug
+    r.set('foo', 'bar')
+    print(r.get('foo'))
+    print('redis success.')
+
     session['user_cookie'] = hashlib.sha224("salt12138" + str(time.time()) + '.' + str(randint(1,10000))).hexdigest()
     session['data'] = dict()
     session['data']['practice'] = ''
