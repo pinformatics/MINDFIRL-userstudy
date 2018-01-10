@@ -1,4 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, session, jsonify, request, g
+from flask.ext.session import Session
 from functools import wraps
 import time
 from random import *
@@ -10,6 +11,9 @@ import collections
 
 
 app = Flask(__name__)
+SESSION_TYPE = 'redis'
+app.config.from_object(__name__)
+Session(app)
 
 
 CONFIG = {
@@ -240,24 +244,19 @@ def save_data():
 
 @app.route('/get_cell', methods=['GET', 'POST'])
 def open_cell():
-    print("in get_cell")
     id1 = request.args.get('id1')
     id2 = request.args.get('id2')
     mode = request.args.get('mode')
-    print("needle 245")
 
     pair_num = str(id1.split('-')[0])
     attr_num = str(id1.split('-')[2])
-    print("needle 249")
 
     pair = dl.get_pair('data/ppirl.csv', pair_num)
     record1 = pair[0]
     record2 = pair[1]
-    print("needle 254")
-
+ 
     attr1 = record1[int(attr_num)]
     attr2 = record2[int(attr_num)]
-    print("needle 258")
 
     if attr_num == '1':
         # id
@@ -289,12 +288,10 @@ def open_cell():
         helper1 = record1[14]
         helper2 = record2[14]
         get_display = dd.get_character_display
-    print("needle 290")
 
     attr_full = get_display(attr1=attr1, attr2=attr2, helper1=helper1, helper2=helper2, attribute_mode='full')
     attr_partial = get_display(attr1=attr1, attr2=attr2, helper1=helper1, helper2=helper2, attribute_mode='partial')
     attr_masked = get_display(attr1=attr1, attr2=attr2, helper1=helper1, helper2=helper2, attribute_mode='masked')
-    print("needle 295")
 
     ret = dict()
     if mode == 'masked':
@@ -304,7 +301,6 @@ def open_cell():
             ret = {"value1": attr_partial[0], "value2": attr_partial[1], "mode": "partial"}
     elif mode == 'partial':
         ret = {"value1": attr_full[0], "value2": attr_full[1], "mode": "full"}
-    print("needle 305")
 
     # get character disclosed percentage
     cdp_previous_attr1 = 0
@@ -312,7 +308,6 @@ def open_cell():
     if mode == 'partial':
         cdp_previous_attr1 = dd.get_character_disclosed_num(helper1)
         cdp_previous_attr2 = dd.get_character_disclosed_num(helper2)
-    print("needle 313")
 
     cdp_post_attr1 = len(attr1)
     cdp_post_attr2 = len(attr2)
@@ -323,10 +318,9 @@ def open_cell():
     session['mindfil_disclosed_characters'] += cdp_increment
     cdp = 100.0*session['mindfil_disclosed_characters']/session['mindfil_total_characters']
     ret['cdp'] = round(cdp, 2)
-    print("needle 324")
 
-    print("returning: ")
-    print(ret)
+    print('disclosed: ' + str(session['mindfil_disclosed_characters']))
+    print('total: ' + str(session['mindfil_total_characters']))
 
     return jsonify(ret)
 
