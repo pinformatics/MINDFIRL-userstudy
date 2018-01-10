@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, session, jsonify, request, g
-from flask.ext.session import Session
+#from flask.ext.session import Session
 from functools import wraps
 import time
 from random import *
@@ -12,10 +12,11 @@ import redis
 
 
 app = Flask(__name__)
+"""
 SESSION_TYPE = 'redis'
 app.config.from_object(__name__)
 Session(app)
-
+"""
 
 CONFIG = {
     'sequence': [
