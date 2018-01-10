@@ -19,6 +19,7 @@ app.config.from_object(__name__)
 Session(app)
 """
 
+#ENV = 'development'
 ENV = 'production'
 
 
@@ -239,7 +240,7 @@ def show_record_linkage_task():
     mindfil_disclosed_characters_key = session['user_cookie'] + '_mindfil_disclosed_characters'
     r.set(mindfil_disclosed_characters_key, 0)
 
-    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='MINDFIL Framework', thisurl='/record_linkage')
+    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 2', thisurl='/record_linkage')
 
 
 @app.route('/thankyou')
@@ -263,6 +264,7 @@ def open_cell():
     id2 = request.args.get('id2')
     mode = request.args.get('mode')
 
+
     pair_num = str(id1.split('-')[0])
     attr_num = str(id1.split('-')[2])
 
@@ -272,6 +274,9 @@ def open_cell():
  
     attr1 = record1[int(attr_num)]
     attr2 = record2[int(attr_num)]
+
+    if mode == 'full':
+        return jsonify({"value1": attr1, "value2": attr2, "mode": "full"})
 
     if attr_num == '1':
         # id

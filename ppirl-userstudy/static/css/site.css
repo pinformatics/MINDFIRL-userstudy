@@ -26,6 +26,17 @@ body {
 
 #title h3 {
     font-size: 36px;
+    margin-bottom: 0px;
+}
+
+#page-number {
+  /*
+  width: 100px;
+  float: right;
+  margin-right: 50px;
+  */
+  width: 1800px;
+  text-align: center;
 }
 
 .submit_button {

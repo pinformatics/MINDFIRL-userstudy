@@ -5,19 +5,25 @@
 }
 
 .choice-label {
-  line-height: 39px;
+  width: 245px;
+  float: left;
+  margin-left: 155px;
+  margin-top: 15px;
   vertical-align: bottom;
+  list-style-type: none;
+}
+
+.choice-label .fill {
+  width: 16.2px;
+  height: 23px;
 }
 
 .choice-label span {
-  display: block;
-  width: 21.94px;
+  float: left;
+  width: 21.1px;
+  height: 23px;
   font-size: 18px;
   text-align: center;
-}
-
-.fill-item {
-  width: 17px;
 }
 
 .icon-hidden {
@@ -52,6 +58,8 @@
 
 .diff {
   float: left;
+  padding-left: 2px;
+  padding-right: 2px;
   border-style: solid;
   border-width: 2px;
   border-color: transparent;
@@ -60,6 +68,8 @@
 
 .same {
   float: right;
+  padding-left: 2px;
+  padding-right: 2px;
   font: bold;
   border-style: solid;
   border-width: 2px;

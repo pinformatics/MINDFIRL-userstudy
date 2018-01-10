@@ -24,7 +24,7 @@ $(document).ready(function(){
         }
         else {
             $diff.css("border-color", "transparent");
-            $same.css("border-color", "green");
+            $same.css("border-color", "#00cc00");
         }
 
         // save the user click data

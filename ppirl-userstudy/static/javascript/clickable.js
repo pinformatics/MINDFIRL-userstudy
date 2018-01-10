@@ -38,15 +38,21 @@ function get_cell_ajax(current_cell) {
 $(function() {
     $('.clickable_cell').bind('click', function() {
         var current_cell = this;
-        get_cell_ajax(current_cell);
+        if(current_cell.getAttribute("mode") != "full") {
+            get_cell_ajax(current_cell);
+        }
         return false;
     });
 
     $('.clickable_big_cell').bind('click', function() {
         var first_name_cell = this.children[0];
         var last_name_cell = this.children[2];
-        get_cell_ajax(first_name_cell);
-        get_cell_ajax(last_name_cell);
+        if(first_name_cell.getAttribute("mode") != "full") {
+            get_cell_ajax(first_name_cell);
+        }
+        if(last_name_cell.getAttribute("mode") != "full") {
+            get_cell_ajax(last_name_cell);
+        }
         this.classList.remove("clickable_big_cell");
         return false;
     });
