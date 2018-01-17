@@ -240,7 +240,7 @@ def show_record_linkage_task():
     mindfil_disclosed_characters_key = session['user_cookie'] + '_mindfil_disclosed_characters'
     r.set(mindfil_disclosed_characters_key, 0)
 
-    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='MINDFIL', thisurl='/record_linkage')
+    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='MINDFIL: Minimum Necessary Disclosure For Interactive record Linkage', thisurl='/record_linkage')
 
 
 @app.route('/thankyou')
