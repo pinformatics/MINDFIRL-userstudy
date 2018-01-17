@@ -3,7 +3,7 @@
 */
 
 #wrapper {
-    width: 1900px;
+    width: 1800px;
     margin: 20px 50px 20px 50px;
 }
 
@@ -14,7 +14,7 @@
 }
 
 #table {
-    width: 1850px;
+    width: 1750px;
 }
 
 #table_head {
@@ -85,7 +85,7 @@
 }
 
 .table_col10 {
-    width: 560px;
+    width: 460px;
     float: left;
 }
 
@@ -276,7 +276,7 @@ input[type="radio"] {
 }
 
 .privacy-budget-div {
-    width: 900px;
+    width: 800px;
     margin-bottom: 15px;
     margin-left: 950px;
     border-style: solid;
