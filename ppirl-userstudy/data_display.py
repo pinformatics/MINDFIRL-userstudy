@@ -688,6 +688,10 @@ def get_character_disclosed_num(value):
     return character_disclosed_num
 
 
+def get_KAPR(pair_num, display_status1, display_status2):
+    return 0
+
+
 if __name__ == '__main__':
     attr1 = 'AUSTIN'
     attr2 = 'AUTWELL'
