@@ -14,7 +14,11 @@ html {
 #title {
     width: 100%;
     text-align: center;
-    margin-bottom: 18px;
+    margin-bottom: 2px;
+}
+
+#page-number {
+    margin-bottom: 10px;
 }
 
 #irb_info {

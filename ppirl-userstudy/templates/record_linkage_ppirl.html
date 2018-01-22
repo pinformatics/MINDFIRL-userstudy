@@ -11,7 +11,8 @@
         <link rel="stylesheet" href="../static/css/select.css?q=11" type="text/css">
         <link rel="stylesheet" href="../static/css/bootstrap.min.css" type="text/css">
         <link rel="stylesheet" href="../static/css/footer.css" type="text/css">
-        
+        <link rel="stylesheet" href="../static/css/animate.min.css">
+
         <script src="../static/javascript/jquery-3.2.1.min.js"></script>
         <script src="../static/javascript/popper.min.js"></script>
         <script src="../static/javascript/bootstrap.min.js"></script>
@@ -33,15 +34,20 @@
             <div id="title">
                 <h3>{{ title }}</h3>
             </div>
-            <!-- <div id="page-number">
-                page: 12/13
-            </div> -->
+            <div id="page-number">
+                （ page: {{ page_number }}/17 ）
+            </div>
             <div style="clear:both"></div>
             <div id="content">
                 <div class="privacy-budget-div">
-                    <div>Privacy risk: <span id="privacy-budget-value">0%</span></div>
+                    <div>Character disclosed: <span id="character-disclosed-value">0%</span></div>
                     <div class="progress">
-                        <div id="privacy-budget-bar" class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 0%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div id="character-disclosed-bar" class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 0%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: 0%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <div>Privacy risk: <span id="privacy-risk-value">0%</span></div>
+                    <div class="progress">
+                        <div id="privacy-risk-bar" class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 0%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
                         <div class="progress-bar bg-warning" role="progressbar" style="width: 0%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                 </div>

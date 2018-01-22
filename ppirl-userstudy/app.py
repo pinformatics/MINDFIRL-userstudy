@@ -152,7 +152,7 @@ def show_pratice_base_mode():
     pairs_formatted = dd.format_data(pairs, 'base')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = (len(pairs)/2)*[7*['']]
-    return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/base_mode')
+    return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/base_mode', page_number=5)
 
 
 @app.route('/practice/full_mode')
@@ -162,7 +162,7 @@ def show_pratice_full_mode():
     pairs_formatted = dd.format_data(pairs, 'full')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = dd.generate_icon(pairs)
-    return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/full_mode')
+    return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/full_mode', page_number=7)
 
 
 @app.route('/practice/masked_mode')
@@ -172,7 +172,7 @@ def show_pratice_masked_mode():
     pairs_formatted = dd.format_data(pairs, 'masked')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = dd.generate_icon(pairs)
-    return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/masked_mode')
+    return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/masked_mode', page_number=10)
 
 
 @app.route('/practice/minimum_mode')
@@ -182,7 +182,7 @@ def show_pratice_minimum_mode():
     pairs_formatted = dd.format_data(pairs, 'minimum')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = dd.generate_icon(pairs)
-    return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/minimum_mode')
+    return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/minimum_mode', page_number=12)
 
 
 @app.route('/practice/moderate_mode')
@@ -192,7 +192,7 @@ def show_pratice_moderate_mode():
     pairs_formatted = dd.format_data(pairs, 'moderate')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = dd.generate_icon(pairs)
-    return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/moderate_mode')
+    return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/moderate_mode', page_number=14)
 
 
 @app.route('/practice/<table_mode>/grading')
@@ -248,7 +248,7 @@ def show_record_linkage_task():
             key = session['user_cookie'] + '-' + id1[i]
             r.set(key, 'M')
 
-    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 2: Minimum Necessary Disclosure For Interactive record Linkage', thisurl='/record_linkage')
+    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 2: Minimum Necessary Disclosure For Interactive record Linkage', thisurl='/record_linkage', page_number=16)
 
 
 @app.route('/thankyou')
@@ -349,6 +349,7 @@ def open_cell():
     mindfil_total_characters_key = session['user_cookie'] + '_mindfil_total_characters'
     cdp = 100.0*int(r.get(mindfil_disclosed_characters_key))/int(r.get(mindfil_total_characters_key))
     ret['cdp'] = round(cdp, 1)
+    print('cdp is: ' + str(cdp))
 
     # get K-Anonymity based Privacy Risk
     old_display_status1 = list()
@@ -386,9 +387,9 @@ def open_cell():
     KAPR_key = session['user_cookie'] + '_KAPR'
     overall_KAPR = float(r.get(KAPR_key))
     overall_KAPR += KAPRINC
-    r.set(KAPR_key, str(overall_KAPR))
-    ret['KAPR'] = overall_KAPR
-    print(overall_KAPR)
+    r.incrbyfloat(KAPR_key, KAPRINC)
+    ret['KAPR'] = round(100*overall_KAPR, 1)
+    print(ret['KAPR'])
 
     return jsonify(ret)
 

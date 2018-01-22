@@ -691,7 +691,7 @@ def get_character_disclosed_num(value):
             character_disclosed_num += 1
     return character_disclosed_num
 
-def get_total_characters(data):
+def get_total_characters_of_one_row(data):
     idx = [1, 3, 4, 6, 7, 8]
     count = 0
     for i in idx:
@@ -713,7 +713,7 @@ def get_KAPR1(dataset, data, display_status):
         else:
             continue
         character_disclosed_num += get_character_disclosed_num(data[col])
-    total_characters = get_total_characters(data)
+    total_characters = get_total_characters_of_one_row(data)
     P = 1.0*character_disclosed_num / total_characters
 
     # calculating K
