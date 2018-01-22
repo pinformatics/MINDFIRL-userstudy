@@ -361,6 +361,10 @@ def get_character_display(attr1, attr2,  helper1, helper2, attribute_mode):
     """
     """
     if attribute_mode == 'base' or attribute_mode == 'full':
+        if not attr1:
+            attr1 = '<img src="../static/images/site/missing.png" alt="missing" class="missing_icon">'
+        if not attr2:
+            attr2 = '<img src="../static/images/site/missing.png" alt="missing" class="missing_icon">'
         return [attr1, attr2]
     else:
         if not attr1 or not attr2:
@@ -687,9 +691,69 @@ def get_character_disclosed_num(value):
             character_disclosed_num += 1
     return character_disclosed_num
 
+def get_total_characters(data):
+    idx = [1, 3, 4, 6, 7, 8]
+    count = 0
+    for i in idx:
+        count += get_character_disclosed_num(data[i])
+    return count
 
-def get_KAPR(pair_num, display_status1, display_status2):
-    return 0
+
+def get_KAPR1(dataset, data, display_status):
+    col_list_F = [1, 3, 4, 6, 7, 8]
+    col_list_P = [9, 10, 11, 12, 13, 14]
+
+    # calculating P
+    character_disclosed_num = 0
+    for j in range(6):
+        if display_status[j] == 'F':
+            col = col_list_F[j]
+        elif display_status[j] == 'P':
+            col = col_list_P[j]
+        else:
+            continue
+        character_disclosed_num += get_character_disclosed_num(data[col])
+    total_characters = get_total_characters(data)
+    P = 1.0*character_disclosed_num / total_characters
+
+    # calculating K
+    count = 0
+    for i in range(len(dataset)):
+        match_flag = True
+        for j in range(6):
+            if display_status[j] == 'F':
+                col = col_list_F[j]
+            elif display_status[j] == 'P':
+                col = col_list_P[j]
+            else:
+                continue
+            if dataset[i][col] != data[col]:
+                match_flag = False
+                break
+        if match_flag:
+            count += 1
+    K = count
+
+    M = 12 # Number of rows that need to be manually linked
+    KAPRINC = (1.0/M)*(1.0/K)*P
+
+    return KAPRINC
+
+def get_KAPR(dataset, pair_num, display_status1, display_status2):
+    data1 = list()
+    data2 = list()
+    find_flag = False
+    for i in range(len(dataset)-1):
+        if dataset[i][0] == pair_num:
+            data1 = dataset[i]
+            data2 = dataset[i+1]
+            find_flag = True
+            break
+    if not find_flag:
+        return 0
+    KAPR1 = get_KAPR1(dataset, data1, display_status1)
+    KAPR2 = get_KAPR1(dataset, data2, display_status2)
+    return KAPR1+KAPR2
 
 
 if __name__ == '__main__':

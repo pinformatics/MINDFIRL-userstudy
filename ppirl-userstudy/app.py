@@ -19,8 +19,8 @@ app.config.from_object(__name__)
 Session(app)
 """
 
-ENV = 'development'
-#ENV = 'production'
+#ENV = 'development'
+ENV = 'production'
 
 
 CONFIG = {
@@ -51,6 +51,8 @@ if ENV == 'production':
 elif ENV == 'development':
     r = redis.Redis(host='localhost', port=6379, db=0)
 
+DATASET = dl.load_data_from_csv('data/section2.csv')
+
 
 def state_machine(function_name):
     def wrapper(f):
@@ -68,11 +70,6 @@ def state_machine(function_name):
 
 @app.route('/')
 def show_record_linkages():
-    #debug
-    r.set('foo', 'bar')
-    print(r.get('foo'))
-    print('redis success.')
-
     session['user_cookie'] = hashlib.sha224("salt12138" + str(time.time()) + '.' + str(randint(1,10000))).hexdigest()
     session['data'] = dict()
     session['data']['practice'] = ''
@@ -155,7 +152,7 @@ def show_pratice_base_mode():
     pairs_formatted = dd.format_data(pairs, 'base')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = (len(pairs)/2)*[7*['']]
-    return render_template('record_linkage_d.html', data=data, icons=icons, title='Base mode', thisurl='/practice/base_mode')
+    return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/base_mode')
 
 
 @app.route('/practice/full_mode')
@@ -165,7 +162,7 @@ def show_pratice_full_mode():
     pairs_formatted = dd.format_data(pairs, 'full')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = dd.generate_icon(pairs)
-    return render_template('record_linkage_d.html', data=data, icons=icons, title='Full mode', thisurl='/practice/full_mode')
+    return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/full_mode')
 
 
 @app.route('/practice/masked_mode')
@@ -175,7 +172,7 @@ def show_pratice_masked_mode():
     pairs_formatted = dd.format_data(pairs, 'masked')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = dd.generate_icon(pairs)
-    return render_template('record_linkage_d.html', data=data, icons=icons, title='Masked mode', thisurl='/practice/masked_mode')
+    return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/masked_mode')
 
 
 @app.route('/practice/minimum_mode')
@@ -185,7 +182,7 @@ def show_pratice_minimum_mode():
     pairs_formatted = dd.format_data(pairs, 'minimum')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = dd.generate_icon(pairs)
-    return render_template('record_linkage_d.html', data=data, icons=icons, title='Minimum mode', thisurl='/practice/minimum_mode')
+    return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/minimum_mode')
 
 
 @app.route('/practice/moderate_mode')
@@ -195,7 +192,7 @@ def show_pratice_moderate_mode():
     pairs_formatted = dd.format_data(pairs, 'moderate')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = dd.generate_icon(pairs)
-    return render_template('record_linkage_d.html', data=data, icons=icons, title='Moderate mode', thisurl='/practice/moderate_mode')
+    return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/moderate_mode')
 
 
 @app.route('/practice/<table_mode>/grading')
@@ -249,10 +246,9 @@ def show_record_linkage_task():
     for id1 in ids_list:
         for i in [1,3,4,6,7,8]:
             key = session['user_cookie'] + '-' + id1[i]
-            print(key)
             r.set(key, 'M')
 
-    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='MINDFIL: Minimum Necessary Disclosure For Interactive record Linkage', thisurl='/record_linkage')
+    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 2: Minimum Necessary Disclosure For Interactive record Linkage', thisurl='/record_linkage')
 
 
 @app.route('/thankyou')
@@ -275,7 +271,6 @@ def open_cell():
     id1 = request.args.get('id1')
     id2 = request.args.get('id2')
     mode = request.args.get('mode')
-
 
     pair_num = str(id1.split('-')[0])
     attr_num = str(id1.split('-')[2])
@@ -334,18 +329,6 @@ def open_cell():
     elif mode == 'partial':
         ret = {"value1": attr_full[0], "value2": attr_full[1], "mode": "full"}
 
-    # update the display status in redis
-    key1 = session['user_cookie'] + '-' + pair_num + '-1-' + attr_num
-    key2 = session['user_cookie'] + '-' + pair_num + '-2-' + attr_num
-    if ret['mode'] == 'full':
-        r.set(key1, 'F')
-        r.set(key2, 'F')
-    elif ret['mode'] == 'partial':
-        r.set(key1, 'P')
-        r.set(key2, 'P')
-    else:
-        print("Error: invalid display status.")
-
     # get character disclosed percentage
     cdp_previous_attr1 = 0
     cdp_previous_attr2 = 0
@@ -360,7 +343,7 @@ def open_cell():
         cdp_post_attr2 = dd.get_character_disclosed_num(helper2)
     cdp_increment = (cdp_post_attr1 - cdp_previous_attr1) + (cdp_post_attr2 - cdp_previous_attr2)
 
-    # atom operation!
+    # atom operation! updating character disclosed percentage
     mindfil_disclosed_characters_key = session['user_cookie'] + '_mindfil_disclosed_characters'
     r.incrby(mindfil_disclosed_characters_key, cdp_increment)
     mindfil_total_characters_key = session['user_cookie'] + '_mindfil_total_characters'
@@ -368,17 +351,44 @@ def open_cell():
     ret['cdp'] = round(cdp, 1)
 
     # get K-Anonymity based Privacy Risk
+    old_display_status1 = list()
+    old_display_status2 = list()
+    attr_idx = [1,3,4,6,7,8]
+    key1_prefix = session['user_cookie'] + '-' + pair_num + '-1-'
+    key2_prefix = session['user_cookie'] + '-' + pair_num + '-2-'
+    for attr_i in attr_idx:
+        old_display_status1.append(r.get(key1_prefix + str(attr_i)))
+        old_display_status2.append(r.get(key2_prefix + str(attr_i)))
+
+    # update the display status in redis
+    key1 = session['user_cookie'] + '-' + pair_num + '-1-' + attr_num
+    key2 = session['user_cookie'] + '-' + pair_num + '-2-' + attr_num
+    if ret['mode'] == 'full':
+        r.set(key1, 'F')
+        r.set(key2, 'F')
+    elif ret['mode'] == 'partial':
+        r.set(key1, 'P')
+        r.set(key2, 'P')
+    else:
+        print("Error: invalid display status.")
+
     display_status1 = list()
     display_status2 = list()
-    attr_idx = [1,3,4,6,7,8]
     key1_prefix = session['user_cookie'] + '-' + pair_num + '-1-'
     key2_prefix = session['user_cookie'] + '-' + pair_num + '-2-'
     for attr_i in attr_idx:
         display_status1.append(r.get(key1_prefix + str(attr_i)))
         display_status2.append(r.get(key2_prefix + str(attr_i)))
 
-    KAPR = dd.get_KAPR(pair_num, display_status1, display_status2)
-    ret['KAPR'] = KAPR
+    old_KAPR = dd.get_KAPR(DATASET, pair_num, old_display_status1, old_display_status2)
+    KAPR = dd.get_KAPR(DATASET, pair_num, display_status1, display_status2)
+    KAPRINC = KAPR - old_KAPR
+    KAPR_key = session['user_cookie'] + '_KAPR'
+    overall_KAPR = float(r.get(KAPR_key))
+    overall_KAPR += KAPRINC
+    r.set(KAPR_key, str(overall_KAPR))
+    ret['KAPR'] = overall_KAPR
+    print(overall_KAPR)
 
     return jsonify(ret)
 
