@@ -64,11 +64,11 @@ def get_string_display(attr1, attr2, helper1, helper2, attribute_mode):
                         k += 2
                         i += 2
                         j += 2
-                    elif helper1[k] == '_':
+                    elif helper1[k] == '_' or helper1[k] == '?':
                         attr2_display += '<span class="indel_text">' + attr2[j] + '</span>'
                         k += 1
                         j += 1
-                    elif helper2[k] == '_':
+                    elif helper2[k] == '_' or helper2[k] == '?':
                         attr1_display += '<span class="indel_text">' + attr1[i] + '</span>'
                         k += 1
                         i += 1
@@ -116,11 +116,11 @@ def get_string_display(attr1, attr2, helper1, helper2, attribute_mode):
                         k += 2
                         i += 2
                         j += 2
-                    elif helper1[k] == '_':
+                    elif helper1[k] == '_' or helper1[k] == '?':
                         attr2_display += '<span class="indel_text">' + attr2[j] + '</span>'
                         k += 1
                         j += 1
-                    elif helper2[k] == '_':
+                    elif helper2[k] == '_' or helper2[k] == '?':
                         attr1_display += '<span class="indel_text">' + attr1[i] + '</span>'
                         k += 1
                         i += 1
@@ -168,11 +168,11 @@ def get_string_display(attr1, attr2, helper1, helper2, attribute_mode):
                         k += 2
                         i += 2
                         j += 2
-                    elif helper1[k] == '_':
+                    elif helper1[k] == '_' or helper1[k] == '?':
                         attr2_display += '<span class="indel_text">' + '&' + '</span>'
                         k += 1
                         j += 1
-                    elif helper2[k] == '_':
+                    elif helper2[k] == '_' or helper2[k] == '?':
                         attr1_display += '<span class="indel_text">' + '@' + '</span>'
                         k += 1
                         i += 1
@@ -524,11 +524,11 @@ def get_icon_string(s1, s2, helper1, helper2):
                         k += 2
                         i += 2
                         j += 2
-                    elif helper1[k] == '_':
+                    elif helper1[k] == '_' or helper1[k] == '?':
                         ret += '<img class="indel_icon" src="../static/images/site/indel.png" alt="indel">'
                         k += 1
                         j += 1
-                    elif helper2[k] == '_':
+                    elif helper2[k] == '_' or helper2[k] == '?':
                         ret += '<img class="indel_icon" src="../static/images/site/indel.png" alt="indel">'
                         k += 1
                         i += 1
@@ -686,6 +686,10 @@ def get_character_disclosed_num(value):
         if c not in ['*', '_']:
             character_disclosed_num += 1
     return character_disclosed_num
+
+
+def get_KAPR(pair_num, display_status1, display_status2):
+    return 0
 
 
 if __name__ == '__main__':

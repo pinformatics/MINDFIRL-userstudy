@@ -230,15 +230,27 @@ def show_record_linkage_task():
     pairs_formatted = dd.format_data(pairs, 'masked')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = dd.generate_icon(pairs)
-    ids = dd.get_attribute_id(pairs)
-    ids = zip(ids[0::2], ids[1::2])
+    ids_list = dd.get_attribute_id(pairs)
+    ids = zip(ids_list[0::2], ids_list[1::2])
 
     total_characters = dd.get_total_characters(pairs)
 
+    # percentage of character disclosure
     mindfil_total_characters_key = session['user_cookie'] + '_mindfil_total_characters'
     r.set(mindfil_total_characters_key, total_characters)
     mindfil_disclosed_characters_key = session['user_cookie'] + '_mindfil_disclosed_characters'
     r.set(mindfil_disclosed_characters_key, 0)
+
+    # KAPR - K-Anonymity privacy risk
+    KAPR_key = session['user_cookie'] + '_KAPR'
+    r.set(KAPR_key, 0)
+
+    # set the user-display-status as masked for all cell
+    for id1 in ids_list:
+        for i in [1,3,4,6,7,8]:
+            key = session['user_cookie'] + '-' + id1[i]
+            print(key)
+            r.set(key, 'M')
 
     return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='MINDFIL: Minimum Necessary Disclosure For Interactive record Linkage', thisurl='/record_linkage')
 
@@ -322,6 +334,18 @@ def open_cell():
     elif mode == 'partial':
         ret = {"value1": attr_full[0], "value2": attr_full[1], "mode": "full"}
 
+    # update the display status in redis
+    key1 = session['user_cookie'] + '-' + pair_num + '-1-' + attr_num
+    key2 = session['user_cookie'] + '-' + pair_num + '-2-' + attr_num
+    if ret['mode'] == 'full':
+        r.set(key1, 'F')
+        r.set(key2, 'F')
+    elif ret['mode'] == 'partial':
+        r.set(key1, 'P')
+        r.set(key2, 'P')
+    else:
+        print("Error: invalid display status.")
+
     # get character disclosed percentage
     cdp_previous_attr1 = 0
     cdp_previous_attr2 = 0
@@ -342,6 +366,19 @@ def open_cell():
     mindfil_total_characters_key = session['user_cookie'] + '_mindfil_total_characters'
     cdp = 100.0*int(r.get(mindfil_disclosed_characters_key))/int(r.get(mindfil_total_characters_key))
     ret['cdp'] = round(cdp, 1)
+
+    # get K-Anonymity based Privacy Risk
+    display_status1 = list()
+    display_status2 = list()
+    attr_idx = [1,3,4,6,7,8]
+    key1_prefix = session['user_cookie'] + '-' + pair_num + '-1-'
+    key2_prefix = session['user_cookie'] + '-' + pair_num + '-2-'
+    for attr_i in attr_idx:
+        display_status1.append(r.get(key1_prefix + str(attr_i)))
+        display_status2.append(r.get(key2_prefix + str(attr_i)))
+
+    KAPR = dd.get_KAPR(pair_num, display_status1, display_status2)
+    ret['KAPR'] = KAPR
 
     return jsonify(ret)
 
