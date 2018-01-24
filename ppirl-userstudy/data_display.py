@@ -550,6 +550,7 @@ def get_icon_nameswap(n11, n12, n21, n22):
     else:
         return ''
 
+
 def get_icon_date(d1, d2, helper1, helper2):
     if not d1 or not d2:
         return ''
@@ -691,6 +692,7 @@ def get_character_disclosed_num(value):
             character_disclosed_num += 1
     return character_disclosed_num
 
+
 def get_total_characters_of_one_row(data):
     idx = [1, 3, 4, 6, 7, 8]
     count = 0
@@ -734,10 +736,11 @@ def get_KAPR1(dataset, data, display_status):
             count += 1
     K = count
 
-    M = 12 # Number of rows that need to be manually linked
+    M = 24 # Number of rows that need to be manually linked
     KAPRINC = (1.0/M)*(1.0/K)*P
 
     return KAPRINC
+
 
 def get_KAPR(dataset, pair_num, display_status1, display_status2):
     data1 = list()

@@ -224,13 +224,14 @@ def grade_pratice_full_mode(table_mode):
 @state_machine('show_record_linkage_task')
 def show_record_linkage_task():
     pairs = dl.load_data_from_csv('data/ppirl.csv')
+    total_characters = dd.get_total_characters(pairs)
+
+    pairs = pairs[0:12]
     pairs_formatted = dd.format_data(pairs, 'masked')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = dd.generate_icon(pairs)
     ids_list = dd.get_attribute_id(pairs)
     ids = zip(ids_list[0::2], ids_list[1::2])
-
-    total_characters = dd.get_total_characters(pairs)
 
     # percentage of character disclosure
     mindfil_total_characters_key = session['user_cookie'] + '_mindfil_total_characters'
@@ -389,9 +390,28 @@ def open_cell():
     overall_KAPR += KAPRINC
     r.incrbyfloat(KAPR_key, KAPRINC)
     ret['KAPR'] = round(100*overall_KAPR, 1)
-    print(ret['KAPR'])
 
     return jsonify(ret)
+
+
+@app.route('/record_linkage/next')
+def show_record_linkage_next():
+    pairs = dl.load_data_from_csv('data/ppirl.csv')
+    pairs = pairs[12:]
+    pairs_formatted = dd.format_data(pairs, 'masked')
+    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    icons = dd.generate_icon(pairs)
+    ids_list = dd.get_attribute_id(pairs)
+    ids = zip(ids_list[0::2], ids_list[1::2])
+
+    # set the user-display-status as masked for all cell
+    for id1 in ids_list:
+        for i in [1,3,4,6,7,8]:
+            key = session['user_cookie'] + '-' + id1[i]
+            r.set(key, 'M')
+
+    print('returning')
+    return render_template('record_linkage_next.html', data=data, icons=icons, ids=ids)
 
 
 @app.route('/select')

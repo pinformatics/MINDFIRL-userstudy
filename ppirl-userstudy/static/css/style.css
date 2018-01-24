@@ -104,7 +104,7 @@
     font-variant: normal;
     font-stretch: normal;
     font-size: 16px;
-    font-family: Consolas, monaco, monospace;
+    font-family: Consolas, monaco, monospace, Courier, Droid Sans Mono;
     font-weight: bold;
     text-align: center;
     overflow: hidden;

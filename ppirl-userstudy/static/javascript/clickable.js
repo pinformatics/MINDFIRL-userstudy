@@ -60,7 +60,7 @@ function get_cell_ajax(current_cell) {
     });
 }
 
-$(function() {
+function make_cell_clickable() {
     // mark the double missing cell as unclickable
     $('.clickable_cell').each(function() {
         if( this.children[0].innerHTML.indexOf('missing') != -1 && this.children[2].innerHTML.indexOf('missing') != -1 ) {
@@ -90,5 +90,9 @@ $(function() {
         this.classList.remove("clickable_big_cell");
         return false;
     });
+}
+
+$(function() {
+    make_cell_clickable();
 });
 
