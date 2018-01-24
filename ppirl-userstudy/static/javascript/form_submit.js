@@ -47,6 +47,38 @@ function make_cell_clickable() {
     });
 }
 
+function reset_choice_panel() {
+    var $options = $("li.input_radio");
+
+    $options.click(function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        $(this).parent().find("li.input_radio").removeClass("ion-android-radio-button-on");
+        $(this).parent().find("li.input_radio").addClass("ion-android-radio-button-off");
+        $(this).removeClass("ion-android-radio-button-off");
+        $(this).addClass("ion-android-radio-button-on");
+        var $selected_id = $(this).attr("id");
+        var $diff = $(this).parent().parent().find("li.diff");
+        var $same = $(this).parent().parent().find("li.same");
+        if($selected_id.indexOf("a1") > 0 || $selected_id.indexOf("a2") > 0 || $selected_id.indexOf("a3") > 0) {
+            $diff.css("border-color", "#CC0000");
+            $same.css("border-color", "transparent");
+        }
+        else {
+            $diff.css("border-color", "transparent");
+            $same.css("border-color", "#00cc00");
+        }
+
+        // save the user click data
+        $this_click = "user click: " + $selected_id;
+        var dt = new Date();
+        $click_time = "click time: " + dt.getHours() + "h" + dt.getMinutes() + "m" + dt.getSeconds() + "s";
+        $click_timestamp = "click timestamp: " + dt.getTime();
+        $data = [$this_click, $click_time, $click_timestamp].join()
+        $user_data += $data + ";";
+    });
+}
+
 /* 
     This function defines the behavior of the next button 
     1. post the user click data to server.
@@ -85,6 +117,7 @@ $(function() {
             success: function(data) {
                 $("#table_content").html(data);
                 make_cell_clickable();
+                reset_choice_panel();
                 $('#button_next_rl').css("display", "none");
                 $('#button_next').css("display", "inline");
             },
