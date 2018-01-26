@@ -19,8 +19,8 @@ app.config.from_object(__name__)
 Session(app)
 """
 
-#ENV = 'development'
-ENV = 'production'
+ENV = 'development'
+#ENV = 'production'
 
 
 CONFIG = {
@@ -50,6 +50,7 @@ if ENV == 'production':
     r = redis.from_url(os.environ.get("REDIS_URL"))
 elif ENV == 'development':
     r = redis.Redis(host='localhost', port=6379, db=0)
+
 
 DATASET = dl.load_data_from_csv('data/section2.csv')
 
@@ -249,7 +250,10 @@ def show_record_linkage_task():
             key = session['user_cookie'] + '-' + id1[i]
             r.set(key, 'M')
 
-    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 2: Minimum Necessary Disclosure For Interactive record Linkage', thisurl='/record_linkage', page_number=16)
+    # get the delta information
+    delta = dd.get_delta_for_dataset(pairs)
+
+    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 2: Minimum Necessary Disclosure For Interactive record Linkage', thisurl='/record_linkage', page_number=16, delta=delta)
 
 
 @app.route('/thankyou')
@@ -276,6 +280,7 @@ def open_cell():
     pair_num = str(id1.split('-')[0])
     attr_num = str(id1.split('-')[2])
 
+    # TODO: don't read database everytime.
     pair = dl.get_pair('data/ppirl.csv', pair_num)
     record1 = pair[0]
     record2 = pair[1]

@@ -743,6 +743,9 @@ def get_KAPR1(dataset, data, display_status):
 
 
 def get_KAPR(dataset, pair_num, display_status1, display_status2):
+    """
+    return the KAPR for a pair with its current display status.
+    """
     data1 = list()
     data2 = list()
     find_flag = False
@@ -757,6 +760,23 @@ def get_KAPR(dataset, pair_num, display_status1, display_status2):
     KAPR1 = get_KAPR1(dataset, data1, display_status1)
     KAPR2 = get_KAPR1(dataset, data2, display_status2)
     return KAPR1+KAPR2
+
+
+def get_delta_for_dataset(pairs):
+    """
+    return the delta for all possible next states.
+    """
+    ret = list()
+    attr_idx = [1,3,4,6,7,8]
+    for j in range(len(pairs)):
+        if j%2 == 1:
+            continue
+        row = pairs[j]
+        for i in attr_idx:
+            id = row[0] + '-1-' + str(i)
+            value = 5.5
+            ret.append((id, value))
+    return ret
 
 
 if __name__ == '__main__':

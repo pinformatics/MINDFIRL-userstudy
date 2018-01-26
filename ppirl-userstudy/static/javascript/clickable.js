@@ -56,6 +56,9 @@ function get_cell_ajax(current_cell) {
             var bar_style2 = 'width:' + data.KAPR + '%';
             $("#privacy-risk-bar").attr("style", bar_style2);
             $("#privacy-risk-value").html(data.KAPR + "%")
+            
+            $("#privacy-risk-delta").attr("style", 'width: 0%');
+            $("#privacy-risk-delta-value").html(" ")
         }
     });
 }
@@ -92,7 +95,21 @@ function make_cell_clickable() {
     });
 }
 
+function refresh_delta() {
+    $('.clickable_cell').hover(function() {
+        var id1 = this.children[0].getAttribute("id");
+        var d = $delta[id1];
+        var bar_style = 'width:' + d + '%';
+        $("#privacy-risk-delta").attr("style", bar_style);
+        $("#privacy-risk-delta-value").html(" + " + d + "%");
+    }, function() {
+        $("#privacy-risk-delta").attr("style", 'width: 0%');
+        $("#privacy-risk-delta-value").html(" ")
+    });
+}
+
 $(function() {
     make_cell_clickable();
+    refresh_delta();
 });
 
