@@ -251,7 +251,7 @@ def show_record_linkage_task():
             r.set(key, 'M')
 
     # get the delta information
-    delta = dd.get_delta_for_dataset(pairs)
+    delta = dd.get_delta_for_dataset(DATASET, pairs)
 
     return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 2: Minimum Necessary Disclosure For Interactive record Linkage', thisurl='/record_linkage', page_number=16, delta=delta)
 

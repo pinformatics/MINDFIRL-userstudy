@@ -745,6 +745,14 @@ def get_KAPR1(dataset, data, display_status):
 def get_KAPR(dataset, pair_num, display_status1, display_status2):
     """
     return the KAPR for a pair with its current display status.
+    input:
+        dataset - the whole dataset
+        pair_num - the pair number
+        display_status1 - the display status for the first row
+        dis_play_status2 - the display status for the second row
+    display status is a list of status, for example:
+    ['M', 'M', 'M', 'M', 'M', 'M'] is all masked display status.
+    TODO: these two display status should be the same?
     """
     data1 = list()
     data2 = list()
@@ -762,9 +770,12 @@ def get_KAPR(dataset, pair_num, display_status1, display_status2):
     return KAPR1+KAPR2
 
 
-def get_delta_for_dataset(pairs):
+def get_delta_for_dataset(dataset, pairs):
     """
-    return the delta for all possible next states.
+    return the delta for all possible next states for all data
+    input:
+        dataset - the whole dataset
+        pairs - the smaller dataset that need manually resolve
     """
     ret = list()
     attr_idx = [1,3,4,6,7,8]
@@ -772,10 +783,19 @@ def get_delta_for_dataset(pairs):
         if j%2 == 1:
             continue
         row = pairs[j]
+        row2 = pairs[j+1]
+        display_status = ['M', 'M', 'M', 'M', 'M', 'M']
+        iidx = 0
         for i in attr_idx:
             id = row[0] + '-1-' + str(i)
-            value = 5.5
-            ret.append((id, value))
+            display_status[iidx] = 'P'
+            KAPR = get_KAPR(dataset, row[0], display_status, display_status)
+            if KAPR == 0:
+                display_status[iidx] = 'F'
+                KAPR = get_KAPR(dataset, row[0], display_status, display_status)
+            ret.append((id, 100.0*KAPR))
+            display_status[iidx] = 'M'
+            iidx += 1
     return ret
 
 
