@@ -396,6 +396,10 @@ def open_cell():
     r.incrbyfloat(KAPR_key, KAPRINC)
     ret['KAPR'] = round(100*overall_KAPR, 1)
 
+    # refresh the delta of KAPR
+    new_delta_list = dd.next_possible_KAPR_delta(DATASET, pair_num, display_status1)
+    ret['new_delta'] = new_delta_list
+
     return jsonify(ret)
 
 
@@ -415,8 +419,20 @@ def show_record_linkage_next():
             key = session['user_cookie'] + '-' + id1[i]
             r.set(key, 'M')
 
-    print('returning')
-    return render_template('record_linkage_next.html', data=data, icons=icons, ids=ids)
+    # get the delta information
+    delta = dd.get_delta_for_dataset(DATASET, pairs)
+    # make delta to be a dict
+    delta_dict = dict()
+    for d in delta:
+        delta_dict[d[0]] = d[1]
+    print(delta_dict)
+
+    page_content = render_template('record_linkage_next.html', data=data, icons=icons, ids=ids)
+    ret = {
+        'delta': delta_dict,
+        'page_content': page_content
+    }
+    return jsonify(ret)
 
 
 @app.route('/select')

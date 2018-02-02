@@ -702,6 +702,9 @@ def get_total_characters_of_one_row(data):
 
 
 def get_KAPR1(dataset, data, display_status):
+    """
+    get KAPR value of one row
+    """
     col_list_F = [1, 3, 4, 6, 7, 8]
     col_list_P = [9, 10, 11, 12, 13, 14]
 
@@ -797,6 +800,33 @@ def get_delta_for_dataset(dataset, pairs):
             display_status[iidx] = 'M'
             iidx += 1
     return ret
+
+
+def next_possible_KAPR_delta(DATASET, pair_num, display_status1):
+    """
+    for the current display status, get all possible next KAPR delta.
+    """
+    current_KAPR = get_KAPR(DATASET, pair_num, display_status1, display_status1)
+    delta = list()
+    col = [1,3,4,6,7,8]
+    for i in range(6):
+        state = display_status1[i]
+        if display_status1[i] == 'M':
+            display_status1[i] = 'P'
+            next_KAPR = get_KAPR(DATASET, pair_num, display_status1, display_status1)
+            # TODO: dont compare float number
+            if current_KAPR - next_KAPR == 0:
+                display_status1[i] = 'F'
+                next_KAPR = get_KAPR(DATASET, pair_num, display_status1, display_status1)
+        elif display_status1[i] == 'P':
+            display_status1[i] = 'F'
+            next_KAPR = get_KAPR(DATASET, pair_num, display_status1, display_status1)
+        else:
+            next_KAPR = current_KAPR
+        id = str(pair_num) + '-1-' + str(col[i])
+        delta.append((id, 100.0*next_KAPR - 100.0*current_KAPR))
+        display_status1[i] = state
+    return delta
 
 
 if __name__ == '__main__':

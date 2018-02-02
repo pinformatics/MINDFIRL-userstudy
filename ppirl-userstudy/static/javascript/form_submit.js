@@ -47,6 +47,19 @@ function make_cell_clickable() {
     });
 }
 
+function refresh_delta() {
+    $('.clickable_cell').hover(function() {
+        var id1 = this.children[0].getAttribute("id");
+        var d = $DELTA[id1];
+        var bar_style = 'width:' + d + '%';
+        $("#privacy-risk-delta").attr("style", bar_style);
+        $("#privacy-risk-delta-value").html(" + " + d + "%");
+    }, function() {
+        $("#privacy-risk-delta").attr("style", 'width: 0%');
+        $("#privacy-risk-delta-value").html(" ")
+    });
+}
+
 function reset_choice_panel() {
     var $options = $("li.input_radio");
 
@@ -103,20 +116,16 @@ $(function() {
     $('#button_next_rl').bind('click', function() {
         $('#button_next_rl').attr("disabled", "disabled");
         post($SCRIPT_ROOT+'/save_data', $user_data, "post");
-        $.getJSON($SCRIPT_ROOT + $THIS_URL + '/next', {}, function(data) {
-            alert("get!")
-            $("#table_content").html("success.");
-            $('#button_next_rl').css("display", "none");
-            $('#button_next').css("display", "inline");
-        });
         $.ajax({
             url: $SCRIPT_ROOT + $THIS_URL + '/next',
             data: {},
             error: function() {},
-            dataType: 'text',
+            dataType: 'json',
             success: function(data) {
-                $("#table_content").html(data);
+                $DELTA = data['delta']
+                $("#table_content").html(data['page_content']);
                 make_cell_clickable();
+                refresh_delta();
                 reset_choice_panel();
                 $('#button_next_rl').css("display", "none");
                 $('#button_next').css("display", "inline");
