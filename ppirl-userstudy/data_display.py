@@ -781,24 +781,20 @@ def get_delta_for_dataset(dataset, pairs):
         pairs - the smaller dataset that need manually resolve
     """
     ret = list()
-    attr_idx = [1,3,4,6,7,8]
-    for j in range(len(pairs)):
-        if j%2 == 1:
-            continue
+    col = [1,3,4,6,7,8]
+    for j in range(0, len(pairs), 2):
         row = pairs[j]
         row2 = pairs[j+1]
         display_status = ['M', 'M', 'M', 'M', 'M', 'M']
-        iidx = 0
-        for i in attr_idx:
-            id = row[0] + '-1-' + str(i)
-            display_status[iidx] = 'P'
+        for i in range(6):
+            display_status[i] = 'P'
             KAPR = get_KAPR(dataset, row[0], display_status, display_status)
             if KAPR == 0:
-                display_status[iidx] = 'F'
+                display_status[i] = 'F'
                 KAPR = get_KAPR(dataset, row[0], display_status, display_status)
+            id = str(row[0]) + '-1-' + str(col[i])
             ret.append((id, 100.0*KAPR))
-            display_status[iidx] = 'M'
-            iidx += 1
+            display_status[i] = 'M'
     return ret
 
 
