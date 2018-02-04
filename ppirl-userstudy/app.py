@@ -1,15 +1,16 @@
 from flask import Flask, render_template, redirect, url_for, session, jsonify, request, g
-#from flask.ext.session import Session
 from functools import wraps
 import time
 from random import *
-import data_loader as dl
-import data_display as dd
 import json
 import hashlib
 import collections
 import os
 import redis
+import logging
+import data_loader as dl
+import data_display as dd
+import data_model as dm
 
 
 app = Flask(__name__)
@@ -19,8 +20,8 @@ app.config.from_object(__name__)
 Session(app)
 """
 
-#ENV = 'development'
-ENV = 'production'
+ENV = 'development'
+#ENV = 'production'
 
 
 CONFIG = {
@@ -53,6 +54,7 @@ elif ENV == 'development':
 
 
 DATASET = dl.load_data_from_csv('data/section2.csv')
+DATA_PAIR_LIST = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/ppirl.csv'))
 
 
 def state_machine(function_name):
@@ -224,21 +226,23 @@ def grade_pratice_full_mode(table_mode):
 @app.route('/record_linkage')
 @state_machine('show_record_linkage_task')
 def show_record_linkage_task():
-    pairs = dl.load_data_from_csv('data/ppirl.csv')
-    total_characters = dd.get_total_characters(pairs)
+    #pairs = dl.load_data_from_csv('data/ppirl.csv')
+    #total_characters = dd.get_total_characters(pairs)
+    #pairs = pairs[0:12]
 
-    pairs = pairs[0:12]
-    pairs_formatted = dd.format_data(pairs, 'masked')
+    pairs_formatted = DATA_PAIR_LIST.get_data_display('masked')[0:12]
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
-    icons = dd.generate_icon(pairs)
-    ids_list = dd.get_attribute_id(pairs)
+    icons = DATA_PAIR_LIST.get_icons()[0:6]
+    ids_list = DATA_PAIR_LIST.get_ids()[0:12]
     ids = zip(ids_list[0::2], ids_list[1::2])
 
     # percentage of character disclosure
+    """
     mindfil_total_characters_key = session['user_cookie'] + '_mindfil_total_characters'
     r.set(mindfil_total_characters_key, total_characters)
     mindfil_disclosed_characters_key = session['user_cookie'] + '_mindfil_disclosed_characters'
     r.set(mindfil_disclosed_characters_key, 0)
+    """
 
     # KAPR - K-Anonymity privacy risk
     KAPR_key = session['user_cookie'] + '_KAPR'
@@ -246,12 +250,12 @@ def show_record_linkage_task():
 
     # set the user-display-status as masked for all cell
     for id1 in ids_list:
-        for i in [1,3,4,6,7,8]:
+        for i in range(6):
             key = session['user_cookie'] + '-' + id1[i]
             r.set(key, 'M')
 
     # get the delta information
-    delta = dd.get_delta_for_dataset(DATASET, pairs)
+    delta = dm.get_delta_for_dataset(DATASET, DATA_PAIR_LIST.get_raw_data()[0:12])
 
     return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 2: Minimum Necessary Disclosure For Interactive record Linkage', thisurl='/record_linkage', page_number=16, delta=delta)
 
@@ -280,61 +284,26 @@ def open_cell():
     pair_num = str(id1.split('-')[0])
     attr_num = str(id1.split('-')[2])
 
-    # TODO: don't read database everytime.
-    pair = dl.get_pair('data/ppirl.csv', pair_num)
-    record1 = pair[0]
-    record2 = pair[1]
- 
-    attr1 = record1[int(attr_num)]
-    attr2 = record2[int(attr_num)]
+    pair_id = int(pair_num)
+    attr_id = int(attr_num)
+
+    pair = DATA_PAIR_LIST.get_data_pair(pair_id)
+    attr = pair.get_attributes(attr_id)
+    attr1 = attr[0]
+    attr2 = attr[1]
+    helper = pair.get_helpers(attr_id)
+    helper1 = helper[0]
+    helper2 = helper[1]
 
     if mode == 'full':
         return jsonify({"value1": attr1, "value2": attr2, "mode": "full"})
 
-    if attr_num == '1':
-        # id
-        helper1 = record1[9]
-        helper2 = record2[9]
-        get_display = dd.get_string_display
-    elif attr_num == '3':
-        # first name
-        helper1 = record1[10]
-        helper2 = record2[10]
-        get_display = dd.get_string_display
-    elif attr_num == '4':
-        # last name
-        helper1 = record1[11]
-        helper2 = record2[11]
-        get_display = dd.get_string_display
-    elif attr_num == '6':
-        # DoB
-        helper1 = record1[12]
-        helper2 = record2[12]
-        get_display = dd.get_date_display
-    elif attr_num == '7':
-        # sex
-        helper1 = record1[13]
-        helper2 = record2[13]
-        get_display = dd.get_character_display
-    elif attr_num == '8':
-        # race
-        helper1 = record1[14]
-        helper2 = record2[14]
-        get_display = dd.get_character_display
+    attr_display_next = pair.get_next_display(attr_id = attr_id, attr_mode = mode)
+    ret = {"value1": attr_display_next[1][0], "value2": attr_display_next[1][1], "mode": attr_display_next[0]}
 
-    attr_full = get_display(attr1=attr1, attr2=attr2, helper1=helper1, helper2=helper2, attribute_mode='full')
-    attr_partial = get_display(attr1=attr1, attr2=attr2, helper1=helper1, helper2=helper2, attribute_mode='partial')
-    attr_masked = get_display(attr1=attr1, attr2=attr2, helper1=helper1, helper2=helper2, attribute_mode='masked')
+    # TODO: assert the mode is consistent with the display_mode in redis
 
-    ret = dict()
-    if mode == 'masked':
-        if(attr_partial[0] == attr_masked[0] and attr_partial[1] == attr_masked[1]):
-            ret = {"value1": attr_full[0], "value2": attr_full[1], "mode": "full"}
-        else:
-            ret = {"value1": attr_partial[0], "value2": attr_partial[1], "mode": "partial"}
-    elif mode == 'partial':
-        ret = {"value1": attr_full[0], "value2": attr_full[1], "mode": "full"}
-
+    """ no character disclosed percentage now
     # get character disclosed percentage
     cdp_previous_attr1 = 0
     cdp_previous_attr2 = 0
@@ -355,15 +324,14 @@ def open_cell():
     mindfil_total_characters_key = session['user_cookie'] + '_mindfil_total_characters'
     cdp = 100.0*int(r.get(mindfil_disclosed_characters_key))/int(r.get(mindfil_total_characters_key))
     ret['cdp'] = round(cdp, 1)
-    print('cdp is: ' + str(cdp))
+    """
 
     # get K-Anonymity based Privacy Risk
     old_display_status1 = list()
     old_display_status2 = list()
-    attr_idx = [1,3,4,6,7,8]
     key1_prefix = session['user_cookie'] + '-' + pair_num + '-1-'
     key2_prefix = session['user_cookie'] + '-' + pair_num + '-2-'
-    for attr_i in attr_idx:
+    for attr_i in range(6):
         old_display_status1.append(r.get(key1_prefix + str(attr_i)))
         old_display_status2.append(r.get(key2_prefix + str(attr_i)))
 
@@ -378,17 +346,18 @@ def open_cell():
         r.set(key2, 'P')
     else:
         print("Error: invalid display status.")
+        logging.error('Error: invalid display status.')
 
     display_status1 = list()
     display_status2 = list()
     key1_prefix = session['user_cookie'] + '-' + pair_num + '-1-'
     key2_prefix = session['user_cookie'] + '-' + pair_num + '-2-'
-    for attr_i in attr_idx:
+    for attr_i in range(6):
         display_status1.append(r.get(key1_prefix + str(attr_i)))
         display_status2.append(r.get(key2_prefix + str(attr_i)))
 
-    old_KAPR = dd.get_KAPR(DATASET, pair_num, old_display_status1, old_display_status2)
-    KAPR = dd.get_KAPR(DATASET, pair_num, display_status1, display_status2)
+    old_KAPR = dm.get_KAPR(DATASET, pair_num, old_display_status1, old_display_status2)
+    KAPR = dm.get_KAPR(DATASET, pair_num, display_status1, display_status2)
     KAPRINC = KAPR - old_KAPR
     KAPR_key = session['user_cookie'] + '_KAPR'
     overall_KAPR = float(r.get(KAPR_key))
@@ -397,7 +366,7 @@ def open_cell():
     ret['KAPR'] = round(100*overall_KAPR, 1)
 
     # refresh the delta of KAPR
-    new_delta_list = dd.next_possible_KAPR_delta(DATASET, pair_num, display_status1)
+    new_delta_list = dm.next_possible_KAPR_delta(DATASET, pair_num, display_status1)
     ret['new_delta'] = new_delta_list
 
     return jsonify(ret)
@@ -405,27 +374,26 @@ def open_cell():
 
 @app.route('/record_linkage/next')
 def show_record_linkage_next():
-    pairs = dl.load_data_from_csv('data/ppirl.csv')
-    pairs = pairs[12:]
-    pairs_formatted = dd.format_data(pairs, 'masked')
+    pairs_formatted = DATA_PAIR_LIST.get_data_display('masked')[12:]
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
-    icons = dd.generate_icon(pairs)
-    ids_list = dd.get_attribute_id(pairs)
+    icons = DATA_PAIR_LIST.get_icons()[6:]
+    ids_list = DATA_PAIR_LIST.get_ids()[12:]
     ids = zip(ids_list[0::2], ids_list[1::2])
 
     # set the user-display-status as masked for all cell
     for id1 in ids_list:
-        for i in [1,3,4,6,7,8]:
+        for i in range(6):
             key = session['user_cookie'] + '-' + id1[i]
             r.set(key, 'M')
 
     # get the delta information
-    delta = dd.get_delta_for_dataset(DATASET, pairs)
+    delta = dm.get_delta_for_dataset(DATASET, DATA_PAIR_LIST.get_raw_data()[12:])
     # make delta to be a dict
     delta_dict = dict()
     for d in delta:
         delta_dict[d[0]] = d[1]
-    print(delta_dict)
+
+    print(icons)
 
     page_content = render_template('record_linkage_next.html', data=data, icons=icons, ids=ids)
     ret = {
