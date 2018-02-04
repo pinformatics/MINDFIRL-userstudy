@@ -19,12 +19,12 @@ $(document).ready(function(){
         var $diff = $(this).parent().parent().find("li.diff");
         var $same = $(this).parent().parent().find("li.same");
         if($selected_id.indexOf("a1") > 0 || $selected_id.indexOf("a2") > 0 || $selected_id.indexOf("a3") > 0) {
-            $diff.css("border-color", "#CC0000");
+            $diff.css("border-color", "#30819c");
             $same.css("border-color", "transparent");
         }
         else {
             $diff.css("border-color", "transparent");
-            $same.css("border-color", "#00cc00");
+            $same.css("border-color", "#30819c");
         }
 
         // save the user click data

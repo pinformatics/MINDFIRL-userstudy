@@ -15,7 +15,7 @@ def load_data_from_csv(filename):
 
 def save_data_to_json(filename, data):
     fileout = open(filename, 'w+')
-    fileout.write(json.dumps(data, ensure_ascii=False))
+    fileout.write(data)
     fileout.close()
 
 

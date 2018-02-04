@@ -74,12 +74,11 @@ def state_machine(function_name):
 @app.route('/')
 def show_record_linkages():
     session['user_cookie'] = hashlib.sha224("salt12138" + str(time.time()) + '.' + str(randint(1,10000))).hexdigest()
-    session['data'] = dict()
-    session['data']['practice'] = ''
-    session['data']['start_time'] = time.time()
+    print(session['user_cookie'])
+    user_data_key = session['user_cookie'] + '_user_data'
+    r.set(user_data_key, 'Session start time: ' + str(time.time()) + ';\n')
 
     return redirect(url_for('show_introduction'))
-    #return render_template('record_linkage.html')
 
 
 @app.route('/introduction')
@@ -263,16 +262,19 @@ def show_record_linkage_task():
 @app.route('/thankyou')
 @state_machine('show_thankyou')
 def show_thankyou():
-    session['data']['end_time'] = time.time()
-    dl.save_data_to_json('data/saved/'+str(session['user_cookie'])+'.json', session['data'])
+    user_data_key = session['user_cookie'] + '_user_data'
+    r.append(user_data_key, 'Session end time: '+str(time.time())+';\n')
+    user_data = r.get(user_data_key)
+    dl.save_data_to_json('data/saved/'+str(session['user_cookie'])+'.json', user_data)
     return render_template('thankyou.html')
 
 
 @app.route('/save_data', methods=['GET', 'POST'])
 def save_data():
-    #print(request.form['user_data'])
-    session['data']['practice'] = session['data']['practice'] + request.form['user_data']
-    return ''
+    user_data = request.form['user_data']
+    user_data_key = session['user_cookie'] + '_user_data'
+    r.append(user_data_key, user_data+'\n')
+    return 'data_saved.'
 
 
 @app.route('/get_cell', methods=['GET', 'POST'])
@@ -420,6 +422,13 @@ def next():
     session['state'] += 1
 
     return redirect(url_for(sequence[state]))
+
+
+@app.route('/pull_data')
+def pull_data():
+    user_data_key = session['user_cookie'] + '_user_data'
+    user_data = r.get(user_data_key)
+    return user_data
 
 
 app.secret_key = 'a9%z$/`9h8FMnh893;*g783'
