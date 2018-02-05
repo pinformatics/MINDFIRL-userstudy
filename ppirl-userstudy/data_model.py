@@ -453,7 +453,14 @@ def get_delta_for_dataset(dataset, pairs):
 def next_possible_KAPR_delta(DATASET, pair_num, display_status1):
     """
     for the current display status, get all possible next KAPR delta.
+
+    Note: cannot use next_KAPR - KAPR == 0 to decide if an attribute has partial mode or not. Why?
+          because the k is different, if the attribute mode is P, then it will use the helper to 
+          calculate k (inherently use the length of the string), and the k is different.
     """
+    print('display_status: ')
+    print(display_status1)
+
     current_KAPR = get_KAPR(DATASET, pair_num, display_status1, display_status1)
     delta = list()
     for i in range(6):
@@ -472,5 +479,79 @@ def next_possible_KAPR_delta(DATASET, pair_num, display_status1):
             next_KAPR = current_KAPR
         id = str(pair_num) + '-1-' + str(i)
         delta.append((id, 100.0*next_KAPR - 100.0*current_KAPR))
+
+        if i == 2:
+            print('display status:')
+            print(display_status1)
+            print('id: ' + id)
+            print('current kapr: ' + str(100.0*current_KAPR))
+            print('next kapr: ' + str(100.0*next_KAPR))
+
         display_status1[i] = state
+
     return delta
+
+
+def get_KAPR_for_dp(dataset, data_pair, display_status):
+    """
+    return the K-Anonymity based Privacy Risk for a data pair at its current display status.
+    Input:
+        dataset - the whole dataset
+        data_pair - DataPair object
+        display_status - display status is a list of status, for example:
+                         ['M', 'M', 'M', 'M', 'M', 'M'] is all masked display status.
+    """
+    # calculating P
+    character_disclosed_num1 = 0
+    character_disclosed_num2 = 0
+    for j in range(6):
+        character_disclosed_num1 += data_pair.get_character_disclosed_num(1, j, display_status[j])
+        character_disclosed_num2 += data_pair.get_character_disclosed_num(2, j, display_status[j])
+
+    total_characters1 = data_pair.get_total_characters(1)
+    total_characters2 = data_pair.get_total_characters(2)
+
+    P1 = 1.0*character_disclosed_num1 / total_characters1
+    P1 = 1.0*character_disclosed_num2 / total_characters2
+
+    # calculating K
+    col_list_F = [1, 3, 4, 6, 7, 8]
+    col_list_P = [9, 10, 11, 12, 13, 14]
+    K1 = 0
+    K2 = 0
+    for i in range(len(dataset)):
+        match_flag = True
+        for j in range(6):
+            if display_status[j] == 'F':
+                col = col_list_F[j]
+            elif display_status[j] == 'P':
+                col = col_list_P[j]
+            else:
+                continue
+            if dataset[i][col] != data_pair.get_data_raw(1, col):
+                match_flag = False
+                break
+        if match_flag:
+            K1 += 1
+
+    for i in range(len(dataset)):
+        match_flag = True
+        for j in range(6):
+            if display_status[j] == 'F':
+                col = col_list_F[j]
+            elif display_status[j] == 'P':
+                col = col_list_P[j]
+            else:
+                continue
+            if dataset[i][col] != data_pair.get_data_raw(2, col):
+                match_flag = False
+                break
+        if match_flag:
+            K2 += 1
+
+    M = 24 # Number of rows that need to be manually linked
+    KAPR1 = (1.0/M)*(1.0/K1)*P1
+    KAPR2 = (1.0/M)*(1.0/K2)*P2
+    KAPR = KAPR1 + KAPR2
+
+    return KAPR
