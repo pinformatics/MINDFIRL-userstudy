@@ -206,18 +206,18 @@ class DataPair(object):
         return [self._data1_helpers[i], self._data2_helpers[i]]
 
     def get_next_display(self, attr_id, attr_mode):
-        if attr_mode not in ['full', 'partial', 'masked']:
+        if attr_mode not in ['full', 'partial', 'masked', 'F', 'P', 'M']:
             logging.error('Error: unsupported attribute display mode.')
 
         ret = list()
-        if attr_mode == 'masked':
+        if attr_mode == 'masked' or attr_mode == 'M':
             if self._data1_attributes_partial[attr_id] is not None:
                 ret = ['partial', [self._data1_attributes_partial[attr_id], self._data2_attributes_partial[attr_id]]]
             else:
                 ret = ['full', [self._data1_attributes_full[attr_id], self._data2_attributes_full[attr_id]]]
-        elif attr_mode == 'partial':
+        elif attr_mode == 'partial' or attr_mode == 'P':
             ret = ['full', [self._data1_attributes_full[attr_id], self._data2_attributes_full[attr_id]]]
-        elif attr_mode == 'full':
+        elif attr_mode == 'full' or attr_mode == 'F':
             logging.warning('Warning: there is no next display for full attribute mode.')
             ret = ['full', [self._data1_attributes_full[attr_id], self._data2_attributes_full[attr_id]]]
         return ret
@@ -227,6 +227,66 @@ class DataPair(object):
         id1_list = [str(self._pair_num)+'-1-'+str(i) for i in range(6)]
         id2_list = [str(self._pair_num)+'-2-'+str(i) for i in range(6)]
         return [id1_list, id2_list]
+
+
+    def _get_character_disclosed_num(self, value):
+        character_disclosed_num = 0
+        for c in value:
+            if c not in ['*', '_', '/']:
+                character_disclosed_num += 1
+        return character_disclosed_num
+
+
+    def get_character_disclosed_num(self, row_number, j, display_status):
+        """
+        get the current character disclosed number for attribute j, at its display status
+        input:
+            row_number - 1 or 2
+            j - attribute j
+            display_status - 'M', 'P', or 'F'
+        """
+        value = ''
+        if display_status == 'M':
+            return 0
+        elif display_status == 'F':
+            if row_number == 1:
+                value = self._data1_attributes[j]
+            else:
+                value = self._data2_attributes[j]
+        elif display_status == 'P':
+            if row_number == 1:
+                value = self._data1_helpers[j]
+            else:
+                value = self._data2_helpers[j]
+        else:
+            logging.error('Error: unsupported display status.')
+            return 0
+
+        return self._get_character_disclosed_num(value)
+
+
+    def get_total_characters(self, row_number):
+        """
+        get the total character number of the row number
+        """
+        total = 0
+        attributes = self._data1_attributes
+        if row_number == 2:
+            attributes = self._data2_attributes
+        for value in attributes:
+            total += self._get_character_disclosed_num(value)
+        return total
+
+
+    def get_data_raw(self, row_number, col):
+        if row_number == 1:
+            data = self._data1_raw
+        else:
+            data = self._data2_raw
+        if col < 0 or col >= len(data):
+            logging.error('Error: index out of range.')
+            return ''
+        return data[col]
 
 
 class DataPairList(object):
@@ -281,6 +341,12 @@ class DataPairList(object):
         if pair_num not in self._id_hash:
             logging.warning('Warning: no data pair for the pair_num: ' + str(pair_num))
         return self._data[self._id_hash[pair_num]]
+
+
+    def get_data_pair_by_index(self, index):
+        if index < 0 or index >= len(self._data):
+            logging.error('Error: index out of range')
+        return self._data[index]
 
 
     def get_data_display(self, data_mode):
@@ -512,7 +578,7 @@ def get_KAPR_for_dp(dataset, data_pair, display_status):
     total_characters2 = data_pair.get_total_characters(2)
 
     P1 = 1.0*character_disclosed_num1 / total_characters1
-    P1 = 1.0*character_disclosed_num2 / total_characters2
+    P2 = 1.0*character_disclosed_num2 / total_characters2
 
     # calculating K
     col_list_F = [1, 3, 4, 6, 7, 8]
@@ -555,3 +621,29 @@ def get_KAPR_for_dp(dataset, data_pair, display_status):
     KAPR = KAPR1 + KAPR2
 
     return KAPR
+
+
+def KAPR_delta(DATASET, data_pair, display_status):
+    """
+    for the current display status, get all possible next KAPR delta.
+
+    Note: cannot use next_KAPR - KAPR == 0 to decide if an attribute has partial mode or not. Why?
+          because the k is different, if the attribute mode is P, then it will use the helper to 
+          calculate k (inherently use the length of the string), and the k is different.
+    """
+    delta = list()
+    current_KAPR = get_KAPR_for_dp(DATASET, data_pair, display_status)
+    for i in range(6):
+        state = display_status[i]
+        next_display = data_pair.get_next_display(i, state)
+        if next_display[0] == 'full':
+            display_status[i] = 'F'
+        elif next_display[0] == 'partial':
+            display_status[i] = 'P'
+        else:
+            logging.error('Error: wrong attribute display mode returned.')
+        next_KAPR = get_KAPR_for_dp(DATASET, data_pair, display_status)
+        id = data_pair.get_ids()[0][i]
+        delta.append((id, 100.0*next_KAPR - 100.0*current_KAPR))
+        display_status[i] = state
+    return delta

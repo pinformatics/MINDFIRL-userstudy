@@ -20,8 +20,8 @@ app.config.from_object(__name__)
 Session(app)
 """
 
-ENV = 'development'
-#ENV = 'production'
+#ENV = 'development'
+ENV = 'production'
 
 
 CONFIG = {
@@ -254,7 +254,10 @@ def show_record_linkage_task():
             r.set(key, 'M')
 
     # get the delta information
-    delta = dm.get_delta_for_dataset(DATASET, DATA_PAIR_LIST.get_raw_data()[0:12])
+    delta = list()
+    for i in range(6):
+        data_pair = DATA_PAIR_LIST.get_data_pair_by_index(i)
+        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'])
 
     return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 2: Minimum Necessary Disclosure For Interactive record Linkage', thisurl='/record_linkage', page_number=16, delta=delta)
 
@@ -358,8 +361,8 @@ def open_cell():
         display_status1.append(r.get(key1_prefix + str(attr_i)))
         display_status2.append(r.get(key2_prefix + str(attr_i)))
 
-    old_KAPR = dm.get_KAPR(DATASET, pair_num, old_display_status1, old_display_status2)
-    KAPR = dm.get_KAPR(DATASET, pair_num, display_status1, display_status2)
+    old_KAPR = dm.get_KAPR_for_dp(DATASET, pair, old_display_status1)
+    KAPR = dm.get_KAPR_for_dp(DATASET, pair, display_status1)
     KAPRINC = KAPR - old_KAPR
     KAPR_key = session['user_cookie'] + '_KAPR'
     overall_KAPR = float(r.get(KAPR_key))
@@ -368,7 +371,7 @@ def open_cell():
     ret['KAPR'] = round(100*overall_KAPR, 1)
 
     # refresh the delta of KAPR
-    new_delta_list = dm.next_possible_KAPR_delta(DATASET, pair_num, display_status1)
+    new_delta_list = dm.KAPR_delta(DATASET, pair, display_status1)
     ret['new_delta'] = new_delta_list
 
     return jsonify(ret)
@@ -389,7 +392,11 @@ def show_record_linkage_next():
             r.set(key, 'M')
 
     # get the delta information
-    delta = dm.get_delta_for_dataset(DATASET, DATA_PAIR_LIST.get_raw_data()[12:])
+    #delta = dm.get_delta_for_dataset(DATASET, DATA_PAIR_LIST.get_raw_data()[12:])
+    delta = list()
+    for i in range(6, 12):
+        data_pair = DATA_PAIR_LIST.get_data_pair_by_index(i)
+        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'])
     # make delta to be a dict
     delta_dict = dict()
     for d in delta:
