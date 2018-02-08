@@ -13,6 +13,14 @@
         <script src="../static/javascript/bootstrap.min.js"></script>
         <script src="../static/javascript/instructions.js"></script>
         <script src="../static/javascript/site.js"></script>
+        <script type=text/javascript>
+            $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+            $(function() {
+                $('#get_data').bind('click', function() {
+                    window.location.href = $SCRIPT_ROOT + "/pull_data";
+                });
+            });
+        </script>
     </head>
 
     <body>
@@ -29,7 +37,10 @@ I hope you enjoyed doing the tutorial.<br/>
 <br/>
 Having good data is a requirement for generating good information from it to support good evidence based decisions. Balancing high quality record linkage to support good evidence based research requires hitting the sweet spot in balancing patient privacy and sharing just the right amount of information needed for good record linkage decisions.<br/>
 <br/>
-We hope you got a glimpse of what it takes to hit the sweet spot.
+We hope you got a glimpse of what it takes to hit the sweet spot.<br/>
+                </div>
+                <div>
+                    <button id="get_data">Get data</button>
                 </div>
             </div>
         </div>
