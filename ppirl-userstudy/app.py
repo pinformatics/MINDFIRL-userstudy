@@ -20,8 +20,8 @@ app.config.from_object(__name__)
 Session(app)
 """
 
-#ENV = 'development'
-ENV = 'production'
+ENV = 'development'
+#ENV = 'production'
 
 
 CONFIG = {
@@ -73,12 +73,7 @@ def state_machine(function_name):
 
 @app.route('/')
 def show_record_linkages():
-    session['user_cookie'] = hashlib.sha224("salt12138" + str(time.time()) + '.' + str(randint(1,10000))).hexdigest()
-    print(session['user_cookie'])
-    user_data_key = session['user_cookie'] + '_user_data'
-    r.set(user_data_key, 'Session start time: ' + str(time.time()) + ';\n')
-
-    return redirect(url_for('show_introduction'))
+    return redirect(url_for('post_survey'))
 
 
 @app.route('/introduction')
@@ -402,8 +397,6 @@ def show_record_linkage_next():
     for d in delta:
         delta_dict[d[0]] = d[1]
 
-    print(icons)
-
     page_content = render_template('record_linkage_next.html', data=data, icons=icons, ids=ids)
     ret = {
         'delta': delta_dict,
@@ -436,6 +429,45 @@ def pull_data():
     user_data_key = session['user_cookie'] + '_user_data'
     user_data = r.get(user_data_key)
     return user_data
+
+
+@app.route('/post_survey')
+def post_survey():
+    #pairs = dl.load_data_from_csv('data/ppirl.csv')
+    #total_characters = dd.get_total_characters(pairs)
+    #pairs = pairs[0:12]
+
+    pairs_formatted = DATA_PAIR_LIST.get_data_display('masked')[0:10]
+    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    icons = DATA_PAIR_LIST.get_icons()[0:5]
+    ids_list = DATA_PAIR_LIST.get_ids()[0:10]
+    ids = zip(ids_list[0::2], ids_list[1::2])
+
+    # percentage of character disclosure
+    """
+    mindfil_total_characters_key = session['user_cookie'] + '_mindfil_total_characters'
+    r.set(mindfil_total_characters_key, total_characters)
+    mindfil_disclosed_characters_key = session['user_cookie'] + '_mindfil_disclosed_characters'
+    r.set(mindfil_disclosed_characters_key, 0)
+    """
+
+    # KAPR - K-Anonymity privacy risk
+    KAPR_key = session['user_cookie'] + '_KAPR'
+    r.set(KAPR_key, 0)
+
+    # set the user-display-status as masked for all cell
+    for id1 in ids_list:
+        for i in range(5):
+            key = session['user_cookie'] + '-' + id1[i]
+            r.set(key, 'M')
+
+    # get the delta information
+    delta = list()
+    for i in range(5):
+        data_pair = DATA_PAIR_LIST.get_data_pair_by_index(i)
+        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'])
+
+    return render_template('post_survey.html', data=data, icons=icons, ids=ids, title='Section 2: Minimum Necessary Disclosure For Interactive record Linkage', thisurl='/record_linkage', page_number=16, delta=delta)
 
 
 app.secret_key = 'a9%z$/`9h8FMnh893;*g783'
