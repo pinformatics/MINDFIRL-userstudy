@@ -11,48 +11,19 @@ import logging
 import data_loader as dl
 import data_display as dd
 import data_model as dm
+import config
 
 
 app = Flask(__name__)
-"""
-SESSION_TYPE = 'redis'
-app.config.from_object(__name__)
-Session(app)
-"""
-
-#ENV = 'development'
-ENV = 'production'
 
 
-CONFIG = {
-    'sequence': [
-        'show_introduction',
-        'show_introduction2',
-        'show_RL_tutorial',
-        'show_instruction_base_mode',
-        'show_pratice_base_mode',
-        'show_instruction_full_mode',
-        'show_pratice_full_mode',
-        'show_privacy_in_RL',
-        'show_instruction_masked_mode',
-        'show_pratice_masked_mode',
-        'show_instruction_minimum_mode',
-        'show_pratice_minimum_mode',
-        'show_instruction_moderate_mode',
-        'show_pratice_moderate_mode',
-        'show_instruction_ppirl',
-        'show_record_linkage_task',
-        'show_thankyou'
-    ]
-}
-
-
-if ENV == 'production':
+if config.ENV == 'production':
     r = redis.from_url(os.environ.get("REDIS_URL"))
-elif ENV == 'development':
+elif config.ENV == 'development':
     r = redis.Redis(host='localhost', port=6379, db=0)
 
 
+# global data, this should be common across all users, not affected by multiple process
 DATASET = dl.load_data_from_csv('data/section2.csv')
 DATA_PAIR_LIST = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/ppirl.csv'))
 
@@ -61,7 +32,7 @@ def state_machine(function_name):
     def wrapper(f):
         @wraps(f)
         def inner_wrapper(*args, **kwargs):
-            sequence = CONFIG['sequence']
+            sequence = config.SEQUENCE
             for i in range(len(sequence)):
                 if sequence[i] == function_name:
                     session['state'] = i
@@ -229,10 +200,13 @@ def show_record_linkage_task():
     #total_characters = dd.get_total_characters(pairs)
     #pairs = pairs[0:12]
 
-    pairs_formatted = DATA_PAIR_LIST.get_data_display('masked')[0:12]
+    dp_size = config.DATA_PAIR_PER_PAGE
+    attribute_size = 6
+
+    pairs_formatted = DATA_PAIR_LIST.get_data_display('masked')[0:2*dp_size]
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
-    icons = DATA_PAIR_LIST.get_icons()[0:6]
-    ids_list = DATA_PAIR_LIST.get_ids()[0:12]
+    icons = DATA_PAIR_LIST.get_icons()[0:dp_size]
+    ids_list = DATA_PAIR_LIST.get_ids()[0:2*dp_size]
     ids = zip(ids_list[0::2], ids_list[1::2])
 
     # percentage of character disclosure
@@ -249,13 +223,13 @@ def show_record_linkage_task():
 
     # set the user-display-status as masked for all cell
     for id1 in ids_list:
-        for i in range(6):
+        for i in range(attribute_size):
             key = session['user_cookie'] + '-' + id1[i]
             r.set(key, 'M')
 
     # get the delta information
     delta = list()
-    for i in range(6):
+    for i in range(dp_size):
         data_pair = DATA_PAIR_LIST.get_data_pair_by_index(i)
         delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'])
 
@@ -424,7 +398,7 @@ def test():
 
 @app.route('/next', methods=['GET', 'POST'])
 def next():
-    sequence = CONFIG['sequence']
+    sequence = config.SEQUENCE
     state = session['state'] + 1
     session['state'] += 1
 
