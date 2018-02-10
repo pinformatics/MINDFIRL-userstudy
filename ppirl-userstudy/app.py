@@ -236,12 +236,12 @@ def show_record_linkage_task():
     ids = zip(ids_list[0::2], ids_list[1::2])
 
     # percentage of character disclosure
-    """
+    total_characters = DATA_PAIR_LIST.get_total_characters()
     mindfil_total_characters_key = session['user_cookie'] + '_mindfil_total_characters'
     r.set(mindfil_total_characters_key, total_characters)
     mindfil_disclosed_characters_key = session['user_cookie'] + '_mindfil_disclosed_characters'
     r.set(mindfil_disclosed_characters_key, 0)
-    """
+
 
     # KAPR - K-Anonymity privacy risk
     KAPR_key = session['user_cookie'] + '_KAPR'
@@ -255,11 +255,13 @@ def show_record_linkage_task():
 
     # get the delta information
     delta = list()
+    delta_cdp = list()
     for i in range(6):
         data_pair = DATA_PAIR_LIST.get_data_pair_by_index(i)
         delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'])
+        delta_cdp += dm.cdp_delta(data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 0, total_characters)
 
-    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 2: Minimum Necessary Disclosure For Interactive record Linkage', thisurl='/record_linkage', page_number=16, delta=delta)
+    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 2: Minimum Necessary Disclosure For Interactive record Linkage', thisurl='/record_linkage', page_number=16, delta=delta, delta_cdp=delta_cdp)
 
 
 @app.route('/thankyou')
@@ -308,28 +310,16 @@ def open_cell():
 
     # TODO: assert the mode is consistent with the display_mode in redis
 
-    """ no character disclosed percentage now
     # get character disclosed percentage
-    cdp_previous_attr1 = 0
-    cdp_previous_attr2 = 0
-    if mode == 'partial':
-        cdp_previous_attr1 = dd.get_character_disclosed_num(helper1)
-        cdp_previous_attr2 = dd.get_character_disclosed_num(helper2)
-
-    cdp_post_attr1 = len(attr1)
-    cdp_post_attr2 = len(attr2)
-    if ret['mode'] == 'partial':
-        cdp_post_attr1 = dd.get_character_disclosed_num(helper1)
-        cdp_post_attr2 = dd.get_character_disclosed_num(helper2)
-    cdp_increment = (cdp_post_attr1 - cdp_previous_attr1) + (cdp_post_attr2 - cdp_previous_attr2)
-
+    cdp_previous = pair.get_character_disclosed_num(1, attr_id, mode) + pair.get_character_disclosed_num(2, attr_id, mode)
+    cdp_post = pair.get_character_disclosed_num(1, attr_id, ret['mode']) + pair.get_character_disclosed_num(2, attr_id, ret['mode'])
+    cdp_increment = cdp_post - cdp_previous
     # atom operation! updating character disclosed percentage
     mindfil_disclosed_characters_key = session['user_cookie'] + '_mindfil_disclosed_characters'
     r.incrby(mindfil_disclosed_characters_key, cdp_increment)
     mindfil_total_characters_key = session['user_cookie'] + '_mindfil_total_characters'
     cdp = 100.0*int(r.get(mindfil_disclosed_characters_key))/int(r.get(mindfil_total_characters_key))
     ret['cdp'] = round(cdp, 1)
-    """
 
     # get K-Anonymity based Privacy Risk
     old_display_status1 = list()
@@ -373,6 +363,8 @@ def open_cell():
     # refresh the delta of KAPR
     new_delta_list = dm.KAPR_delta(DATASET, pair, display_status1)
     ret['new_delta'] = new_delta_list
+    new_delta_cdp_list = dm.cdp_delta(pair, display_status1, int(r.get(mindfil_disclosed_characters_key)), int(r.get(mindfil_total_characters_key)))
+    ret['new_delta_cdp'] = new_delta_cdp_list
 
     return jsonify(ret)
 
@@ -392,7 +384,6 @@ def show_record_linkage_next():
             r.set(key, 'M')
 
     # get the delta information
-    #delta = dm.get_delta_for_dataset(DATASET, DATA_PAIR_LIST.get_raw_data()[12:])
     delta = list()
     for i in range(6, 12):
         data_pair = DATA_PAIR_LIST.get_data_pair_by_index(i)
@@ -402,11 +393,20 @@ def show_record_linkage_next():
     for d in delta:
         delta_dict[d[0]] = d[1]
 
-    print(icons)
+    delta_cdp = list()
+    total_characters = DATA_PAIR_LIST.get_total_characters()
+    for i in range(6, 12):
+        data_pair = DATA_PAIR_LIST.get_data_pair_by_index(i)
+        delta_cdp += dm.cdp_delta(data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 0, total_characters)
+    # make delta to be a dict
+    delta_cdp_dict = dict()
+    for d in delta_cdp:
+        delta_cdp_dict[d[0]] = d[1]
 
     page_content = render_template('record_linkage_next.html', data=data, icons=icons, ids=ids)
     ret = {
         'delta': delta_dict,
+        'delta_cdp': delta_cdp_dict,
         'page_content': page_content
     }
     return jsonify(ret)

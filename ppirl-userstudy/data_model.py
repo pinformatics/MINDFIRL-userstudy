@@ -246,14 +246,14 @@ class DataPair(object):
             display_status - 'M', 'P', or 'F'
         """
         value = ''
-        if display_status == 'M':
+        if display_status == 'M' or display_status == 'masked':
             return 0
-        elif display_status == 'F':
+        elif display_status == 'F' or display_status == 'full':
             if row_number == 1:
                 value = self._data1_attributes[j]
             else:
                 value = self._data2_attributes[j]
-        elif display_status == 'P':
+        elif display_status == 'P' or display_status == 'partial':
             if row_number == 1:
                 value = self._data1_helpers[j]
             else:
@@ -385,177 +385,14 @@ class DataPairList(object):
         return self._data_raw
 
 
-def get_character_disclosed_num(value):
-    """
-    the character disclosed num
-    """
-    character_disclosed_num = 0
-    for c in value:
-        if c not in ['*', '_', '/']:
-            character_disclosed_num += 1
-    return character_disclosed_num
+    def get_total_characters(self):
+        total_characters = 0
+        for d in self._data:
+            total_characters += (d.get_total_characters(1) + d.get_total_characters(2))
+        return total_characters
 
 
-def get_total_characters(data):
-    """
-        data - list
-        example: 
-        data = [
-            [16,1027791027,993,GLORIA,MASTON,9,09/22/1938,F,W,*********7,*L**IA,******,**/**/****,F,*,8,2,0],
-            [16,1027791028,2412,GEORGE,MASTON,10,09/22/1938,M,W,*********8,*E**GE,******,**/**/****,M,*,8,2,0]
-        ]
-    """
-    total_characters = 0
-    for row in data:
-        for i in [1,3,4,6,7,8]:
-            total_characters += get_character_disclosed_num(row[i])
-    return total_characters
 
-
-def get_total_characters_of_one_row(data):
-    idx = [1, 3, 4, 6, 7, 8]
-    count = 0
-    for i in idx:
-        count += get_character_disclosed_num(data[i])
-    return count
-
-
-def get_KAPR1(dataset, data, display_status):
-    """
-    get KAPR value of one row
-    """
-    col_list_F = [1, 3, 4, 6, 7, 8]
-    col_list_P = [9, 10, 11, 12, 13, 14]
-
-    # calculating P
-    character_disclosed_num = 0
-    for j in range(6):
-        if display_status[j] == 'F':
-            col = col_list_F[j]
-        elif display_status[j] == 'P':
-            col = col_list_P[j]
-        else:
-            continue
-        character_disclosed_num += get_character_disclosed_num(data[col])
-    total_characters = get_total_characters_of_one_row(data)
-    P = 1.0*character_disclosed_num / total_characters
-
-    # calculating K
-    count = 0
-    for i in range(len(dataset)):
-        match_flag = True
-        for j in range(6):
-            if display_status[j] == 'F':
-                col = col_list_F[j]
-            elif display_status[j] == 'P':
-                col = col_list_P[j]
-            else:
-                continue
-            if dataset[i][col] != data[col]:
-                match_flag = False
-                break
-        if match_flag:
-            count += 1
-    K = count
-
-    M = 24 # Number of rows that need to be manually linked
-    KAPRINC = (1.0/M)*(1.0/K)*P
-
-    return KAPRINC
-
-
-def get_KAPR(dataset, pair_num, display_status1, display_status2):
-    """
-    return the KAPR for a pair with its current display status.
-    input:
-        dataset - the whole dataset
-        pair_num - the pair number
-        display_status1 - the display status for the first row
-        dis_play_status2 - the display status for the second row
-    display status is a list of status, for example:
-    ['M', 'M', 'M', 'M', 'M', 'M'] is all masked display status.
-    TODO: these two display status should be the same?
-    """
-    data1 = list()
-    data2 = list()
-    find_flag = False
-    for i in range(len(dataset)-1):
-        if dataset[i][0] == pair_num:
-            data1 = dataset[i]
-            data2 = dataset[i+1]
-            find_flag = True
-            break
-    if not find_flag:
-        return 0
-    KAPR1 = get_KAPR1(dataset, data1, display_status1)
-    KAPR2 = get_KAPR1(dataset, data2, display_status2)
-    return KAPR1+KAPR2
-
-
-def get_delta_for_dataset(dataset, pairs):
-    """
-    return the delta for all possible next states for all data
-    input:
-        dataset - the whole dataset
-        pairs - the smaller dataset that need manually resolve
-    """
-    ret = list()
-    for j in range(0, len(pairs), 2):
-        row = pairs[j]
-        row2 = pairs[j+1]
-        display_status = ['M', 'M', 'M', 'M', 'M', 'M']
-        for i in range(6):
-            display_status[i] = 'P'
-            KAPR = get_KAPR(dataset, row[0], display_status, display_status)
-            if KAPR == 0:
-                display_status[i] = 'F'
-                KAPR = get_KAPR(dataset, row[0], display_status, display_status)
-            id = str(row[0]) + '-1-' + str(i)
-            ret.append((id, 100.0*KAPR))
-            display_status[i] = 'M'
-    return ret
-
-
-def next_possible_KAPR_delta(DATASET, pair_num, display_status1):
-    """
-    for the current display status, get all possible next KAPR delta.
-
-    Note: cannot use next_KAPR - KAPR == 0 to decide if an attribute has partial mode or not. Why?
-          because the k is different, if the attribute mode is P, then it will use the helper to 
-          calculate k (inherently use the length of the string), and the k is different.
-    """
-    print('display_status: ')
-    print(display_status1)
-
-    current_KAPR = get_KAPR(DATASET, pair_num, display_status1, display_status1)
-    delta = list()
-    for i in range(6):
-        state = display_status1[i]
-        if display_status1[i] == 'M':
-            display_status1[i] = 'P'
-            next_KAPR = get_KAPR(DATASET, pair_num, display_status1, display_status1)
-            # TODO: dont compare float number
-            if current_KAPR - next_KAPR == 0:
-                display_status1[i] = 'F'
-                next_KAPR = get_KAPR(DATASET, pair_num, display_status1, display_status1)
-        elif display_status1[i] == 'P':
-            display_status1[i] = 'F'
-            next_KAPR = get_KAPR(DATASET, pair_num, display_status1, display_status1)
-        else:
-            next_KAPR = current_KAPR
-        id = str(pair_num) + '-1-' + str(i)
-        delta.append((id, 100.0*next_KAPR - 100.0*current_KAPR))
-
-        if i == 2:
-            print('display status:')
-            print(display_status1)
-            print('id: ' + id)
-            print('current kapr: ' + str(100.0*current_KAPR))
-            print('next kapr: ' + str(100.0*next_KAPR))
-
-        display_status1[i] = state
-
-    return delta
 
 
 def get_KAPR_for_dp(dataset, data_pair, display_status):
@@ -647,3 +484,28 @@ def KAPR_delta(DATASET, data_pair, display_status):
         delta.append((id, 100.0*next_KAPR - 100.0*current_KAPR))
         display_status[i] = state
     return delta
+
+
+def cdp_delta(data_pair, display_status, current_cd_num, total_characters):
+    """
+    delta for character disclosure percentage
+    data_pair: DataPair object
+    display_status: ['M', 'M', 'M', 'M', 'M', 'M']
+    current_cd_num: current character disclosed number
+    total_characters: total character number for the dataset
+    """
+    delta = list()
+    for i in range(6):
+        state = display_status[i]
+        next_display = data_pair.get_next_display(i, state)[0]
+        cd_pre = data_pair.get_character_disclosed_num(1, i, state) + \
+        data_pair.get_character_disclosed_num(2, i, state)
+        cd_post = data_pair.get_character_disclosed_num(1, i, next_display) + \
+        data_pair.get_character_disclosed_num(2, i, next_display)
+        cdp_pre = 100.0*current_cd_num/total_characters
+        cdp_post = 100.0*((1.0*current_cd_num+cd_post-cd_pre)/total_characters)
+        cdp_increment = cdp_post - cdp_pre
+        id = data_pair.get_ids()[0][i]
+        delta.append((id, cdp_increment))
+    return delta
+

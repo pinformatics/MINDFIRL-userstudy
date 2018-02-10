@@ -47,6 +47,7 @@ function make_cell_clickable() {
     });
 }
 
+// this function is just a mirror from clickable.js
 function refresh_delta() {
     $('.clickable_cell').hover(function() {
         var id1 = this.children[0].getAttribute("id");
@@ -54,9 +55,16 @@ function refresh_delta() {
         var bar_style = 'width:' + d + '%';
         $("#privacy-risk-delta").attr("style", bar_style);
         $("#privacy-risk-delta-value").html(" + " + d + "%");
+
+        var cd = $DELTA_CDP[id1]
+        var bar_style_cdp = 'width:' + cd + '%';
+        $("#character-percentage-delta").attr("style", bar_style_cdp);
+        $("#character-percentage-delta-value").html(" + " + cd + "%");
     }, function() {
         $("#privacy-risk-delta").attr("style", 'width: 0%');
         $("#privacy-risk-delta-value").html(" ")
+        $("#character-percentage-delta").attr("style", 'width: 0%');
+        $("#character-percentage-delta-value").html(" ");
     });
 }
 
@@ -122,7 +130,8 @@ $(function() {
             error: function() {},
             dataType: 'json',
             success: function(data) {
-                $DELTA = data['delta']
+                $DELTA = data['delta'];
+                $DELTA_CDP = data['delta_cdp'];
                 $("#table_content").html(data['page_content']);
                 make_cell_clickable();
                 refresh_delta();
