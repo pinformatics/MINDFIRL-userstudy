@@ -12,6 +12,10 @@ import data_loader as dl
 import data_display as dd
 import data_model as dm
 from flask_mail import Mail, Message
+import logging
+import sys
+
+
 # from app import app, mail
 
 app = Flask(__name__)
@@ -21,14 +25,17 @@ app.config.update(
     LOGGER_HANDLER_POLICY='production'
 )
 
+app.logger.addHandler(logging.StreamHandler(sys.stdout))
+app.logger.setLevel(logging.ERROR)
+
 """
 SESSION_TYPE = 'redis'
 app.config.from_object(__name__)
 Session(app)
 """
 
-# ENV = 'development'
-ENV = 'production'
+ENV = 'development'
+# ENV = 'production'
 
 app.config.from_pyfile('config.py')
 
