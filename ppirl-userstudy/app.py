@@ -470,4 +470,24 @@ def post_survey():
     return render_template('post_survey.html', data=data, icons=icons, ids=ids, title='Section 2: Minimum Necessary Disclosure For Interactive record Linkage', thisurl='/record_linkage', page_number=16, delta=delta)
 
 
+@app.route("/save_survey", methods=['GET', 'POST'])
+def save_survey():
+    if request.method == "POST":
+
+        # if request.form.getlist('q1_o1'):
+            # q1_c1 = True
+        # r.set("opt",request.form.get('q1_o1'))
+        # return r.get("opt")
+        a = ', '.join(request.form.getlist('q1'))
+        b = ', '.join(request.form.getlist('q2'))
+        c = ', '.join(request.form.getlist('q3'))
+        all_answers = '\n'.join([a, b, c])
+        r.set(session['user_cookie']+'_survey', all_answers)
+        return "Thank you!"
+    else:
+        # return r.get("opt")
+        return "get"
+
+
+
 app.secret_key = 'a9%z$/`9h8FMnh893;*g783'
