@@ -469,14 +469,14 @@ def post_survey():
     """
 
     # KAPR - K-Anonymity privacy risk
-    KAPR_key = session['user_cookie'] + '_KAPR'
-    r.set(KAPR_key, 0)
+    # KAPR_key = session['user_cookie'] + '_KAPR'
+    # r.set(KAPR_key, 0)
 
-    # set the user-display-status as masked for all cell
-    for id1 in ids_list:
-        for i in range(6):
-            key = session['user_cookie'] + '-' + id1[i]
-            r.set(key, 'M')
+    # # set the user-display-status as masked for all cell
+    # for id1 in ids_list:
+    #     for i in range(6):
+    #         key = session['user_cookie'] + '-' + id1[i]
+    #         r.set(key, 'M')
 
     # get the delta information
     delta = list()
@@ -491,7 +491,7 @@ def post_survey():
 def save_survey():
     if request.method == "POST":
 
-		ses = session['user_cookie']
+		# ses = session['user_cookie']
 		time_stamp = str(time.time())
 
 		header = ','.join(['timestamp', "question", "choice_1", "choice_2"])
