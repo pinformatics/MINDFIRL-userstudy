@@ -11,7 +11,8 @@ import logging
 import data_loader as dl
 import data_display as dd
 import data_model as dm
-
+from flask_mail import Mail, Message
+# from app import app, mail
 
 app = Flask(__name__)
 """
@@ -23,6 +24,9 @@ Session(app)
 ENV = 'development'
 #ENV = 'production'
 
+app.config.from_pyfile('config.py')
+
+mail = Mail(app)
 
 CONFIG = {
     'sequence': [
@@ -483,6 +487,10 @@ def save_survey():
         c = ', '.join(request.form.getlist('q3'))
         all_answers = '\n'.join([a, b, c])
         r.set(session['user_cookie']+'_survey', all_answers)
+
+        msg = Message(subject='Survey answers',body=all_answers, recipients=['mindfil.ppirl@gmail.com'])
+        mail.send(msg)
+
         return "Thank you!"
     else:
         # return r.get("opt")

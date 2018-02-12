@@ -37,11 +37,11 @@
     <body>
         <div id="wrapper">
             <div id="title">
-                <h3>{{ title }}</h3>
+                <h3>Privacy Preserving Interactive Record Linkage (PPIRL)</h3>
             </div>
-            <div id="page-number">
+          <!--   <div id="page-number">
                 （ page: {{ page_number }}/17 ）
-            </div>
+            </div> -->
             <div style="clear:both"></div>
             <div id="content">
                 <div class="privacy-budget-div">
@@ -265,59 +265,60 @@
                 
                 <br><br>
                 
-                    <div id="survey" style="width: 750px; margin-left:50px;  line-height: 1.8;">
+                    <div id="survey" style="width: 80%; margin-left:50px;  line-height: 1.8;">
                     <h3>Survey</h3>
                     <form action="save_survey" method="post">
                         <ol>
                             
                             
                             <li>What do you perceive as the risks for subjects of data when using the PPIRL framework for database record linkage?
-                                <ol>
-                                    <table width:25%>
+                                <ol type="a">
+                                    <table width=1600>
+                                    
                                         <tr>
-                                            <th></th>
-                                            <th>First Choice</th>
-                                            <th>Second Choice</th>                                        
+                                            <th width="70%" ></th>
+                                            <th width="15%" style="text-align: center">First Choice</th>
+                                            <th width="15%" style="text-align: center">Second Choice</th>                                        
                                         </tr>
                                         
                                         <tr>
                                             <td>
                                             <li>Potential that software will enable flawed research (e.g., linking flawed data or enabling research that uses inaccurately linked data from user or software errors)</li>
                                             </td>
-                                            <td><input type="checkbox" name="q1" custom="q1_o1" value = "q1_o1_c1"> </td>
-                                            <td><input type="checkbox" name="q1" custom="q1_o1" value = "q1_o1_c2"> </td>
+                                            <td style="text-align: center"><input type="checkbox" name="q1" custom="q1_o1" value = "q1_o1_c1"> </td>
+                                            <td style="text-align: center"><input type="checkbox" name="q1" custom="q1_o1" value = "q1_o1_c2"> </td>
                                         </tr>
                                         
                                         <tr>
                                             <td>
                                             <li>Potential for unnecessary privacy loss/identity exposure to authorized personnel (i.e., among researchers)</li>
                                             </td>
-                                            <td><input type="checkbox" name="q1" value="q1_o2_c1"> </td>
-                                            <td><input type="checkbox" name="q1" value="q1_o2_c2"> </td>
+                                            <td style="text-align: center"><input type="checkbox" name="q1" value="q1_o2_c1"> </td>
+                                            <td style="text-align: center"><input type="checkbox" name="q1" value="q1_o2_c2"> </td>
                                         </tr>
 
                                         <tr>
                                             <td>
                                             <li>Potential for privacy loss to unauthorized personnel (e.g. hacking)</li>
                                             </td>
-                                            <td><input type="checkbox" name="q1" value="q1_o3_c1"> </td>
-                                            <td><input type="checkbox" name="q1" value="q1_o3_c2"> </td>
+                                             <td style="text-align: center"><input type="checkbox" name="q1" value="q1_o3_c1"> </td>
+                                             <td style="text-align: center"><input type="checkbox" name="q1" value="q1_o3_c2"> </td>
                                         </tr>
 
                                         <tr>
                                             <td>
                                              <li>Potential for a lack of accountability for disclosures</li>
                                             </td>
-                                            <td><input type="checkbox" name="q1" value="q1_o4_c1"> </td>
-                                            <td><input type="checkbox" name="q1" value="q1_o4_c2"> </td>
+                                             <td style="text-align: center"><input type="checkbox" name="q1" value="q1_o4_c1"> </td>
+                                             <td style="text-align: center"><input type="checkbox" name="q1" value="q1_o4_c2"> </td>
                                         </tr>
 
                                          <tr>
                                             <td>
                                             <li>Possibility that an organization’s administrative controls (i.e. training and user rules) permit inappropriate use of the software.</li>
                                             </td>
-                                            <td><input type="checkbox" name="q1" value="q1_o5_c1"> </td>
-                                            <td><input type="checkbox" name="q1" value="q1_o5_c2"> </td>
+                                             <td style="text-align: center"><input type="checkbox" name="q1" value="q1_o5_c1"> </td>
+                                             <td style="text-align: center"><input type="checkbox" name="q1" value="q1_o5_c2"> </td>
                                         </tr>
  
                                     </table>
@@ -326,12 +327,12 @@
                             
                             
                             <li>What do you perceive as the benefits of using the PPIRL framework for database record linkage?
-                                <ol>
-                                    <table>
+                                <ol type="a">
+                                    <table width="1600">
                                         <tr>
-                                            <th></th>
-                                            <th>First Choice</th>
-                                            <th>Second Choice</th>                                        
+                                            <th width="70%"></th>
+                                            <th width="15%" style="text-align: center">First Choice</th>
+                                            <th width="15%" style="text-align: center">Second Choice</th>                                        
                                         </tr>
 
                                         
@@ -339,32 +340,32 @@
                                             <td>
                                             <li>Potential to reduce the <b>risk of disclosure</b></li>
                                             </td>
-                                            <td><input type="checkbox" name="q2" value = "q2_o1_c1"> </td>
-                                            <td><input type="checkbox" name="q2" value = "q2_o1_c2"> </td>
+                                             <td style="text-align: center"><input type="checkbox" name="q2" value = "q2_o1_c1"> </td>
+                                             <td style="text-align: center"><input type="checkbox" name="q2" value = "q2_o1_c2"> </td>
                                         </tr>
                                         
                                         <tr>
                                             <td>
                                             <li>Potential that the framework will promote <b>responsible and accountable data use and good data governance</b></li>
                                             </td>
-                                            <td><input type="checkbox" name="q2" value = "q2_o2_c1"> </td>
-                                            <td><input type="checkbox" name="q2" value = "q2_o2_c2"> </td>
+                                             <td style="text-align: center"><input type="checkbox" name="q2" value = "q2_o2_c1"> </td>
+                                             <td style="text-align: center"><input type="checkbox" name="q2" value = "q2_o2_c2"> </td>
                                         </tr>
 
                                         <tr>
                                             <td>
                                             <li>Potential to facilitate research and data sharing <b>approval processes</b></li>
                                             </td>
-                                            <td><input type="checkbox" name="q2" value = "q2_o3_c1"> </td>
-                                            <td><input type="checkbox" name="q2" value = "q2_o3_c2"> </td>
+                                             <td style="text-align: center"><input type="checkbox" name="q2" value = "q2_o3_c1"> </td>
+                                             <td style="text-align: center"><input type="checkbox" name="q2" value = "q2_o3_c2"> </td>
                                         </tr>
 
                                         <tr>
                                             <td>
                                              <li>Potential to facilitate the execution of <b>research protocols</b> (e.g., providing a tool for researchers to link data, de-identify data, and re-identify data)</li>
                                             </td>
-                                            <td><input type="checkbox" name="q2" value = "q2_o4_c1"> </td>
-                                            <td><input type="checkbox" name="q2" value = "q2_o4_c2"> </td>
+                                             <td style="text-align: center"><input type="checkbox" name="q2" value = "q2_o4_c1"> </td>
+                                             <td style="text-align: center"><input type="checkbox" name="q2" value = "q2_o4_c2"> </td>
                                         </tr>
  
                                     </table>
@@ -375,37 +376,37 @@
                             
                             
                             <li>For research using the PPIRL framework for record linkage, what other information would you need to know if you were serving on the IRB as the public representative for reviewing and approving an IRB application?
-                                <ol>
-                                    <table>
+                                <ol type="a">
+                                    <table  width="1600">
                                         <tr>
-                                            <th></th>
-                                            <th>First Choice</th>
-                                            <th>Second Choice</th>                                        
+                                            <th width="70%"></th>
+                                            <th width="15%" style="text-align: center">First Choice</th>
+                                            <th width="15%" style="text-align: center">Second Choice</th>                                        
                                         </tr>
 
                                         
                                         <tr>
                                             <td><li>Evidence for the validity of record linkage when using the software</li></td>
-                                            <td><input type="checkbox" name="q3" value = "q3_o1_c1"> </td>
-                                            <td><input type="checkbox" name="q3" value = "q3_o1_c2"> </td>
+                                             <td style="text-align: center"><input type="checkbox" name="q3" value = "q3_o1_c1"> </td>
+                                             <td style="text-align: center"><input type="checkbox" name="q3" value = "q3_o1_c2"> </td>
                                         </tr>
                                         
                                         <tr>
                                             <td><li>The administrative controls (e.g. organizational rules, policies and required training) and data governance</li></td>
-                                            <td><input type="checkbox" name="q3" value = "q3_o2_c1"> </td>
-                                            <td><input type="checkbox" name="q3" value = "q3_o2_c2"> </td>
+                                             <td style="text-align: center"><input type="checkbox" name="q3" value = "q3_o2_c1"> </td>
+                                             <td style="text-align: center"><input type="checkbox" name="q3" value = "q3_o2_c2"> </td>
                                         </tr>
                                         
                                         <tr>
                                             <td><li>The nature of software security and vulnerability issues, if any</li></td>
-                                            <td><input type="checkbox" name="q3" value = "q3_o3_c1"> </td>
-                                            <td><input type="checkbox" name="q3" value = "q3_o3_c2"> </td>
+                                             <td style="text-align: center"><input type="checkbox" name="q3" value = "q3_o3_c1"> </td>
+                                             <td style="text-align: center"><input type="checkbox" name="q3" value = "q3_o3_c2"> </td>
                                         </tr>
                                         
                                         <tr>
                                             <td><li>Specific details regarding the nature of the data used for record linkage</li></td>
-                                            <td><input type="checkbox" name="q3" value = "q3_o4_c1"> </td>
-                                            <td><input type="checkbox" name="q3" value = "q3_o4_c2"> </td> 
+                                             <td style="text-align: center"><input type="checkbox" name="q3" value = "q3_o4_c1"> </td>
+                                             <td style="text-align: center"><input type="checkbox" name="q3" value = "q3_o4_c2"> </td> 
                                         </tr>
                                     </table>
                                 </ol>
@@ -414,7 +415,7 @@
                         
                         </ol>
 <!--                        <input type="text" name="opinion">-->
-                        <input type="submit" style="margin-left: 350px" id="submit">
+                        <input type="submit" style="margin-left: 45%" id="submit">
                     
                     </form>
                 </div>
