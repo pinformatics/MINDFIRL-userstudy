@@ -5,13 +5,14 @@
         <title>PPIRL</title>
         <link rel="shortcut icon" href="../static/images/site/favicon.ico" type="image/x-icon" />
 
+        <link rel="stylesheet" href="../static/css/bootstrap.min.css" type="text/css">
         <link rel="stylesheet" href="../static/css/site.css" type="text/css">
         <link rel="stylesheet" href="../static/css/style.css?q=12" type="text/css">
         <link rel="stylesheet" href="../static/css/ionicons.min.css" type="text/css">
         <link rel="stylesheet" href="../static/css/select.css?q=12" type="text/css">
-        <link rel="stylesheet" href="../static/css/bootstrap.min.css" type="text/css">
         <link rel="stylesheet" href="../static/css/footer.css" type="text/css">
         <link rel="stylesheet" href="../static/css/animate.min.css">
+
 
         <script src="../static/javascript/jquery-3.2.1.min.js"></script>
         <script src="../static/javascript/popper.min.js"></script>
@@ -273,52 +274,52 @@
                             
                             <li>What do you perceive as the risks for subjects of data when using the PPIRL framework for database record linkage?
                                 <ol type="a">
-                                    <table width=1600>
-                                    
-                                        <tr>
-                                            <th width="70%" ></th>
+                                    <table width="1600">
+
+                                    	 <tr>
+                                            <th width="70%"></th>
                                             <th width="15%" style="text-align: center">First Choice</th>
                                             <th width="15%" style="text-align: center">Second Choice</th>                                        
                                         </tr>
-                                        
-                                        <tr>
+                                    
+                                         <tr>
                                             <td>
                                             <li>Potential that software will enable flawed research (e.g., linking flawed data or enabling research that uses inaccurately linked data from user or software errors)</li>
                                             </td>
-                                            <td style="text-align: center"><input type="checkbox" name="q1" custom="q1_o1" value = "q1_o1_c1"> </td>
-                                            <td style="text-align: center"><input type="checkbox" name="q1" custom="q1_o1" value = "q1_o1_c2"> </td>
+                                            <td style="text-align: center"><input type="radio" name="q1_c1" value="a" id="q1_o1_c1" style="display: inline-block;" required> </td>
+                                            <td style="text-align: center"><input type="radio" name="q1_c2" value="a" id="q1_o1_c2" style="display: inline-block;" required> </td>
                                         </tr>
                                         
                                         <tr>
                                             <td>
                                             <li>Potential for unnecessary privacy loss/identity exposure to authorized personnel (i.e., among researchers)</li>
                                             </td>
-                                            <td style="text-align: center"><input type="checkbox" name="q1" value="q1_o2_c1"> </td>
-                                            <td style="text-align: center"><input type="checkbox" name="q1" value="q1_o2_c2"> </td>
+                                            <td style="text-align: center"><input type="radio" name="q1_c1" value="b" id="q1_o2_c1"  style="display: inline-block;"> </td>
+                                            <td style="text-align: center"><input type="radio" name="q1_c2" value="b" id="q1_o2_c2"  style="display: inline-block;"> </td>
                                         </tr>
 
                                         <tr>
                                             <td>
                                             <li>Potential for privacy loss to unauthorized personnel (e.g. hacking)</li>
                                             </td>
-                                             <td style="text-align: center"><input type="checkbox" name="q1" value="q1_o3_c1"> </td>
-                                             <td style="text-align: center"><input type="checkbox" name="q1" value="q1_o3_c2"> </td>
+                                             <td style="text-align: center"><input type="radio" name="q1_c1" value="c" id="q1_o3_c1"  style="display: inline-block;"> </td>
+                                             <td style="text-align: center"><input type="radio" name="q1_c2" value="c" id="q1_o3_c2"  style="display: inline-block;"> </td>
                                         </tr>
 
                                         <tr>
                                             <td>
                                              <li>Potential for a lack of accountability for disclosures</li>
                                             </td>
-                                             <td style="text-align: center"><input type="checkbox" name="q1" value="q1_o4_c1"> </td>
-                                             <td style="text-align: center"><input type="checkbox" name="q1" value="q1_o4_c2"> </td>
+                                             <td style="text-align: center"><input type="radio" name="q1_c1" value="d" id="q1_o4_c1"  style="display: inline-block;"> </td>
+                                             <td style="text-align: center"><input type="radio" name="q1_c2" value="d" id="q1_o4_c2"  style="display: inline-block;"> </td>
                                         </tr>
 
                                          <tr>
                                             <td>
                                             <li>Possibility that an organization’s administrative controls (i.e. training and user rules) permit inappropriate use of the software.</li>
                                             </td>
-                                             <td style="text-align: center"><input type="checkbox" name="q1" value="q1_o5_c1"> </td>
-                                             <td style="text-align: center"><input type="checkbox" name="q1" value="q1_o5_c2"> </td>
+                                             <td style="text-align: center"><input type="radio" name="q1_c1" value="e" id="q1_o5_c1"  style="display: inline-block;"> </td>
+                                             <td style="text-align: center"><input type="radio" name="q1_c2" value="e" id="q1_o5_c2"  style="display: inline-block;"> </td>
                                         </tr>
  
                                     </table>
@@ -340,32 +341,32 @@
                                             <td>
                                             <li>Potential to reduce the <b>risk of disclosure</b></li>
                                             </td>
-                                             <td style="text-align: center"><input type="checkbox" name="q2" value = "q2_o1_c1"> </td>
-                                             <td style="text-align: center"><input type="checkbox" name="q2" value = "q2_o1_c2"> </td>
+                                             <td style="text-align: center"><input type="radio" name="q2_c1" value="a" id="q2_o1_c1" style="display: inline-block;" required> </td>
+                                             <td style="text-align: center"><input type="radio" name="q2_c2" value="a" id="q2_o1_c2" style="display: inline-block;" required> </td>
                                         </tr>
                                         
                                         <tr>
                                             <td>
                                             <li>Potential that the framework will promote <b>responsible and accountable data use and good data governance</b></li>
                                             </td>
-                                             <td style="text-align: center"><input type="checkbox" name="q2" value = "q2_o2_c1"> </td>
-                                             <td style="text-align: center"><input type="checkbox" name="q2" value = "q2_o2_c2"> </td>
+                                             <td style="text-align: center"><input type="radio" name="q2_c1" value="b" id="q2_o2_c1" style="display: inline-block;"> </td>
+                                             <td style="text-align: center"><input type="radio" name="q2_c2" value="b" id="q2_o2_c2" style="display: inline-block;"> </td>
                                         </tr>
 
                                         <tr>
                                             <td>
                                             <li>Potential to facilitate research and data sharing <b>approval processes</b></li>
                                             </td>
-                                             <td style="text-align: center"><input type="checkbox" name="q2" value = "q2_o3_c1"> </td>
-                                             <td style="text-align: center"><input type="checkbox" name="q2" value = "q2_o3_c2"> </td>
+                                             <td style="text-align: center"><input type="radio" name="q2_c1" value="c" id="q2_o3_c1" style="display: inline-block;"> </td>
+                                             <td style="text-align: center"><input type="radio" name="q2_c2" value="c" id="q2_o3_c2" style="display: inline-block;"> </td>
                                         </tr>
 
                                         <tr>
                                             <td>
                                              <li>Potential to facilitate the execution of <b>research protocols</b> (e.g., providing a tool for researchers to link data, de-identify data, and re-identify data)</li>
                                             </td>
-                                             <td style="text-align: center"><input type="checkbox" name="q2" value = "q2_o4_c1"> </td>
-                                             <td style="text-align: center"><input type="checkbox" name="q2" value = "q2_o4_c2"> </td>
+                                             <td style="text-align: center"><input type="radio" name="q2_c1" value="d" id="q2_o4_c1" style="display: inline-block;"> </td>
+                                             <td style="text-align: center"><input type="radio" name="q2_c2" value="d" id="q2_o4_c2" style="display: inline-block;"> </td>
                                         </tr>
  
                                     </table>
@@ -387,26 +388,26 @@
                                         
                                         <tr>
                                             <td><li>Evidence for the validity of record linkage when using the software</li></td>
-                                             <td style="text-align: center"><input type="checkbox" name="q3" value = "q3_o1_c1"> </td>
-                                             <td style="text-align: center"><input type="checkbox" name="q3" value = "q3_o1_c2"> </td>
+                                             <td style="text-align: center"><input type="radio" name="q3_c1" value="a" id="q3_o1_c1" style="display: inline-block;" required> </td>
+                                             <td style="text-align: center"><input type="radio" name="q3_c2" value="a" id="q3_o1_c2" style="display: inline-block;" required> </td>
                                         </tr>
                                         
                                         <tr>
                                             <td><li>The administrative controls (e.g. organizational rules, policies and required training) and data governance</li></td>
-                                             <td style="text-align: center"><input type="checkbox" name="q3" value = "q3_o2_c1"> </td>
-                                             <td style="text-align: center"><input type="checkbox" name="q3" value = "q3_o2_c2"> </td>
+                                             <td style="text-align: center"><input type="radio" name="q3_c1" value = "b" id="q3_o2_c1" style="display: inline-block;"> </td>
+                                             <td style="text-align: center"><input type="radio" name="q3_c2" value = "b" id="q3_o2_c2" style="display: inline-block;"> </td>
                                         </tr>
                                         
                                         <tr>
                                             <td><li>The nature of software security and vulnerability issues, if any</li></td>
-                                             <td style="text-align: center"><input type="checkbox" name="q3" value = "q3_o3_c1"> </td>
-                                             <td style="text-align: center"><input type="checkbox" name="q3" value = "q3_o3_c2"> </td>
+                                             <td style="text-align: center"><input type="radio" name="q3_c1" value = "c" id="q3_o3_c1" style="display: inline-block;"> </td>
+                                             <td style="text-align: center"><input type="radio" name="q3_c2" value = "c" id="q3_o3_c2" style="display: inline-block;"> </td>
                                         </tr>
                                         
                                         <tr>
                                             <td><li>Specific details regarding the nature of the data used for record linkage</li></td>
-                                             <td style="text-align: center"><input type="checkbox" name="q3" value = "q3_o4_c1"> </td>
-                                             <td style="text-align: center"><input type="checkbox" name="q3" value = "q3_o4_c2"> </td> 
+                                             <td style="text-align: center"><input type="radio" name="q3_c1" value = "d" id="q3_o4_c1" style="display: inline-block;"> </td>
+                                             <td style="text-align: center"><input type="radio" name="q3_c2" value = "d" id="q3_o4_c2" style="display: inline-block;"> </td> 
                                         </tr>
                                     </table>
                                 </ol>
@@ -444,15 +445,15 @@
     </body>
     
     <script>
-//        document.getElementById("submit").addEventListener("click", function () {
-//            var check = $('#survey').find("input[custom='q1_o1']:checked").length;
-//            console.log(check);
-////            alert(document.querySelector("input[custom='q1_o1']").find('input.checkbox:checked"]').length);
-//        });
-//        submit.onclick({
-//            alert(document.querySelector("input[custom='q1_o1']").find('input.checkbox:checked"]').length);
-//        })
-//         
+        $("input[type='radio']").change(function(){
+            clicked_element = $(this).attr('id');
+            check_element = clicked_element.substring(0, 7) + (clicked_element.substring(7) == 1 ? 2 : 1);            
+            if($("#"+check_element).is(':checked')){
+                alert("Option already used. Please select a different option for this choice.");
+                $("#"+clicked_element).prop("checked", false);
+            }
+            
+        });         
     </script>
     
 </html>

@@ -21,8 +21,8 @@ app.config.from_object(__name__)
 Session(app)
 """
 
-#ENV = 'development'
-ENV = 'production'
+ENV = 'development'
+#ENV = 'production'
 
 app.config.from_pyfile('config.py')
 
@@ -478,20 +478,31 @@ def post_survey():
 def save_survey():
     if request.method == "POST":
 
-        # if request.form.getlist('q1_o1'):
-            # q1_c1 = True
-        # r.set("opt",request.form.get('q1_o1'))
-        # return r.get("opt")
-        a = ', '.join(request.form.getlist('q1'))
-        b = ', '.join(request.form.getlist('q2'))
-        c = ', '.join(request.form.getlist('q3'))
-        all_answers = '\n'.join([a, b, c])
-        r.set(session['user_cookie']+'_survey', all_answers)
+		ses = session['user_cookie']
+		time_stamp = str(time.time())
 
-        msg = Message(subject='Survey answers',body=all_answers, recipients=['mindfil.ppirl@gmail.com'])
-        mail.send(msg)
+		header = ','.join(['timestamp', "question", "choice_1", "choice_2"])
 
-        return "Thank you!"
+
+		q1_c1 = request.form.get('q1_c1')
+		q1_c2 = request.form.get('q1_c2')
+		r1 = ','.join([time_stamp,"1",q1_c1,q1_c2])
+
+		q2_c1 = request.form.get('q2_c1')
+		q2_c2 = request.form.get('q2_c2')
+		r2 = ','.join([time_stamp,"2",q2_c1,q2_c2])        
+
+		q3_c1 = request.form.get('q3_c1')
+		q3_c2 = request.form.get('q3_c2')
+		r3 = ','.join([time_stamp,"3",q3_c1,q3_c2])        
+
+		all_answers = ',\n'.join([header, r1, r2, r3])
+		r.set(ses+'_survey', all_answers)
+
+		msg = Message(subject='Survey answers',body=all_answers, recipients=['mindfil.ppirl@gmail.com'])
+		mail.send(msg)
+		
+		return all_answers
     else:
         # return r.get("opt")
         return "get"
