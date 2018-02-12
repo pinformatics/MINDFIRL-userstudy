@@ -268,7 +268,7 @@
                 
                     <div id="survey" style="width: 80%; margin-left:50px;  line-height: 1.8;">
                     <h3>Survey</h3>
-                    <form action="save_survey" method="post">
+                    <form action="save_survey" method="post" onsubmit="return validateForm();">
                         <ol>
                             
                             
@@ -286,8 +286,8 @@
                                             <td>
                                             <li>Potential that software will enable flawed research (e.g., linking flawed data or enabling research that uses inaccurately linked data from user or software errors)</li>
                                             </td>
-                                            <td style="text-align: center"><input type="radio" name="q1_c1" value="a" id="q1_o1_c1" style="display: inline-block;" required> </td>
-                                            <td style="text-align: center"><input type="radio" name="q1_c2" value="a" id="q1_o1_c2" style="display: inline-block;" required> </td>
+                                            <td style="text-align: center"><input type="radio" name="q1_c1" value="a" id="q1_o1_c1" style="display: inline-block;" > </td>
+                                            <td style="text-align: center"><input type="radio" name="q1_c2" value="a" id="q1_o1_c2" style="display: inline-block;" > </td>
                                         </tr>
                                         
                                         <tr>
@@ -341,8 +341,8 @@
                                             <td>
                                             <li>Potential to reduce the <b>risk of disclosure</b></li>
                                             </td>
-                                             <td style="text-align: center"><input type="radio" name="q2_c1" value="a" id="q2_o1_c1" style="display: inline-block;" required> </td>
-                                             <td style="text-align: center"><input type="radio" name="q2_c2" value="a" id="q2_o1_c2" style="display: inline-block;" required> </td>
+                                             <td style="text-align: center"><input type="radio" name="q2_c1" value="a" id="q2_o1_c1" style="display: inline-block;" > </td>
+                                             <td style="text-align: center"><input type="radio" name="q2_c2" value="a" id="q2_o1_c2" style="display: inline-block;" > </td>
                                         </tr>
                                         
                                         <tr>
@@ -388,8 +388,8 @@
                                         
                                         <tr>
                                             <td><li>Evidence for the validity of record linkage when using the software</li></td>
-                                             <td style="text-align: center"><input type="radio" name="q3_c1" value="a" id="q3_o1_c1" style="display: inline-block;" required> </td>
-                                             <td style="text-align: center"><input type="radio" name="q3_c2" value="a" id="q3_o1_c2" style="display: inline-block;" required> </td>
+                                             <td style="text-align: center"><input type="radio" name="q3_c1" value="a" id="q3_o1_c1" style="display: inline-block;" > </td>
+                                             <td style="text-align: center"><input type="radio" name="q3_c2" value="a" id="q3_o1_c2" style="display: inline-block;" > </td>
                                         </tr>
                                         
                                         <tr>
@@ -445,6 +445,40 @@
     </body>
     
     <script>
+
+        function val(q,c){
+            var qc = "q"+q+"_c"+c;
+            if($("input[name="+ qc + "]:checked").val()){
+                return true;
+            } else {
+                alert("For question "+q+', pick an option for choice '+c);
+                return false;
+            }
+        }
+
+        function validateForm(){
+
+            for (var q = 1; q <= 3; q++) {
+                for (var c = 1; c <= 2; c++) {
+                    if(!val(q,c)){
+                        return false;
+                    }
+                }
+            }
+            return true;
+            // if(val(1,1) && val(1,2) && val(2,1) && val())
+
+           // if($("input[name='q1_c1']").prop("checked")==True && $("input[name='q1_c2']").prop("checked") && $("input[name='q2_c1']").prop("checked") && $("input[name='q2_c2']").prop("checked") && $("input[name='q3_c1']").prop("checked") && $("input[name='q3_c2']").prop("checked")){
+           //      return True;
+           //  } else {
+           //      alert("Answer all choices");
+           //      return False;
+           //  }
+        }
+
+
+
+
         $("input[type='radio']").change(function(){
             clicked_element = $(this).attr('id');
             check_element = clicked_element.substring(0, 7) + (clicked_element.substring(7) == 1 ? 2 : 1);            
