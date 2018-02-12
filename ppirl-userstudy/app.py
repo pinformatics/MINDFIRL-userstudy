@@ -15,6 +15,12 @@ from flask_mail import Mail, Message
 # from app import app, mail
 
 app = Flask(__name__)
+
+app.config.update(
+    DEBUG=True,
+    LOGGER_HANDLER_POLICY='production'
+)
+
 """
 SESSION_TYPE = 'redis'
 app.config.from_object(__name__)
