@@ -615,7 +615,7 @@ def get_KAPR_for_dp(dataset, data_pair, display_status):
         if match_flag:
             K2 += 1
 
-    M = 24 # Number of rows that need to be manually linked
+    M = 10 # Number of rows that need to be manually linked
     KAPR1 = (1.0/M)*(1.0/K1)*P1
     KAPR2 = (1.0/M)*(1.0/K2)*P2
     KAPR = KAPR1 + KAPR2
