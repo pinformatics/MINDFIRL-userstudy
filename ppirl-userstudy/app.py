@@ -508,7 +508,7 @@ def save_survey():
 		msg = Message(subject='Survey answers',body=all_answers, recipients=['mindfil.ppirl@gmail.com'])
 		mail.send(msg)
 		
-		return all_answers
+		return "<h2>Thank you!</h2>"
     else:
         # return r.get("opt")
         return "get"
