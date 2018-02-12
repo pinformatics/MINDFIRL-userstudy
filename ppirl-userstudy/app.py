@@ -468,15 +468,18 @@ def post_survey():
     r.set(mindfil_disclosed_characters_key, 0)
     """
 
-    # KAPR - K-Anonymity privacy risk
-    # KAPR_key = session['user_cookie'] + '_KAPR'
-    # r.set(KAPR_key, 0)
+    session['user_cookie'] = hashlib.sha224("salt12138" + str(time.time()) + '.' + str(randint(1,10000))).hexdigest()
+    print(session['user_cookie'])
 
-    # # set the user-display-status as masked for all cell
-    # for id1 in ids_list:
-    #     for i in range(6):
-    #         key = session['user_cookie'] + '-' + id1[i]
-    #         r.set(key, 'M')
+    KAPR - K-Anonymity privacy risk
+    KAPR_key = session['user_cookie'] + '_KAPR'
+    r.set(KAPR_key, 0)
+
+    # set the user-display-status as masked for all cell
+    for id1 in ids_list:
+        for i in range(6):
+            key = session['user_cookie'] + '-' + id1[i]
+            r.set(key, 'M')
 
     # get the delta information
     delta = list()
@@ -510,7 +513,7 @@ def save_survey():
 		r3 = ','.join([time_stamp,"3",q3_c1,q3_c2])        
 
 		all_answers = ',\n'.join([header, r1, r2, r3])
-		# r.set(ses+'_survey', all_answers)
+		r.set(time_stamp+'_survey', all_answers)
 
 		msg = Message(subject='Survey answers',body=all_answers, recipients=['mindfil.ppirl@gmail.com'])
 		mail.send(msg)
