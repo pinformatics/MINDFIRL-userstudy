@@ -90,7 +90,7 @@ def state_machine(function_name):
 
 @app.route('/')
 def show_record_linkages():
-	return 'test'
+    return 'test'
     #return redirect(url_for('post_survey'))
 
 
