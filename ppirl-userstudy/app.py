@@ -34,8 +34,8 @@ app.config.from_object(__name__)
 Session(app)
 """
 
-# ENV = 'development'
-ENV = 'production'
+ENV = 'development'
+# ENV = 'production'
 
 app.config.from_pyfile('config.py')
 
@@ -90,8 +90,8 @@ def state_machine(function_name):
 
 @app.route('/')
 def show_record_linkages():
-    return 'test'
-    #return redirect(url_for('post_survey'))
+    # return 'test'
+    return redirect(url_for('post_survey'))
 
 
 @app.route('/introduction')
@@ -472,7 +472,7 @@ def post_survey():
     session['user_cookie'] = hashlib.sha224("salt12138" + str(time.time()) + '.' + str(randint(1,10000))).hexdigest()
     print(session['user_cookie'])
 
-    KAPR - K-Anonymity privacy risk
+    #KAPR - K-Anonymity privacy risk
     KAPR_key = session['user_cookie'] + '_KAPR'
     r.set(KAPR_key, 0)
 
