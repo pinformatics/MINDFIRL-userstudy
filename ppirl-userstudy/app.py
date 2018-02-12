@@ -461,7 +461,7 @@ def post_survey():
 
     # set the user-display-status as masked for all cell
     for id1 in ids_list:
-        for i in range(5):
+        for i in range(6):
             key = session['user_cookie'] + '-' + id1[i]
             r.set(key, 'M')
 
@@ -497,7 +497,7 @@ def save_survey():
 		r3 = ','.join([time_stamp,"3",q3_c1,q3_c2])        
 
 		all_answers = ',\n'.join([header, r1, r2, r3])
-		r.set(ses+'_survey', all_answers)
+		# r.set(ses+'_survey', all_answers)
 
 		msg = Message(subject='Survey answers',body=all_answers, recipients=['mindfil.ppirl@gmail.com'])
 		mail.send(msg)
