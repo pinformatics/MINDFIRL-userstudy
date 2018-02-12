@@ -127,8 +127,13 @@ $(function() {
                 make_cell_clickable();
                 refresh_delta();
                 reset_choice_panel();
-                $('#button_next_rl').css("display", "none");
-                $('#button_next').css("display", "inline");
+                if(data['is_last_page'] == 0) {
+                    $('#button_next_rl').attr("disabled", false);
+                }
+                else {
+                    $('#button_next_rl').css("display", "none");
+                    $('#button_next').css("display", "inline");
+                }
             },
             type: 'GET'
         });

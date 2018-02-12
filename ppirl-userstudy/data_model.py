@@ -385,6 +385,10 @@ class DataPairList(object):
         return self._data_raw
 
 
+    def get_size(self):
+        return len(self._data)
+
+
 def get_character_disclosed_num(value):
     """
     the character disclosed num

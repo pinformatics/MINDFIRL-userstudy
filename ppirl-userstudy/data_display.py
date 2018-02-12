@@ -59,7 +59,8 @@ def get_string_display(attr1, attr2, helper1, helper2, attribute_mode):
                         k += 1
                         i += 1
                         j += 1
-                    elif k+1 < len(helper1) and i+1 < len(attr1) and j+1 < len(attr2) and attr1[i] == attr2[j+1] and attr1[i+1] == attr2[j]:
+                    elif k+1 < len(helper1) and i+1 < len(attr1) and j+1 < len(attr2) and \
+                    helper1[k] not in ['*', '_', '?'] and helper1[k+1] not in ['*', '_', '?'] and attr1[i] == attr2[j+1] and attr1[i+1] == attr2[j]:
                         attr1_display += '<span class="transpose_text">' + attr1[i] + attr1[i+1] + '</span>'
                         attr2_display += '<span class="transpose_text">' + attr2[j] + attr2[j+1] + '</span>'
                         k += 2
@@ -111,7 +112,8 @@ def get_string_display(attr1, attr2, helper1, helper2, attribute_mode):
                         k += 1
                         i += 1
                         j += 1
-                    elif k+1 < len(helper1) and i+1 < len(attr1) and j+1 < len(attr2) and attr1[i] == attr2[j+1] and attr1[i+1] == attr2[j]:
+                    elif k+1 < len(helper1) and i+1 < len(attr1) and j+1 < len(attr2) and \
+                    helper1[k] not in ['*', '_', '?'] and helper1[k+1] not in ['*', '_', '?'] and attr1[i] == attr2[j+1] and attr1[i+1] == attr2[j]:
                         attr1_display += '<span class="transpose_text">' + attr1[i] + attr1[i+1] + '</span>'
                         attr2_display += '<span class="transpose_text">' + attr2[j] + attr2[j+1] + '</span>'
                         k += 2
@@ -163,7 +165,8 @@ def get_string_display(attr1, attr2, helper1, helper2, attribute_mode):
                         k += 1
                         i += 1
                         j += 1
-                    elif k+1 < len(helper1) and i+1 < len(attr1) and j+1 < len(attr2) and attr1[i] == attr2[j+1] and attr1[i+1] == attr2[j]:
+                    elif k+1 < len(helper1) and i+1 < len(attr1) and j+1 < len(attr2) and \
+                    helper1[k] not in ['*', '_', '?'] and helper1[k+1] not in ['*', '_', '?'] and attr1[i] == attr2[j+1] and attr1[i+1] == attr2[j]:
                         attr1_display += '<span class="transpose_text">' + '@&' + '</span>'
                         attr2_display += '<span class="transpose_text">' + '&@' + '</span>'
                         k += 2
@@ -524,7 +527,7 @@ def get_icon_string(s1, s2, helper1, helper2):
                         k += 1
                         i += 1
                         j += 1
-                    elif k+1 < len(helper1) and i+1 < len(s1) and j+1 < len(s2) and s1[i] == s2[j+1] and s1[i+1] == s2[j]:
+                    elif k+1 < len(helper1) and i+1 < len(s1) and j+1 < len(s2) and helper1[k] not in ['*', '_', '?'] and helper1[k+1] not in ['*', '_', '?'] and s1[i] == s2[j+1] and s1[i+1] == s2[j]:
                         ret += '<img class="transpose_icon" src="../static/images/site/transpose.png" alt="transpose">'
                         k += 2
                         i += 2
