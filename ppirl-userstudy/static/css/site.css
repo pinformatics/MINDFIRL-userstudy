@@ -30,16 +30,6 @@ body {
     margin-bottom: 0px;
 }
 
-#page-number {
-  /*
-  width: 100px;
-  float: right;
-  margin-right: 50px;
-  */
-  width: 100%;
-  text-align: center;
-}
-
 .submit_button {
     background-color: #30819C;
     border: none;
