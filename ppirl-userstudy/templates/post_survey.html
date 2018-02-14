@@ -40,12 +40,17 @@
             <div id="title">
                 <h3>Privacy Preserving Interactive Record Linkage (PPIRL)</h3>
             </div>
-          <!--   <div id="page-number">
-                （ page: {{ page_number }}/17 ）
-            </div> -->
+
+           
+         
             <div style="clear:both"></div>
             <div id="content">
-                <div class="privacy-budget-div">
+                <div id="click_below" style="float: left;">
+                    
+                    <p style="margin-top: 4%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    Try clicking on cells below and making linkage decisions to refresh your memory.</p>
+                </div>
+                <div class="privacy-budget-div" style="width: 35%; margin-left: 60%;float: clear; ">
                     <!--
                     <div>Character disclosed: <span id="character-disclosed-value">0%</span></div>
                     <div class="progress">
@@ -264,7 +269,13 @@
                 </div>
                 </div>
                 
-                <br><br>
+               <br>
+
+                &nbsp;&nbsp;If you would like to review the full tutorial, <a href="http://ppirl-tutorial-g.herokuapp.com/" target="_blank">click here</a>. 
+
+                
+
+                <br> <br>
                 
                     <div id="survey" style="width: 80%; margin-left:50px;  line-height: 1.8;">
                     <h3>Survey</h3>
@@ -412,10 +423,17 @@
                                     </table>
                                 </ol>
                             </li>
+
+                            <li>
+                                If you would like to be entered into a raffle to win $50, please type your email here. 
+                                 (We will keep this email separate from your reponses.)
+                                  <input type="text" id="text_email" name="raffle_email">
+                            </li>
                         
                         
                         </ol>
 <!--                        <input type="text" name="opinion">-->
+                        
                         <input type="submit" style="margin-left: 45%" id="submit">
                     
                     </form>

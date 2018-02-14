@@ -516,10 +516,15 @@ def save_survey():
 		all_answers = ',\n'.join([header, r1, r2, r3])
 		r.set(time_stamp+'_survey', all_answers)
 
-		msg = Message(subject='Survey answers',body=all_answers, recipients=['mindfil.ppirl@gmail.com'])
-		mail.send(msg)
-		
-		return "<h2>Thank you!</h2>"
+        	raffle_email = request.form.get("raffle_email")        
+    
+		if(len(raffle_email) > 0):
+		    mail.send(Message(subject="Mindfil_raffle", body = raffle_email, recipients=['ilan50_guru@tamu.edu']))
+
+       		msg = Message(subject='Survey answers', body=all_answers, recipients=['mindfil.ppirl@gmail.com'])
+	        mail.send(msg)
+
+	        return "<h2>Thank you!</h2>"
     else:
         # return r.get("opt")
         return "get"
