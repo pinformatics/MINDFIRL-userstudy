@@ -240,7 +240,7 @@ def show_record_linkage_task():
         data_pair = DATA_PAIR_LIST.get_data_pair_by_index(i)
         delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'])
 
-    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 2: Minimum Necessary Disclosure For Interactive record Linkage', thisurl='/record_linkage', page_number=16, delta=delta)
+    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 2: Minimum Necessary Disclosure For Interactive record Linkage', thisurl='/record_linkage', page_number="1/6", delta=delta)
 
 
 @app.route('/thankyou')
@@ -348,8 +348,9 @@ def open_cell():
 def show_record_linkage_next():
     current_page = int(r.get(session['user_cookie']+'_current_page'))+1
     r.incr(session['user_cookie']+'_current_page')
+    page_size = int(r.get(session['user_cookie'] + '_page_size'))
     is_last_page = 0
-    if current_page == int(r.get(session['user_cookie'] + '_page_size'))-1:
+    if current_page == page_size - 1:
         is_last_page = 1
 
     pairs_formatted = DATA_PAIR_LIST.get_data_display('masked')[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
@@ -379,6 +380,7 @@ def show_record_linkage_next():
     ret = {
         'delta': delta_dict,
         'is_last_page': is_last_page,
+        'page_number': 'page: ' + str(current_page+1)+'/'+str(page_size),
         'page_content': page_content
     }
     return jsonify(ret)

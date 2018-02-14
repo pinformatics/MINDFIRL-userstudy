@@ -122,8 +122,12 @@ $(function() {
             error: function() {},
             dataType: 'json',
             success: function(data) {
-                $DELTA = data['delta']
+                // update delta
+                $DELTA = data['delta'];
+                // update table content
                 $("#table_content").html(data['page_content']);
+                // update page number
+                $("#page-number").html(data['page_number']);
                 make_cell_clickable();
                 refresh_delta();
                 reset_choice_panel();

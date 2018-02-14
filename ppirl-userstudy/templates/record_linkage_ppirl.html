@@ -19,7 +19,7 @@
         <script src="../static/javascript/site.js"></script>
         <script src="../static/javascript/choice_panel.js?v=3"></script>
         <script src="../static/javascript/grading.js"></script>
-        <script src="../static/javascript/form_submit.js?v=6"></script>
+        <script src="../static/javascript/form_submit.js?v=7"></script>
         <script src="../static/javascript/clickable.js?v=10"></script>
         <script type=text/javascript>
             $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
@@ -43,7 +43,7 @@
             <div id="content">
                 <div class="tool-bar">
                 <div id="page-number" class="page-number-div">
-                    page: {{ page_number }}/6
+                    page: <span id="page-number">{{ page_number }}</span>
                 </div>
                 <div class="privacy-budget-div">
                     <!--
