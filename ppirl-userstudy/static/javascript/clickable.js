@@ -129,6 +129,18 @@ function refresh_delta() {
         $("#privacy-risk-delta").attr("style", 'width: 0%');
         $("#privacy-risk-delta-value").html(" ")
     });
+
+    $('.clickable_big_cell').hover(function() {
+        var id1 = this.children[0].children[0].getAttribute("id");
+        var id2 = this.children[2].children[0].getAttribute("id");
+        var d = $DELTA[id1] + $DELTA[id2];
+        var bar_style = 'width:' + d + '%';
+        $("#privacy-risk-delta").attr("style", bar_style);
+        $("#privacy-risk-delta-value").html(" + " + d + "%");
+    }, function() {
+        $("#privacy-risk-delta").attr("style", 'width: 0%');
+        $("#privacy-risk-delta-value").html(" ")
+    });
 }
 
 $(function() {
