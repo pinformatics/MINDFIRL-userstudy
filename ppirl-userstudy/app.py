@@ -136,7 +136,7 @@ def show_pratice_full_mode():
     pairs_formatted = dd.format_data(pairs, 'full')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = dd.generate_icon(pairs)
-    return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/full_mode', page_number=7)
+    return render_template('record_linkage_d.html', data=data, icons=icons, title='Practice', thisurl='/practice/full_mode', page_number=7)
 
 
 @app.route('/practice/masked_mode')
@@ -240,7 +240,7 @@ def show_record_linkage_task():
         data_pair = DATA_PAIR_LIST.get_data_pair_by_index(i)
         delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'])
 
-    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 2: Minimum Necessary Disclosure for Interactive Record Linkage', thisurl='/record_linkage', page_number="1/6", delta=delta)
+    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 1: Minimum Necessary Disclosure for Interactive Record Linkage', thisurl='/record_linkage', page_number="1/6", delta=delta)
 
 
 @app.route('/thankyou')
