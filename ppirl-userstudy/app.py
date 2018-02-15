@@ -34,8 +34,10 @@ app.config.from_object(__name__)
 Session(app)
 """
 
+
 # ENV = 'development'
 ENV = 'production'
+
 
 app.config.from_pyfile('config.py')
 
@@ -90,7 +92,6 @@ def state_machine(function_name):
 
 @app.route('/')
 def show_record_linkages():
-    # return 'test'
     return redirect(url_for('post_survey'))
 
 
@@ -469,16 +470,15 @@ def post_survey():
     r.set(mindfil_disclosed_characters_key, 0)
     """
 
+
     session['user_cookie'] = hashlib.sha224("salt12138" + str(time.time()) + '.' + str(randint(1,10000))).hexdigest()
     print(session['user_cookie'])
-
-    #KAPR - K-Anonymity privacy risk
     KAPR_key = session['user_cookie'] + '_KAPR'
     r.set(KAPR_key, 0)
 
     # set the user-display-status as masked for all cell
     for id1 in ids_list:
-        for i in range(6):
+        for i in range(5):
             key = session['user_cookie'] + '-' + id1[i]
             r.set(key, 'M')
 
@@ -525,6 +525,17 @@ def save_survey():
 	        mail.send(msg)
 
 	        return "<h2>Thank you!</h2>"
+        # if request.form.getlist('q1_o1'):
+            # q1_c1 = True
+        # r.set("opt",request.form.get('q1_o1'))
+        # return r.get("opt")
+        a = ', '.join(request.form.getlist('q1'))
+        b = ', '.join(request.form.getlist('q2'))
+        c = ', '.join(request.form.getlist('q3'))
+        all_answers = '\n'.join([a, b, c])
+        r.set(session['user_cookie']+'_survey', all_answers)
+        return "Thank you!"
+
     else:
         # return r.get("opt")
         return "get"
