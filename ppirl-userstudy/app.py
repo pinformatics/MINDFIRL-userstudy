@@ -11,18 +11,37 @@ import logging
 import data_loader as dl
 import data_display as dd
 import data_model as dm
+from flask_mail import Mail, Message
+import logging
+import sys
 
+
+# from app import app, mail
 
 app = Flask(__name__)
+
+app.config.update(
+    DEBUG=True,
+    LOGGER_HANDLER_POLICY='production'
+)
+
+app.logger.addHandler(logging.StreamHandler(sys.stdout))
+app.logger.setLevel(logging.ERROR)
+
 """
 SESSION_TYPE = 'redis'
 app.config.from_object(__name__)
 Session(app)
 """
 
-ENV = 'development'
-#ENV = 'production'
 
+# ENV = 'development'
+ENV = 'production'
+
+
+app.config.from_pyfile('config.py')
+
+mail = Mail(app)
 
 CONFIG = {
     'sequence': [
@@ -451,7 +470,9 @@ def post_survey():
     r.set(mindfil_disclosed_characters_key, 0)
     """
 
-    # KAPR - K-Anonymity privacy risk
+
+    session['user_cookie'] = hashlib.sha224("salt12138" + str(time.time()) + '.' + str(randint(1,10000))).hexdigest()
+    print(session['user_cookie'])
     KAPR_key = session['user_cookie'] + '_KAPR'
     r.set(KAPR_key, 0)
 
@@ -474,6 +495,36 @@ def post_survey():
 def save_survey():
     if request.method == "POST":
 
+		# ses = session['user_cookie']
+		time_stamp = str(time.time())
+
+		header = ','.join(['timestamp', "question", "choice_1", "choice_2"])
+
+
+		q1_c1 = request.form.get('q1_c1')
+		q1_c2 = request.form.get('q1_c2')
+		r1 = ','.join([time_stamp,"1",q1_c1,q1_c2])
+
+		q2_c1 = request.form.get('q2_c1')
+		q2_c2 = request.form.get('q2_c2')
+		r2 = ','.join([time_stamp,"2",q2_c1,q2_c2])        
+
+		q3_c1 = request.form.get('q3_c1')
+		q3_c2 = request.form.get('q3_c2')
+		r3 = ','.join([time_stamp,"3",q3_c1,q3_c2])        
+
+		all_answers = ',\n'.join([header, r1, r2, r3])
+		r.set(time_stamp+'_survey', all_answers)
+
+        	raffle_email = request.form.get("raffle_email")        
+    
+		if(len(raffle_email) > 0):
+		    mail.send(Message(subject="Mindfil_raffle", body = raffle_email, recipients=['ilan50_guru@tamu.edu']))
+
+       		msg = Message(subject='Survey answers', body=all_answers, recipients=['mindfil.ppirl@gmail.com'])
+	        mail.send(msg)
+
+	        return "<h2>Thank you!</h2>"
         # if request.form.getlist('q1_o1'):
             # q1_c1 = True
         # r.set("opt",request.form.get('q1_o1'))
@@ -484,6 +535,7 @@ def save_survey():
         all_answers = '\n'.join([a, b, c])
         r.set(session['user_cookie']+'_survey', all_answers)
         return "Thank you!"
+
     else:
         # return r.get("opt")
         return "get"
