@@ -388,9 +388,12 @@ class DataPairList(object):
     def get_size(self):
         return len(self._data)
 
+    def size(self):
+        return len(self._data)
 
 
-def get_KAPR_for_dp(dataset, data_pair, display_status):
+
+def get_KAPR_for_dp(dataset, data_pair, display_status, M):
     """
     return the K-Anonymity based Privacy Risk for a data pair at its current display status.
     Input:
@@ -398,6 +401,7 @@ def get_KAPR_for_dp(dataset, data_pair, display_status):
         data_pair - DataPair object
         display_status - display status is a list of status, for example:
                          ['M', 'M', 'M', 'M', 'M', 'M'] is all masked display status.
+        M - Number of rows that need to be manually linked
     """
     # calculating P
     character_disclosed_num1 = 0
@@ -447,7 +451,6 @@ def get_KAPR_for_dp(dataset, data_pair, display_status):
         if match_flag:
             K2 += 1
 
-    M = 72 # Number of rows that need to be manually linked
     KAPR1 = (1.0/M)*(1.0/K1)*P1
     KAPR2 = (1.0/M)*(1.0/K2)*P2
     KAPR = KAPR1 + KAPR2
@@ -455,16 +458,17 @@ def get_KAPR_for_dp(dataset, data_pair, display_status):
     return KAPR
 
 
-def KAPR_delta(DATASET, data_pair, display_status):
+def KAPR_delta(DATASET, data_pair, display_status, M):
     """
     for the current display status, get all possible next KAPR delta.
 
     Note: cannot use next_KAPR - KAPR == 0 to decide if an attribute has partial mode or not. Why?
           because the k is different, if the attribute mode is P, then it will use the helper to 
           calculate k (inherently use the length of the string), and the k is different.
+    M - Number of rows that need to be manually linked
     """
     delta = list()
-    current_KAPR = get_KAPR_for_dp(DATASET, data_pair, display_status)
+    current_KAPR = get_KAPR_for_dp(DATASET, data_pair, display_status, M)
     for i in range(6):
         state = display_status[i]
         next_display = data_pair.get_next_display(i, state)
@@ -474,7 +478,7 @@ def KAPR_delta(DATASET, data_pair, display_status):
             display_status[i] = 'P'
         else:
             logging.error('Error: wrong attribute display mode returned.')
-        next_KAPR = get_KAPR_for_dp(DATASET, data_pair, display_status)
+        next_KAPR = get_KAPR_for_dp(DATASET, data_pair, display_status, M)
         id = data_pair.get_ids()[0][i]
         delta.append((id, 100.0*next_KAPR - 100.0*current_KAPR))
         display_status[i] = state

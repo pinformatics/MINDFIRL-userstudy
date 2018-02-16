@@ -27,6 +27,7 @@ elif config.ENV == 'development':
 # global data, this should be common across all users, not affected by multiple process
 DATASET = dl.load_data_from_csv('data/section2.csv')
 DATA_PAIR_LIST = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/ppirl.csv'))
+DATA_TUTORIAL1 = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial1.csv'))
 
 
 def state_machine(function_name):
@@ -136,7 +137,7 @@ def show_pratice_full_mode():
     pairs_formatted = dd.format_data(pairs, 'full')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = dd.generate_icon(pairs)
-    return render_template('record_linkage_d.html', data=data, icons=icons, title='Practice', thisurl='/practice/full_mode', page_number=7)
+    return render_template('record_linkage_d.html', data=data, icons=icons, title='Practice 1', thisurl='/practice/full_mode', page_number=7)
 
 
 @app.route('/practice/masked_mode')
@@ -194,6 +195,35 @@ def grade_pratice_full_mode(table_mode):
     return jsonify(result=ret)
 
 
+@app.route('/ppirl_tutorial1')
+@state_machine('show_ppirl_tutorial1')
+def show_ppirl_tutorial1():
+    pairs_formatted = DATA_TUTORIAL1.get_data_display('masked')
+    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    icons = DATA_TUTORIAL1.get_icons()
+    ids_list = DATA_TUTORIAL1.get_ids()
+    ids = zip(ids_list[0::2], ids_list[1::2])
+
+    # KAPR - K-Anonymity privacy risk
+    KAPR_key = session['user_cookie'] + '_KAPR'
+    r.set(KAPR_key, 0)
+
+    # set the user-display-status as masked for all cell
+    attribute_size = 6
+    for id1 in ids_list:
+        for i in range(attribute_size):
+            key = session['user_cookie'] + '-' + id1[i]
+            r.set(key, 'M')
+
+    # get the delta information
+    delta = list()
+    for i in range(len(icons)):
+        data_pair = DATA_TUTORIAL1.get_data_pair_by_index(i)
+        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_TUTORIAL1.size())
+
+    return render_template('tutorial1.html', data=data, icons=icons, ids=ids, title='Practice 2', thisurl='/ppirl_tutorial1', page_number=" ", delta=delta)
+
+
 @app.route('/record_linkage')
 @state_machine('show_record_linkage_task')
 def show_record_linkage_task():
@@ -238,9 +268,9 @@ def show_record_linkage_task():
     delta = list()
     for i in range(dp_size):
         data_pair = DATA_PAIR_LIST.get_data_pair_by_index(i)
-        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'])
+        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_PAIR_LIST.size())
 
-    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 1: Minimum Necessary Disclosure for Interactive Record Linkage', thisurl='/record_linkage', page_number="1/6", delta=delta)
+    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 1', thisurl='/record_linkage', page_number="1/6", delta=delta)
 
 
 @app.route('/thankyou')
@@ -268,6 +298,11 @@ def save_data():
 
 @app.route('/get_cell', methods=['GET', 'POST'])
 def open_cell():
+    if session['state'] == 5:
+        working_data = DATA_TUTORIAL1
+    else:
+        working_data = DATA_PAIR_LIST
+
     id1 = request.args.get('id1')
     id2 = request.args.get('id2')
     mode = request.args.get('mode')
@@ -278,7 +313,7 @@ def open_cell():
     pair_id = int(pair_num)
     attr_id = int(attr_num)
 
-    pair = DATA_PAIR_LIST.get_data_pair(pair_id)
+    pair = working_data.get_data_pair(pair_id)
     attr = pair.get_attributes(attr_id)
     attr1 = attr[0]
     attr2 = attr[1]
@@ -328,8 +363,8 @@ def open_cell():
         display_status1.append(r.get(key1_prefix + str(attr_i)))
         display_status2.append(r.get(key2_prefix + str(attr_i)))
 
-    old_KAPR = dm.get_KAPR_for_dp(DATASET, pair, old_display_status1)
-    KAPR = dm.get_KAPR_for_dp(DATASET, pair, display_status1)
+    old_KAPR = dm.get_KAPR_for_dp(DATASET, pair, old_display_status1, 2*working_data.size())
+    KAPR = dm.get_KAPR_for_dp(DATASET, pair, display_status1, 2*working_data.size())
     KAPRINC = KAPR - old_KAPR
     KAPR_key = session['user_cookie'] + '_KAPR'
     overall_KAPR = float(r.get(KAPR_key))
@@ -338,7 +373,7 @@ def open_cell():
     ret['KAPR'] = round(100*overall_KAPR, 1)
 
     # refresh the delta of KAPR
-    new_delta_list = dm.KAPR_delta(DATASET, pair, display_status1)
+    new_delta_list = dm.KAPR_delta(DATASET, pair, display_status1, 2*working_data.size())
     ret['new_delta'] = new_delta_list
 
     return jsonify(ret)
@@ -370,7 +405,7 @@ def show_record_linkage_next():
     delta = list()
     for i in range(config.DATA_PAIR_PER_PAGE*current_page, config.DATA_PAIR_PER_PAGE*(current_page+1)):
         data_pair = DATA_PAIR_LIST.get_data_pair_by_index(i)
-        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'])
+        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_PAIR_LIST.size())
     # make delta to be a dict
     delta_dict = dict()
     for d in delta:
