@@ -481,7 +481,7 @@ def KAPR_delta(DATASET, data_pair, display_status):
             logging.error('Error: wrong attribute display mode returned.')
         next_KAPR = get_KAPR_for_dp(DATASET, data_pair, display_status)
         id = data_pair.get_ids()[0][i]
-        delta.append((id, round(100.0*next_KAPR - 100.0*current_KAPR), 6) )
+        delta.append((id, 100.0*next_KAPR - 100.0*current_KAPR) )
         display_status[i] = state
     return delta
 
