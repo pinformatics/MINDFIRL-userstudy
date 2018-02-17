@@ -504,7 +504,7 @@ def cdp_delta(data_pair, display_status, current_cd_num, total_characters):
         data_pair.get_character_disclosed_num(2, i, next_display)
         cdp_pre = 100.0*current_cd_num/total_characters
         cdp_post = 100.0*((1.0*current_cd_num+cd_post-cd_pre)/total_characters)
-        cdp_increment = cdp_post - cdp_pre
+        cdp_increment = round(cdp_post - cdp_pre,2);
         id = data_pair.get_ids()[0][i]
         delta.append((id, cdp_increment))
     return delta
