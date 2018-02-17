@@ -448,3 +448,117 @@ def pull_data():
 
 
 app.secret_key = 'a9%z$/`9h8FMnh893;*g783'
+
+@app.route('/tutorial_sec3_start')
+@state_machine('show_tutorial_sec3_start')
+def show_tutorial_sec3_start():
+    return render_template('tutorial_sec3_start.html')
+
+
+
+# @app.route('/ppirl_tutorial1')
+# @state_machine('show_ppirl_tutorial1')
+# def show_ppirl_tutorial1():
+#     pairs_formatted = DATA_TUTORIAL1.get_data_display('masked')
+#     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+#     icons = DATA_TUTORIAL1.get_icons()
+#     ids_list = DATA_TUTORIAL1.get_ids()
+#     ids = zip(ids_list[0::2], ids_list[1::2])
+
+#     # KAPR - K-Anonymity privacy risk
+#     KAPR_key = session['user_cookie'] + '_KAPR'
+#     r.set(KAPR_key, 0)
+
+#     # set the user-display-status as masked for all cell
+#     attribute_size = 6
+#     for id1 in ids_list:
+#         for i in range(attribute_size):
+#             key = session['user_cookie'] + '-' + id1[i]
+#             r.set(key, 'M')
+
+#     # get the delta information
+#     delta = list()
+#     for i in range(len(icons)):
+#         data_pair = DATA_TUTORIAL1.get_data_pair_by_index(i)
+#         delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_TUTORIAL1.size())
+
+#     return render_template('tutorial1.html', data=data, icons=icons, ids=ids, title='Practice 2', thisurl='/ppirl_tutorial1', page_number=" ", delta=delta)
+
+
+
+@app.route('/tutorial_sec3_clickable')
+@state_machine('show_tutorial_sec3_clickable')
+def show_tutorial_sec3_clickable():
+    pairs_formatted = DATA_TUTORIAL1.get_data_display('masked')
+    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    icons = DATA_TUTORIAL1.get_icons()
+    ids_list = DATA_TUTORIAL1.get_ids()
+    ids = zip(ids_list[0::2], ids_list[1::2])
+
+    # KAPR - K-Anonymity privacy risk
+    KAPR_key = session['user_cookie'] + '_KAPR'
+    r.set(KAPR_key, 0)
+
+    # set the user-display-status as masked for all cell
+    attribute_size = 6
+    for id1 in ids_list:
+        for i in range(attribute_size):
+            key = session['user_cookie'] + '-' + id1[i]
+            r.set(key, 'M')
+
+    DATASET_T = dl.load_data_from_csv('data/tutorial1.csv')
+    print DATASET_T
+    # get the delta information
+    delta = list()
+    for i in range(1):
+        data_pair = DATA_TUTORIAL1.get_data_pair_by_index(i)
+        delta += dm.KAPR_delta(DATASET_T, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_TUTORIAL1.size())
+
+    return render_template('tutorial_sec3_clickable.html', data=data, icons=icons, ids=ids, title='Tutorial 3', thisurl='/tutorial_sec3_clickable', page_number=" ", delta=delta)
+
+@app.route('/tutorial_sec3_incremental3')
+@state_machine('show_tutorial_sec3_incremental3')
+def show_tutorial_sec3_incremental3():
+    pairs_formatted = DATA_TUTORIAL1.get_data_display('masked')
+    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    icons = DATA_TUTORIAL1.get_icons()
+    ids_list = DATA_TUTORIAL1.get_ids()
+    ids = zip(ids_list[0::2], ids_list[1::2])
+
+    # KAPR - K-Anonymity privacy risk
+    KAPR_key = session['user_cookie'] + '_KAPR'
+    r.set(KAPR_key, 0)
+
+    # set the user-display-status as masked for all cell
+    attribute_size = 6
+    for id1 in ids_list:
+        for i in range(attribute_size):
+            key = session['user_cookie'] + '-' + id1[i]
+            r.set(key, 'M')
+
+    DATASET_T = dl.load_data_from_csv('data/tutorial1.csv')
+    print DATASET_T
+    # get the delta information
+    delta = list()
+    for i in range(1):
+        data_pair = DATA_TUTORIAL1.get_data_pair_by_index(i)
+        delta += dm.KAPR_delta(DATASET_T, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_TUTORIAL1.size())
+
+    return render_template('tutorial_sec3_incremental3.html', data=data, icons=icons, ids=ids, title='Tutorial 3', thisurl='/tutorial_sec3_clickable', page_number=" ", delta=delta)
+
+
+@app.route('/tutorial_sec3_incremental1')
+@state_machine('show_tutorial_sec3_incremental1')
+def show_tutorial_sec3_incremental1():
+    return render_template('tutorial_sec3_incremental1.html')
+
+
+@app.route('/tutorial_sec3_incremental2')
+@state_machine('show_tutorial_sec3_incremental2')
+def show_tutorial_sec3_incremental2():
+    return render_template('tutorial_sec3_incremental2.html')
+
+@app.route('/tutorial_sec3_howto')
+@state_machine('show_tutorial_sec3_howto')
+def show_tutorial_sec3_howto():
+    return render_template('tutorial_sec3_howto.html')
