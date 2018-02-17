@@ -17,6 +17,8 @@ SEQUENCE = [
     'show_tutorial_sec3_incremental2',
     'show_tutorial_sec3_incremental3',
     'show_tutorial_sec3_howto',
+    'show_tutorial_sec3_howto2',
+    'show_tutorial_sec3_prepractice',
     'show_record_linkage_task',
     'show_thankyou'
 ]

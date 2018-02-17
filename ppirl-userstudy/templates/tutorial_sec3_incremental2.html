@@ -1,6 +1,12 @@
 {% extends "head_template.html" %}
 {% block content %}
-    <p>For identical as well as completely different cells, all the contents will be revealed in the first click.</p>
-    <img src="static/images/tutorial/diff.gif">
-    <p>This method of disclosure is called incremental disclosure.</p>
+    <ul>
+        <li>
+            For cells that are partly different, only the differences will be revealed in the first click and the full contents, in the next click.
+            <br><img src="static/images/tutorial/partially_diff.gif" style="border-width: 10px; border-style: solid;">
+        </li>
+        <li>That means such cells can be clicked twice to open them up fully</li>    
+        <li>This method of disclosure is called incremental disclosure.</li>
+    </ul>    
 {% endblock %}
+

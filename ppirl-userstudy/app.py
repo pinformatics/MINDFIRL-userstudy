@@ -537,7 +537,7 @@ def show_tutorial_sec3_incremental3():
             r.set(key, 'M')
 
     DATASET_T = dl.load_data_from_csv('data/tutorial1.csv')
-    print DATASET_T
+    # print DATASET_T
     # get the delta information
     delta = list()
     for i in range(1):
@@ -562,3 +562,13 @@ def show_tutorial_sec3_incremental2():
 @state_machine('show_tutorial_sec3_howto')
 def show_tutorial_sec3_howto():
     return render_template('tutorial_sec3_howto.html')
+
+@app.route('/tutorial_sec3_howto2')
+@state_machine('show_tutorial_sec3_howto2')
+def show_tutorial_sec3_howto2():
+    return render_template('tutorial_sec3_howto2.html')
+
+@app.route('/tutorial_sec3_prepractice')
+@state_machine('show_tutorial_sec3_prepractice')
+def show_tutorial_sec3_prepractice():
+    return render_template('tutorial_sec3_prepractice.html')
