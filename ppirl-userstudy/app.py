@@ -364,7 +364,7 @@ def open_cell():
     new_delta_list = dm.KAPR_delta(DATASET, pair, display_status1)
     ret['new_delta'] = new_delta_list
     new_delta_cdp_list = dm.cdp_delta(pair, display_status1, int(r.get(mindfil_disclosed_characters_key)), int(r.get(mindfil_total_characters_key)))
-    ret['new_delta_cdp'] = round(new_delta_cdp_list,2)
+    ret['new_delta_cdp'] = new_delta_cdp_list
 
     return jsonify(ret)
 
