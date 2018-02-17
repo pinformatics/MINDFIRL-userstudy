@@ -481,7 +481,7 @@ def KAPR_delta(DATASET, data_pair, display_status):
             logging.error('Error: wrong attribute display mode returned.')
         next_KAPR = get_KAPR_for_dp(DATASET, data_pair, display_status)
         id = data_pair.get_ids()[0][i]
-        delta.append((id, 100.0*next_KAPR - 100.0*current_KAPR))
+        delta.append((id, round(100.0*next_KAPR - 100.0*current_KAPR), 3) )
         display_status[i] = state
     return delta
 
@@ -504,7 +504,7 @@ def cdp_delta(data_pair, display_status, current_cd_num, total_characters):
         data_pair.get_character_disclosed_num(2, i, next_display)
         cdp_pre = 100.0*current_cd_num/total_characters
         cdp_post = 100.0*((1.0*current_cd_num+cd_post-cd_pre)/total_characters)
-        cdp_increment = round(cdp_post - cdp_pre,2);
+        cdp_increment = round(cdp_post - cdp_pre,3);
         id = data_pair.get_ids()[0][i]
         delta.append((id, cdp_increment))
     return delta
