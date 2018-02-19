@@ -160,12 +160,13 @@ function make_cell_clickable() {
         }
 
         // save the user click data
-        $this_click = "user click: " + current_cell.children[0].id;
+        $type = "type: cell";
+        $this_click = "id: " + current_cell.children[0].id;
         var dt = new Date();
         $click_time = "click time: " + dt.getHours() + "h" + dt.getMinutes() + "m" + dt.getSeconds() + "s";
         $click_timestamp = "click timestamp: " + dt.getTime();
-        $data = [$this_click, $click_time, $click_timestamp].join()
-        $user_data += $data + ";";
+        $data = [$type, $this_click, $click_time, $click_timestamp].join()
+        $user_data += $data + ";\n";
         return false;
     });
 
@@ -179,12 +180,13 @@ function make_cell_clickable() {
         this.classList.remove("clickable_big_cell");
 
         // save the user click data
-        $this_click = "user click: " + first_name_cell.children[0].id + "user click: " + last_name_cell.children[0].id;
+        $type = "type: cell";
+        $this_click = "id: " + first_name_cell.children[0].id;
         var dt = new Date();
         $click_time = "click time: " + dt.getHours() + "h" + dt.getMinutes() + "m" + dt.getSeconds() + "s";
         $click_timestamp = "click timestamp: " + dt.getTime();
-        $data = [$this_click, $click_time, $click_timestamp].join()
-        $user_data += $data + ";";
+        $data = [$type, $this_click, $click_time, $click_timestamp].join()
+        $user_data += $data + ";\n";
         
         return false;
     });
