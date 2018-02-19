@@ -9,6 +9,7 @@ import os
 import redis
 import logging
 import math
+import copy
 import data_loader as dl
 import data_display as dd
 import data_model as dm
@@ -298,83 +299,52 @@ def save_data():
 
 @app.route('/get_cell', methods=['GET', 'POST'])
 def open_cell():
+    ret = dict()
     if session['state'] == 5:
         working_data = DATA_TUTORIAL1
     else:
         working_data = DATA_PAIR_LIST
-
     id1 = request.args.get('id1')
     id2 = request.args.get('id2')
     mode = request.args.get('mode')
-
     pair_num = str(id1.split('-')[0])
     attr_num = str(id1.split('-')[2])
+    user_key = session['user_cookie']
+    ret = dm.open_cell(user_key, DATASET, working_data, pair_num, attr_num, mode, r)
+    return jsonify(ret)
 
-    pair_id = int(pair_num)
-    attr_id = int(attr_num)
 
-    pair = working_data.get_data_pair(pair_id)
-    attr = pair.get_attributes(attr_id)
-    attr1 = attr[0]
-    attr2 = attr[1]
-    helper = pair.get_helpers(attr_id)
-    helper1 = helper[0]
-    helper2 = helper[1]
-
-    if mode == 'full':
-        return jsonify({"value1": attr1, "value2": attr2, "mode": "full"})
-
-    attr_display_next = pair.get_next_display(attr_id = attr_id, attr_mode = mode)
-    ret = {"value1": attr_display_next[1][0], "value2": attr_display_next[1][1], "mode": attr_display_next[0]}
-
-    # TODO: assert the mode is consistent with the display_mode in redis
-
-    """ no character disclosed percentage now
-    for character disclosure percentage, see branch ELSI
-    """
-
-    # get K-Anonymity based Privacy Risk
-    old_display_status1 = list()
-    old_display_status2 = list()
-    key1_prefix = session['user_cookie'] + '-' + pair_num + '-1-'
-    key2_prefix = session['user_cookie'] + '-' + pair_num + '-2-'
-    for attr_i in range(6):
-        old_display_status1.append(r.get(key1_prefix + str(attr_i)))
-        old_display_status2.append(r.get(key2_prefix + str(attr_i)))
-
-    # update the display status in redis
-    key1 = session['user_cookie'] + '-' + pair_num + '-1-' + attr_num
-    key2 = session['user_cookie'] + '-' + pair_num + '-2-' + attr_num
-    if ret['mode'] == 'full':
-        r.set(key1, 'F')
-        r.set(key2, 'F')
-    elif ret['mode'] == 'partial':
-        r.set(key1, 'P')
-        r.set(key2, 'P')
+@app.route('/get_big_cell', methods=['GET', 'POST'])
+def open_big_cell():
+    ret = dict()
+    if session['state'] == 5:
+        working_data = DATA_TUTORIAL1
     else:
-        print("Error: invalid display status.")
-        logging.error('Error: invalid display status.')
+        working_data = DATA_PAIR_LIST
+    id1 = request.args.get('id1')
+    id2 = request.args.get('id2')
+    id3 = request.args.get('id3')
+    id4 = request.args.get('id4')
+    mode = request.args.get('mode')
+    user_key = session['user_cookie']
 
-    display_status1 = list()
-    display_status2 = list()
-    key1_prefix = session['user_cookie'] + '-' + pair_num + '-1-'
-    key2_prefix = session['user_cookie'] + '-' + pair_num + '-2-'
-    for attr_i in range(6):
-        display_status1.append(r.get(key1_prefix + str(attr_i)))
-        display_status2.append(r.get(key2_prefix + str(attr_i)))
+    pair_num1 = str(id1.split('-')[0])
+    attr_num1 = str(id1.split('-')[2])
+    ret1 = dm.open_cell(user_key, DATASET, working_data, pair_num1, attr_num1, mode, r)
+    pair_num2 = str(id3.split('-')[0])
+    attr_num2 = str(id3.split('-')[2])
+    ret2 = dm.open_cell(user_key, DATASET, working_data, pair_num2, attr_num2, mode, r)
 
-    old_KAPR = dm.get_KAPR_for_dp(DATASET, pair, old_display_status1, 2*working_data.size())
-    KAPR = dm.get_KAPR_for_dp(DATASET, pair, display_status1, 2*working_data.size())
-    KAPRINC = KAPR - old_KAPR
-    KAPR_key = session['user_cookie'] + '_KAPR'
-    overall_KAPR = float(r.get(KAPR_key))
-    overall_KAPR += KAPRINC
-    r.incrbyfloat(KAPR_key, KAPRINC)
-    ret['KAPR'] = round(100*overall_KAPR, 1)
-
-    # refresh the delta of KAPR
-    new_delta_list = dm.KAPR_delta(DATASET, pair, display_status1, 2*working_data.size())
-    ret['new_delta'] = new_delta_list
+    ret = {
+        'value1': ret1['value1'],
+        'value2': ret1['value2'],
+        'value3': ret2['value1'],
+        'value4': ret2['value2'],
+        'mode': ret2['mode'],
+        'KAPR': ret2['KAPR'],
+        'result': ret2['result'],
+        'new_delta': ret2['new_delta']
+    }
 
     return jsonify(ret)
 
