@@ -28,7 +28,10 @@ elif config.ENV == 'development':
 DATASET = dl.load_data_from_csv('data/section2.csv')
 DATA_PAIR_LIST = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/ppirl.csv'))
 DATA_TUTORIAL1 = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial1.csv'))
-
+DATA_inc3 = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial_sec3_incremental3_data.csv'))
+DATA_tut3 = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial3.csv'))
+# DATA_inc3 = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/video_decisonmaking.csv'))
+# DATA_PAIR_LIST = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial_sec3_incremental3_data.csv'))
 
 def state_machine(function_name):
     def wrapper(f):
@@ -519,10 +522,10 @@ def show_tutorial_sec3_clickable():
 @app.route('/tutorial_sec3_incremental3')
 @state_machine('show_tutorial_sec3_incremental3')
 def show_tutorial_sec3_incremental3():
-    pairs_formatted = DATA_TUTORIAL1.get_data_display('masked')
+    pairs_formatted =  DATA_inc3.get_data_display('masked')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
-    icons = DATA_TUTORIAL1.get_icons()
-    ids_list = DATA_TUTORIAL1.get_ids()
+    icons = DATA_inc3.get_icons()
+    ids_list = DATA_inc3.get_ids()
     ids = zip(ids_list[0::2], ids_list[1::2])
 
     # KAPR - K-Anonymity privacy risk
@@ -536,13 +539,13 @@ def show_tutorial_sec3_incremental3():
             key = session['user_cookie'] + '-' + id1[i]
             r.set(key, 'M')
 
-    DATASET_T = dl.load_data_from_csv('data/tutorial1.csv')
+    # DATASET_T = dl.load_data_from_csv('data/tutorial1.csv')
     # print DATASET_T
     # get the delta information
     delta = list()
     for i in range(1):
-        data_pair = DATA_TUTORIAL1.get_data_pair_by_index(i)
-        delta += dm.KAPR_delta(DATASET_T, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_TUTORIAL1.size())
+        data_pair = DATA_inc3.get_data_pair_by_index(i)
+        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_inc3.size())
 
     return render_template('tutorial_sec3_incremental3.html', data=data, icons=icons, ids=ids, title='Tutorial 3', thisurl='/tutorial_sec3_clickable', page_number=" ", delta=delta)
 
@@ -572,3 +575,48 @@ def show_tutorial_sec3_howto2():
 @state_machine('show_tutorial_sec3_prepractice')
 def show_tutorial_sec3_prepractice():
     return render_template('tutorial_sec3_prepractice.html')
+
+    
+
+@app.route('/tutorial_sec3_decision_making')
+@state_machine('show_tutorial_sec3_decision_making')
+def show_tutorial_sec3_decision_making():
+    return render_template('tutorial_sec3_decision_making.html')
+
+
+@app.route('/tutorial_sec3_privacy_budget_vid')
+@state_machine('show_tutorial_sec3_privacy_budget_vid')
+def show_tutorial_sec3_privacy_budget_vid():
+    return render_template('tutorial_sec3_privacy_budget_vid.html')
+
+
+@app.route('/tutorial_sec3_practice')
+@state_machine('show_tutorial_sec3_practice')
+def show_tutorial_sec3_practice():
+    pairs_formatted = DATA_tut3.get_data_display('masked')
+    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    icons = DATA_tut3.get_icons()
+    ids_list = DATA_tut3.get_ids()
+    ids = zip(ids_list[0::2], ids_list[1::2])
+
+    # KAPR - K-Anonymity privacy risk
+    KAPR_key = session['user_cookie'] + '_KAPR'
+    r.set(KAPR_key, 0)
+
+    # set the user-display-status as masked for all cell
+    attribute_size = 6
+    for id1 in ids_list:
+        for i in range(attribute_size):
+            key = session['user_cookie'] + '-' + id1[i]
+            r.set(key, 'M')
+
+    # DATASET_T = dl.load_data_from_csv('data/tutorial1.csv')
+    # print DATASET_T
+    # get the delta information
+    delta = list()
+    for i in range(1):
+        data_pair = DATA_tut3.get_data_pair_by_index(i)
+        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_tut3.size())
+
+    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Practice 3 ', thisurl='/tutorial_sec3_practice', page_number=" ", delta=delta)
+
