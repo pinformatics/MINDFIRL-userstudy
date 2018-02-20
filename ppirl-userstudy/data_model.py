@@ -2,6 +2,7 @@
 # encoding=utf-8
 
 import logging
+import copy
 import data_display as dd
 from util import RET
 
@@ -388,9 +389,12 @@ class DataPairList(object):
     def get_size(self):
         return len(self._data)
 
+    def size(self):
+        return len(self._data)
 
 
-def get_KAPR_for_dp(dataset, data_pair, display_status):
+
+def get_KAPR_for_dp(dataset, data_pair, display_status, M):
     """
     return the K-Anonymity based Privacy Risk for a data pair at its current display status.
     Input:
@@ -398,6 +402,7 @@ def get_KAPR_for_dp(dataset, data_pair, display_status):
         data_pair - DataPair object
         display_status - display status is a list of status, for example:
                          ['M', 'M', 'M', 'M', 'M', 'M'] is all masked display status.
+        M - Number of rows that need to be manually linked
     """
     # calculating P
     character_disclosed_num1 = 0
@@ -447,9 +452,6 @@ def get_KAPR_for_dp(dataset, data_pair, display_status):
         if match_flag:
             K2 += 1
 
-    M = 72 # Number of rows that need to be manually linked
-    if K1 == 0.0:
-        print(data_pair.get_data_raw(1, 0))
     KAPR1 = (1.0/M)*(1.0/K1)*P1
     KAPR2 = (1.0/M)*(1.0/K2)*P2
     KAPR = KAPR1 + KAPR2
@@ -457,16 +459,17 @@ def get_KAPR_for_dp(dataset, data_pair, display_status):
     return KAPR
 
 
-def KAPR_delta(DATASET, data_pair, display_status):
+def KAPR_delta(DATASET, data_pair, display_status, M):
     """
     for the current display status, get all possible next KAPR delta.
 
     Note: cannot use next_KAPR - KAPR == 0 to decide if an attribute has partial mode or not. Why?
           because the k is different, if the attribute mode is P, then it will use the helper to 
           calculate k (inherently use the length of the string), and the k is different.
+    M - Number of rows that need to be manually linked
     """
     delta = list()
-    current_KAPR = get_KAPR_for_dp(DATASET, data_pair, display_status)
+    current_KAPR = get_KAPR_for_dp(DATASET, data_pair, display_status, M)
     for i in range(6):
         state = display_status[i]
         next_display = data_pair.get_next_display(i, state)
@@ -476,8 +479,79 @@ def KAPR_delta(DATASET, data_pair, display_status):
             display_status[i] = 'P'
         else:
             logging.error('Error: wrong attribute display mode returned.')
-        next_KAPR = get_KAPR_for_dp(DATASET, data_pair, display_status)
+        next_KAPR = get_KAPR_for_dp(DATASET, data_pair, display_status, M)
         id = data_pair.get_ids()[0][i]
         delta.append((id, 100.0*next_KAPR - 100.0*current_KAPR))
         display_status[i] = state
     return delta
+
+
+def open_cell(user_key, full_data, working_data, pair_num, attr_num, mode, r):
+    """
+    openning a clickable cell, full_data is the full database, working_data is the data that need to manually linked.
+    pair_num and attr_num are string
+    r is redis handler
+    return a dict with following keys:
+    value1, value2, mode, KAPR, result, new_delta
+    """
+    ret = dict()
+
+    pair_id = int(pair_num)
+    attr_id = int(attr_num)
+
+    pair = working_data.get_data_pair(pair_id)
+    attr = pair.get_attributes(attr_id)
+    attr1 = attr[0]
+    attr2 = attr[1]
+    helper = pair.get_helpers(attr_id)
+    helper1 = helper[0]
+    helper2 = helper[1]
+
+    attr_display_next = pair.get_next_display(attr_id = attr_id, attr_mode = mode)
+    
+    # TODO: assert the mode is consistent with the display_mode in redis
+
+    """ no character disclosed percentage now
+    for character disclosure percentage, see branch ELSI
+    """
+
+    # get K-Anonymity based Privacy Risk
+    old_display_status1 = list()
+    old_display_status2 = list()
+    key1_prefix = user_key + '-' + pair_num + '-1-'
+    key2_prefix = user_key + '-' + pair_num + '-2-'
+    for attr_i in range(6):
+        old_display_status1.append(r.get(key1_prefix + str(attr_i)))
+        old_display_status2.append(r.get(key2_prefix + str(attr_i)))
+    new_display_status = copy.deepcopy(old_display_status1)
+    new_display_status[attr_id] = 'F' if attr_display_next[0] == 'full' else 'P'
+
+    old_KAPR = get_KAPR_for_dp(full_data, pair, old_display_status1, 2*working_data.size())
+    KAPR = get_KAPR_for_dp(full_data, pair, new_display_status, 2*working_data.size())
+    KAPRINC = KAPR - old_KAPR
+    KAPR_key = user_key + '_KAPR'
+    overall_KAPR = 100*(float(r.get(KAPR_key)) + KAPRINC)
+    if overall_KAPR > 80.0:
+        ret['result'] = 'fail'
+        ret['KAPR'] = 0
+        return jsonify(ret)
+
+    # success! update the display status in redis, update KAPR, get delta for KAPR
+    ret['value1'] = attr_display_next[1][0]
+    ret['value2'] = attr_display_next[1][1]
+    ret['mode'] = attr_display_next[0]
+
+    key1 = user_key + '-' + pair_num + '-1-' + attr_num
+    key2 = user_key + '-' + pair_num + '-2-' + attr_num
+    r.set(key1, new_display_status[attr_id])
+    r.set(key2, new_display_status[attr_id])
+    r.incrbyfloat(KAPR_key, KAPRINC)
+    ret['KAPR'] = round(overall_KAPR, 1)
+    ret['result'] = 'success'
+
+    # refresh the delta of KAPR
+    new_delta_list = KAPR_delta(full_data, pair, new_display_status, 2*working_data.size())
+    ret['new_delta'] = new_delta_list
+
+    return ret
+

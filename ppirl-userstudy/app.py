@@ -9,6 +9,7 @@ import os
 import redis
 import logging
 import math
+import copy
 import data_loader as dl
 import data_display as dd
 import data_model as dm
@@ -29,6 +30,7 @@ DATASET = dl.load_data_from_csv('data/section1_full.csv')
 DATASET2 = dl.load_data_from_csv('data/section2.csv')
 DATA_PAIR_LIST = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/ppirl.csv'))
 DATA_SECTION2 = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/section2.csv'))
+DATA_TUTORIAL1 = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial1.csv'))
 
 
 def state_machine(function_name):
@@ -137,7 +139,7 @@ def show_pratice_full_mode():
     pairs_formatted = dd.format_data(pairs, 'full')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = dd.generate_icon(pairs)
-    return render_template('record_linkage_d.html', data=data, icons=icons, title='Practice', thisurl='/practice/full_mode', page_number=7)
+    return render_template('record_linkage_d.html', data=data, icons=icons, title='Practice 1', thisurl='/practice/full_mode', page_number=7)
 
 
 @app.route('/practice/masked_mode')
@@ -195,6 +197,35 @@ def grade_pratice_full_mode(table_mode):
     return jsonify(result=ret)
 
 
+@app.route('/ppirl_tutorial1')
+@state_machine('show_ppirl_tutorial1')
+def show_ppirl_tutorial1():
+    pairs_formatted = DATA_TUTORIAL1.get_data_display('masked')
+    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    icons = DATA_TUTORIAL1.get_icons()
+    ids_list = DATA_TUTORIAL1.get_ids()
+    ids = zip(ids_list[0::2], ids_list[1::2])
+
+    # KAPR - K-Anonymity privacy risk
+    KAPR_key = session['user_cookie'] + '_KAPR'
+    r.set(KAPR_key, 0)
+
+    # set the user-display-status as masked for all cell
+    attribute_size = 6
+    for id1 in ids_list:
+        for i in range(attribute_size):
+            key = session['user_cookie'] + '-' + id1[i]
+            r.set(key, 'M')
+
+    # get the delta information
+    delta = list()
+    for i in range(len(icons)):
+        data_pair = DATA_TUTORIAL1.get_data_pair_by_index(i)
+        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_TUTORIAL1.size())
+
+    return render_template('tutorial1.html', data=data, icons=icons, ids=ids, title='Practice 2', thisurl='/ppirl_tutorial1', page_number=" ", delta=delta)
+
+
 @app.route('/record_linkage')
 @state_machine('show_record_linkage_task')
 def show_record_linkage_task():
@@ -239,9 +270,9 @@ def show_record_linkage_task():
     delta = list()
     for i in range(dp_size):
         data_pair = DATA_PAIR_LIST.get_data_pair_by_index(i)
-        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'])
+        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_PAIR_LIST.size())
 
-    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 1: Minimum Necessary Disclosure for Interactive Record Linkage', thisurl='/record_linkage', page_number="1/6", delta=delta)
+    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 1', thisurl='/record_linkage', page_number="1/6", delta=delta)
 
 
 @app.route('/thankyou')
@@ -269,85 +300,53 @@ def save_data():
 
 @app.route('/get_cell', methods=['GET', 'POST'])
 def open_cell():
-    # use current state to find which page the user at, and decide which data to use
-    if session['state'] == 6:
-        working_data = DATA_PAIR_LIST
-        working_whole_data = DATASET
+    ret = dict()
+    if session['state'] == 5:
+        working_data = DATA_TUTORIAL1
     else:
-        working_data = DATA_SECTION2
-        working_whole_data = DATASET2
+        working_data = DATA_PAIR_LIST
+
     id1 = request.args.get('id1')
     id2 = request.args.get('id2')
     mode = request.args.get('mode')
-
     pair_num = str(id1.split('-')[0])
     attr_num = str(id1.split('-')[2])
+    user_key = session['user_cookie']
+    ret = dm.open_cell(user_key, DATASET, working_data, pair_num, attr_num, mode, r)
+    return jsonify(ret)
 
-    pair_id = int(pair_num)
-    attr_id = int(attr_num)
 
-    pair = working_data.get_data_pair(pair_id)
-    attr = pair.get_attributes(attr_id)
-    attr1 = attr[0]
-    attr2 = attr[1]
-    helper = pair.get_helpers(attr_id)
-    helper1 = helper[0]
-    helper2 = helper[1]
-
-    if mode == 'full':
-        return jsonify({"value1": attr1, "value2": attr2, "mode": "full"})
-
-    attr_display_next = pair.get_next_display(attr_id = attr_id, attr_mode = mode)
-    ret = {"value1": attr_display_next[1][0], "value2": attr_display_next[1][1], "mode": attr_display_next[0]}
-
-    # TODO: assert the mode is consistent with the display_mode in redis
-
-    """ no character disclosed percentage now
-    for character disclosure percentage, see branch ELSI
-    """
-
-    # get K-Anonymity based Privacy Risk
-    old_display_status1 = list()
-    old_display_status2 = list()
-    key1_prefix = session['user_cookie'] + '-' + pair_num + '-1-'
-    key2_prefix = session['user_cookie'] + '-' + pair_num + '-2-'
-    for attr_i in range(6):
-        old_display_status1.append(r.get(key1_prefix + str(attr_i)))
-        old_display_status2.append(r.get(key2_prefix + str(attr_i)))
-
-    # update the display status in redis
-    key1 = session['user_cookie'] + '-' + pair_num + '-1-' + attr_num
-    key2 = session['user_cookie'] + '-' + pair_num + '-2-' + attr_num
-    if ret['mode'] == 'full':
-        r.set(key1, 'F')
-        r.set(key2, 'F')
-    elif ret['mode'] == 'partial':
-        r.set(key1, 'P')
-        r.set(key2, 'P')
+@app.route('/get_big_cell', methods=['GET', 'POST'])
+def open_big_cell():
+    ret = dict()
+    if session['state'] == 5:
+        working_data = DATA_TUTORIAL1
     else:
-        print("Error: invalid display status.")
-        logging.error('Error: invalid display status.')
+        working_data = DATA_PAIR_LIST
+    id1 = request.args.get('id1')
+    id2 = request.args.get('id2')
+    id3 = request.args.get('id3')
+    id4 = request.args.get('id4')
+    mode = request.args.get('mode')
+    user_key = session['user_cookie']
 
-    display_status1 = list()
-    display_status2 = list()
-    key1_prefix = session['user_cookie'] + '-' + pair_num + '-1-'
-    key2_prefix = session['user_cookie'] + '-' + pair_num + '-2-'
-    for attr_i in range(6):
-        display_status1.append(r.get(key1_prefix + str(attr_i)))
-        display_status2.append(r.get(key2_prefix + str(attr_i)))
+    pair_num1 = str(id1.split('-')[0])
+    attr_num1 = str(id1.split('-')[2])
+    ret1 = dm.open_cell(user_key, DATASET, working_data, pair_num1, attr_num1, mode, r)
+    pair_num2 = str(id3.split('-')[0])
+    attr_num2 = str(id3.split('-')[2])
+    ret2 = dm.open_cell(user_key, DATASET, working_data, pair_num2, attr_num2, mode, r)
 
-    old_KAPR = dm.get_KAPR_for_dp(working_whole_data, pair, old_display_status1)
-    KAPR = dm.get_KAPR_for_dp(working_whole_data, pair, display_status1)
-    KAPRINC = KAPR - old_KAPR
-    KAPR_key = session['user_cookie'] + '_KAPR'
-    overall_KAPR = float(r.get(KAPR_key))
-    overall_KAPR += KAPRINC
-    r.incrbyfloat(KAPR_key, KAPRINC)
-    ret['KAPR'] = round(100*overall_KAPR, 1)
-
-    # refresh the delta of KAPR
-    new_delta_list = dm.KAPR_delta(working_whole_data, pair, display_status1)
-    ret['new_delta'] = new_delta_list
+    ret = {
+        'value1': ret1['value1'],
+        'value2': ret1['value2'],
+        'value3': ret2['value1'],
+        'value4': ret2['value2'],
+        'mode': ret2['mode'],
+        'KAPR': ret2['KAPR'],
+        'result': ret2['result'],
+        'new_delta': ret2['new_delta']
+    }
 
     return jsonify(ret)
 
@@ -378,7 +377,7 @@ def show_record_linkage_next():
     delta = list()
     for i in range(config.DATA_PAIR_PER_PAGE*current_page, config.DATA_PAIR_PER_PAGE*(current_page+1)):
         data_pair = DATA_PAIR_LIST.get_data_pair_by_index(i)
-        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'])
+        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_PAIR_LIST.size())
     # make delta to be a dict
     delta_dict = dict()
     for d in delta:

@@ -11,6 +11,7 @@ SEQUENCE = [
     'show_RL_tutorial',
     'show_pratice_full_mode',
     'show_privacy_in_RL',
+    'show_ppirl_tutorial1',
     'show_instruction_ppirl',
     'show_record_linkage_task',
     'show_section2',
