@@ -448,6 +448,8 @@ def get_KAPR_for_dp(dataset, data_pair, display_status):
             K2 += 1
 
     M = 72 # Number of rows that need to be manually linked
+    if K1 == 0.0:
+        print(data_pair.get_data_raw(1, 0))
     KAPR1 = (1.0/M)*(1.0/K1)*P1
     KAPR2 = (1.0/M)*(1.0/K2)*P2
     KAPR = KAPR1 + KAPR2
