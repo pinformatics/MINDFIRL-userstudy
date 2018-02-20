@@ -438,7 +438,7 @@ def show_section2():
     delta = list()
     for i in range(dp_size):
         data_pair = DATA_SECTION2.get_data_pair_by_index(i)
-        delta += dm.KAPR_delta(DATASET2, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'])
+        delta += dm.KAPR_delta(DATASET2, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*dp_list_size)
 
     return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 2: Minimum Necessary Disclosure for Interactive Record Linkage', thisurl='/section2', page_number="1/56", delta=delta)
 
