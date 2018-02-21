@@ -201,7 +201,7 @@ function refresh_delta() {
         KAPR = parseFloat(KAPR);
 
         // if there is a budget limit, then check if this cell goes over the limit
-        if( typeof KAPR_LIMIT !== 'undefined' && KAPR_LIMIT > 0 && KAPR + d > KAPR_LIMIT) {
+        if( typeof $KAPR_LIMIT !== 'undefined' && $KAPR_LIMIT > 0 && KAPR + d > $KAPR_LIMIT) {
             $(this).css('cursor', 'not-allowed');
         }
         var bar_style = 'width:' + d + '%';
