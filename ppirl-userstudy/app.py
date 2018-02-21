@@ -26,7 +26,9 @@ elif config.ENV == 'development':
 
 
 # global data, this should be common across all users, not affected by multiple process
+# this is the full database for section 1
 DATASET = dl.load_data_from_csv('data/section1_full.csv')
+# this is the full database for section 2
 DATASET2 = dl.load_data_from_csv('data/section2.csv')
 DATA_PAIR_LIST = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/ppirl.csv'))
 DATA_SECTION2 = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/section2.csv'))
@@ -272,7 +274,7 @@ def show_record_linkage_task():
         data_pair = DATA_PAIR_LIST.get_data_pair_by_index(i)
         delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_PAIR_LIST.size())
 
-    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 1', thisurl='/record_linkage', page_number="1/6", delta=delta)
+    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 1', thisurl='/record_linkage', page_number="1/6", delta=delta, kapr_limit = config.KAPR_LIMIT)
 
 
 @app.route('/thankyou')
@@ -301,10 +303,17 @@ def save_data():
 @app.route('/get_cell', methods=['GET', 'POST'])
 def open_cell():
     ret = dict()
+    kapr_limit = 0
     if session['state'] == 5:
         working_data = DATA_TUTORIAL1
-    else:
+        full_data = DATASET
+    elif session['state'] == 7:
         working_data = DATA_PAIR_LIST
+        full_data = DATASET
+        kapr_limit = config.KAPR_LIMIG
+    else:
+        working_data = DATA_SECTION2
+        full_data = DATASET2
 
     id1 = request.args.get('id1')
     id2 = request.args.get('id2')
@@ -312,17 +321,26 @@ def open_cell():
     pair_num = str(id1.split('-')[0])
     attr_num = str(id1.split('-')[2])
     user_key = session['user_cookie']
-    ret = dm.open_cell(user_key, DATASET, working_data, pair_num, attr_num, mode, r)
+    ret = dm.open_cell(user_key, full_data, working_data, pair_num, attr_num, mode, r, kapr_limit)
     return jsonify(ret)
 
 
 @app.route('/get_big_cell', methods=['GET', 'POST'])
 def open_big_cell():
     ret = dict()
+
+    kapr_limit = 0
     if session['state'] == 5:
         working_data = DATA_TUTORIAL1
-    else:
+        full_data = DATASET
+    elif session['state'] == 7:
         working_data = DATA_PAIR_LIST
+        full_data = DATASET
+        kapr_limit = config.KAPR_LIMIG
+    else:
+        working_data = DATA_SECTION2
+        full_data = DATASET2
+
     id1 = request.args.get('id1')
     id2 = request.args.get('id2')
     id3 = request.args.get('id3')
@@ -332,10 +350,13 @@ def open_big_cell():
 
     pair_num1 = str(id1.split('-')[0])
     attr_num1 = str(id1.split('-')[2])
-    ret1 = dm.open_cell(user_key, DATASET, working_data, pair_num1, attr_num1, mode, r)
+    ret1 = dm.open_cell(user_key, full_data, working_data, pair_num1, attr_num1, mode, r, kapr_limit)
     pair_num2 = str(id3.split('-')[0])
     attr_num2 = str(id3.split('-')[2])
-    ret2 = dm.open_cell(user_key, DATASET, working_data, pair_num2, attr_num2, mode, r)
+    ret2 = dm.open_cell(user_key, full_data, working_data, pair_num2, attr_num2, mode, r, kapr_limit)
+
+    if ret2['result'] == 'fail':
+        return jsonify(ret2)
 
     ret = {
         'value1': ret1['value1'],
@@ -440,11 +461,12 @@ def show_section2():
         data_pair = DATA_SECTION2.get_data_pair_by_index(i)
         delta += dm.KAPR_delta(DATASET2, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*dp_list_size)
 
-    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 2: Minimum Necessary Disclosure for Interactive Record Linkage', thisurl='/section2', page_number="1/56", delta=delta)
+    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 2', thisurl='/section2', page_number="1/55", delta=delta, kapr_limit=0)
 
 
 @app.route('/section2/next')
 def show_section2_next():
+    dp_list_size = DATA_SECTION2.get_size()
     current_page = int(r.get(session['user_cookie']+'_section2_current_page'))+1
     r.incr(session['user_cookie']+'_section2_current_page')
     page_size = int(r.get(session['user_cookie'] + '_section2_page_size'))
@@ -467,7 +489,7 @@ def show_section2_next():
     delta = list()
     for i in range(config.DATA_PAIR_PER_PAGE*current_page, config.DATA_PAIR_PER_PAGE*(current_page+1)):
         data_pair = DATA_SECTION2.get_data_pair_by_index(i)
-        delta += dm.KAPR_delta(DATASET2, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'])
+        delta += dm.KAPR_delta(DATASET2, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*dp_list_size)
     # make delta to be a dict
     delta_dict = dict()
     for d in delta:

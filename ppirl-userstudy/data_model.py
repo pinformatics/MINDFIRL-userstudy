@@ -486,7 +486,7 @@ def KAPR_delta(DATASET, data_pair, display_status, M):
     return delta
 
 
-def open_cell(user_key, full_data, working_data, pair_num, attr_num, mode, r):
+def open_cell(user_key, full_data, working_data, pair_num, attr_num, mode, r, kapr_limit=0):
     """
     openning a clickable cell, full_data is the full database, working_data is the data that need to manually linked.
     pair_num and attr_num are string
@@ -531,7 +531,7 @@ def open_cell(user_key, full_data, working_data, pair_num, attr_num, mode, r):
     KAPRINC = KAPR - old_KAPR
     KAPR_key = user_key + '_KAPR'
     overall_KAPR = 100*(float(r.get(KAPR_key)) + KAPRINC)
-    if overall_KAPR > 80.0:
+    if kapr_limit > 0.0001 and overall_KAPR > kapr_limit:
         ret['result'] = 'fail'
         ret['KAPR'] = 0
         return jsonify(ret)
