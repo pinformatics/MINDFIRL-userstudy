@@ -534,7 +534,7 @@ def open_cell(user_key, full_data, working_data, pair_num, attr_num, mode, r, ka
     if kapr_limit > 0.0001 and overall_KAPR > kapr_limit:
         ret['result'] = 'fail'
         ret['KAPR'] = 0
-        return jsonify(ret)
+        return ret
 
     # success! update the display status in redis, update KAPR, get delta for KAPR
     ret['value1'] = attr_display_next[1][0]
@@ -546,7 +546,7 @@ def open_cell(user_key, full_data, working_data, pair_num, attr_num, mode, r, ka
     r.set(key1, new_display_status[attr_id])
     r.set(key2, new_display_status[attr_id])
     r.incrbyfloat(KAPR_key, KAPRINC)
-    ret['KAPR'] = round(overall_KAPR, 1)
+    ret['KAPR'] = overall_KAPR
     ret['result'] = 'success'
 
     # refresh the delta of KAPR

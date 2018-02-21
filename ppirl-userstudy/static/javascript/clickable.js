@@ -5,6 +5,15 @@
     This file makes the elements in the file clickable
 */
 
+function pround(number, precision) {
+    var factor = Math.pow(10, precision);
+    var ret = Math.round(number * factor) / factor;
+    if(ret < 0.001) {
+        return 0.001;
+    }
+    return ret;
+}
+
 function get_response(clicked_object) {
     var mode_info = clicked_object.getAttribute("mode");
     var id1 = clicked_object.children[0].id;
@@ -65,6 +74,7 @@ function get_cell_ajax(current_cell) {
             if(data.mode == "full") {
                 current_cell.classList.remove("clickable_cell");
             }
+            $KAPR = data.KAPR;
             
             //var bar_style = 'width:' + data.cdp + '%';
             //$("#character-disclosed-bar").attr("style", bar_style);
@@ -72,7 +82,7 @@ function get_cell_ajax(current_cell) {
 
             var bar_style2 = 'width:' + data.KAPR + '%';
             $("#privacy-risk-bar").attr("style", bar_style2);
-            $("#privacy-risk-value").html(data.KAPR + "%")
+            $("#privacy-risk-value").html(pround(data.KAPR,1) + "%")
             
             $("#privacy-risk-delta").attr("style", 'width: 0%');
             $("#privacy-risk-delta-value").html(" ")
@@ -102,7 +112,7 @@ function get_big_cell_ajax(current_cell1, current_cell2) {
 
     $.getJSON($SCRIPT_ROOT + '/get_big_cell', get_response2(current_cell1, current_cell2), function(data) {
         if( data.result != "success") {
-            // failed, do nothing.
+            return false;
         }
         else if(data.value1 && data.value2 && data.mode) {
             current_cell1.classList.add("animated");
@@ -122,14 +132,11 @@ function get_big_cell_ajax(current_cell1, current_cell2) {
             current_cell2.children[0].innerHTML = data.value3;
             current_cell2.children[2].innerHTML = data.value4;
             current_cell2.setAttribute("mode", data.mode);
-
-            if(data.mode == "full") {
-                current_cell1.classList.remove("clickable_cell");
-            }
+            $KAPR = data.KAPR;
             
             var bar_style2 = 'width:' + data.KAPR + '%';
             $("#privacy-risk-bar").attr("style", bar_style2);
-            $("#privacy-risk-value").html(data.KAPR + "%")
+            $("#privacy-risk-value").html(pround(data.KAPR,1) + "%")
             
             $("#privacy-risk-delta").attr("style", 'width: 0%');
             $("#privacy-risk-delta-value").html(" ")
@@ -140,6 +147,7 @@ function get_big_cell_ajax(current_cell1, current_cell2) {
                 $DELTA[id] = new_delta_value;
             }
         }
+        return true;
     });
 }
 
@@ -175,9 +183,11 @@ function make_cell_clickable() {
         var first_name_cell = this.children[0];
         var last_name_cell = this.children[2];
         if(first_name_cell.getAttribute("mode") != "full") {
-            get_big_cell_ajax(first_name_cell, last_name_cell);
+            flag = get_big_cell_ajax(first_name_cell, last_name_cell);
+            if( flag ) {
+                this.classList.remove("clickable_big_cell");
+            }
         }
-        this.classList.remove("clickable_big_cell");
 
         // save the user click data
         $type = "type: cell";
@@ -197,16 +207,14 @@ function refresh_delta() {
     $('.clickable_cell').hover(function() {
         var id1 = this.children[0].getAttribute("id");
         var d = $DELTA[id1];
-        var KAPR = $('#privacy-risk-value').html()
-        KAPR = parseFloat(KAPR);
 
         // if there is a budget limit, then check if this cell goes over the limit
-        if( typeof $KAPR_LIMIT !== 'undefined' && $KAPR_LIMIT > 0 && KAPR + d > $KAPR_LIMIT) {
+        if( typeof $KAPR_LIMIT !== 'undefined' && $KAPR_LIMIT > 0 && $KAPR + d > $KAPR_LIMIT) {
             $(this).css('cursor', 'not-allowed');
         }
         var bar_style = 'width:' + d + '%';
         $("#privacy-risk-delta").attr("style", bar_style);
-        $("#privacy-risk-delta-value").html(" + " + d + "%");
+        $("#privacy-risk-delta-value").html(" + " + pround(d,3) + "%");
     }, function() {
         $("#privacy-risk-delta").attr("style", 'width: 0%');
         $("#privacy-risk-delta-value").html(" ")
@@ -218,7 +226,7 @@ function refresh_delta() {
         var d = $DELTA[id1] + $DELTA[id2];
         var bar_style = 'width:' + d + '%';
         $("#privacy-risk-delta").attr("style", bar_style);
-        $("#privacy-risk-delta-value").html(" + " + d + "%");
+        $("#privacy-risk-delta-value").html(" + " + pround(d,3) + "%");
     }, function() {
         $("#privacy-risk-delta").attr("style", 'width: 0%');
         $("#privacy-risk-delta-value").html(" ")
