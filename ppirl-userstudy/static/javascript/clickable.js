@@ -224,6 +224,10 @@ function refresh_delta() {
         var id1 = this.children[0].children[0].getAttribute("id");
         var id2 = this.children[2].children[0].getAttribute("id");
         var d = $DELTA[id1] + $DELTA[id2];
+        // if there is a budget limit, then check if this cell goes over the limit
+        if( typeof $KAPR_LIMIT !== 'undefined' && $KAPR_LIMIT > 0 && $KAPR + d > $KAPR_LIMIT) {
+            $(this).css('cursor', 'not-allowed');
+        }
         var bar_style = 'width:' + d + '%';
         $("#privacy-risk-delta").attr("style", bar_style);
         $("#privacy-risk-delta-value").html(" + " + pround(d,3) + "%");
