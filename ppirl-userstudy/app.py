@@ -310,7 +310,7 @@ def open_cell():
     elif session['state'] == 7:
         working_data = DATA_PAIR_LIST
         full_data = DATASET
-        kapr_limit = config.KAPR_LIMIG
+        kapr_limit = config.KAPR_LIMIT
     else:
         working_data = DATA_SECTION2
         full_data = DATASET2
@@ -336,7 +336,7 @@ def open_big_cell():
     elif session['state'] == 7:
         working_data = DATA_PAIR_LIST
         full_data = DATASET
-        kapr_limit = config.KAPR_LIMIG
+        kapr_limit = config.KAPR_LIMIT
     else:
         working_data = DATA_SECTION2
         full_data = DATASET2
