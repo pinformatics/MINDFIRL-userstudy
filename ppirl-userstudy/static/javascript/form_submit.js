@@ -81,6 +81,8 @@ $(function() {
         get_summitted_answers();
         post($SCRIPT_ROOT+'/save_data', $user_data, "post");
         $user_data = "";
+
+        $(window).off("beforeunload");
         window.location.href = $NEXT_URL;
     });
 });
