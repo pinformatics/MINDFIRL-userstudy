@@ -1,16 +1,23 @@
 #! /usr/bin/python
 # encoding=utf-8
 
-# ENV = 'development'
-ENV = 'production'
+ENV = 'development'
+# ENV = 'production'
 
 
 SEQUENCE = [
     'show_introduction',
     'show_introduction2',
-    'show_RL_tutorial',
-    'show_pratice_full_mode',
-    'show_privacy_in_RL',
+    'show_tutorial_rl_pdf',
+    'show_tutorial_rl_id_1',
+    'show_tutorial_rl_id_2',
+    'show_tutorial_rl_id_3',
+    'show_tutorial_rl_twin',
+    'show_tutorial_rl_dup',
+    'show_tutorial_rl_missing',
+    'show_tutorial_rl_freq',
+    'show_tutorial_privacy_pdf',
+    'show_tutorial_privacy_practice',
     'show_tutorial_sec3_start',
     'show_tutorial_sec3_clickable',
     'show_tutorial_sec3_incremental1',

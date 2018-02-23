@@ -68,17 +68,17 @@ def show_introduction():
 def show_introduction2():
     return render_template('introduction2.html')
 
+@app.route('/tutorial/')
+@app.route('/tutorial/rl/')
+@state_machine('show_tutorial_rl_pdf')
+def show_tutorial_rl_pdf():
+    return render_template('tutorial/rl/tutorial_pdf.html')
 
-@app.route('/RL_tutorial')
-@state_machine('show_RL_tutorial')
-def show_RL_tutorial():
-    return render_template('RL_tutorial.html')
 
-
-@app.route('/privacy_in_RL')
-@state_machine('show_privacy_in_RL')
-def show_privacy_in_RL():
-    return render_template('privacy.html')
+@app.route('/tutorial/privacy')
+@state_machine('show_tutorial_privacy_pdf')
+def show_tutorial_privacy_pdf():
+    return render_template('tutorial/privacy/tutorial_pdf.html')
 
 
 @app.route('/instructions/base_mode')
@@ -122,63 +122,144 @@ def show_instruction_encrypted_mode():
 def show_instruction_ppirl():
     return render_template('instruction_ppirl.html')
 
+# def set_session_state(function_name):
+#     sequence = config.SEQUENCE
+#     for i in range(len(sequence)):
+#         if sequence[i] == function_name:
+#             session['state'] = i
+#             break
 
-@app.route('/practice/base_mode')
-@state_machine('show_pratice_base_mode')
-def show_pratice_base_mode():
-    pairs = dl.load_data_from_csv('data/practice_base_mode.csv')
-    pairs_formatted = dd.format_data(pairs, 'base')
-    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
-    icons = (len(pairs)/2)*[7*['']]
-    return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/base_mode', page_number=5)
+# @app.route('/tutorial/')
+# @app.route('/tutorial/rl/')
+# @app.route('/tutorial/<tutorial_section>/<page>')
+# # @state_machine('show_tutorial_'+page)
+# def show_tutorial_id_1(tutorial_section = "rl", page = "id_1"):
+#     pairs = dl.load_data_from_csv('data/tutorial/rl/id_1.csv')
+#     pairs_formatted = dd.format_data(pairs, 'full')
+#     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+#     icons = dd.generate_icon(pairs)
+#     return render_template('tutorial/rl/id_1.html', data=data, icons=icons, title='Section 1: practice', thisurl='/tutorial/rl/id_1', page_number=5)
 
 
-@app.route('/practice/full_mode')
-@state_machine('show_pratice_full_mode')
-def show_pratice_full_mode():
-    pairs = dl.load_data_from_csv('data/practice_full_mode.csv')
+@app.route('/tutorial/rl/id')
+@app.route('/tutorial/rl/id_1')
+@state_machine('show_tutorial_rl_id_1')
+def show_tutorial_rl_id_1():
+    pairs = dl.load_data_from_csv('data/tutorial/rl/id_1.csv')
     pairs_formatted = dd.format_data(pairs, 'full')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = dd.generate_icon(pairs)
-    return render_template('record_linkage_d.html', data=data, icons=icons, title='Practice 1', thisurl='/practice/full_mode', page_number=7)
+    return render_template('tutorial/rl/id_1.html', data=data, icons=icons, title='Section 1: practice', thisurl='/tutorial/rl/id_1', page_number=5)
 
+@app.route('/tutorial/rl/id_2')
+@state_machine('show_tutorial_rl_id_2')
+def show_tutorial_rl_id_2():
+    return render_template('tutorial/rl/id_2.html')
 
-@app.route('/practice/masked_mode')
-@state_machine('show_pratice_masked_mode')
-def show_pratice_masked_mode():
-    pairs = dl.load_data_from_csv('data/practice_masked_mode.csv')
+@app.route('/tutorial/rl/id_3')
+@state_machine('show_tutorial_rl_id_3')
+def show_tutorial_rl_id_3():
+    pairs = dl.load_data_from_csv('data/tutorial/rl/id_3.csv')
+    pairs_formatted = dd.format_data(pairs, 'full')
+    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    icons = dd.generate_icon(pairs)
+    return render_template('tutorial/rl/id_3.html', data=data, icons=icons, title='Section 1: practice', thisurl='/tutorial/rl/id_3',  page_number=5)
+
+@app.route('/tutorial/rl/twin')
+@state_machine('show_tutorial_rl_twin')
+def show_tutorial_rl_twin():
+    pairs = dl.load_data_from_csv('data/tutorial/rl/twin.csv')
+    pairs_formatted = dd.format_data(pairs, 'full')
+    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    icons = dd.generate_icon(pairs)
+    return render_template('tutorial/rl/twin.html', data=data, icons=icons, title='Section 1: practice', thisurl='/tutorial/rl/twin',  page_number=5)
+
+@app.route('/tutorial/rl/dup')
+@state_machine('show_tutorial_rl_dup')
+def show_tutorial_rl_dup():
+    pairs = dl.load_data_from_csv('data/tutorial/rl/dup.csv')
+    pairs_formatted = dd.format_data(pairs, 'full')
+    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    icons = dd.generate_icon(pairs)
+    return render_template('tutorial/rl/dup.html', data=data, icons=icons, title='Section 1: practice', thisurl='/tutorial/rl/dup',  page_number=5)
+
+@app.route('/tutorial/rl/missing')
+@state_machine('show_tutorial_rl_missing')
+def show_tutorial_rl_missing():
+    pairs = dl.load_data_from_csv('data/tutorial/rl/missing.csv')
+    pairs_formatted = dd.format_data(pairs, 'full')
+    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    icons = dd.generate_icon(pairs)
+    return render_template('tutorial/rl/missing.html', data=data, icons=icons, title='Section 1: practice', thisurl='/tutorial/rl/missing',  page_number=5)
+
+@app.route('/tutorial/rl/freq')
+@state_machine('show_tutorial_rl_freq')
+def show_tutorial_rl_freq():
+    pairs = dl.load_data_from_csv('data/tutorial/rl/freq.csv')
+    pairs_formatted = dd.format_data(pairs, 'full')
+    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    icons = dd.generate_icon(pairs)
+    return render_template('tutorial/rl/freq.html', data=data, icons=icons, title='Section 1: practice', thisurl='/tutorial/rl/freq',  page_number=5)
+
+@app.route('/tutorial/privacy/practice')
+@state_machine('show_tutorial_privacy_practice')
+def show_tutorial_privacy_practice():
+    pairs = dl.load_data_from_csv('data/tutorial/privacy/practice.csv')
     pairs_formatted = dd.format_data(pairs, 'masked')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = dd.generate_icon(pairs)
-    return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/masked_mode', page_number=10)
+    return render_template('tutorial/privacy/practice.html', data=data, icons=icons, title='Section 2: practice', thisurl='/tutorial/privacy/practice',  page_number=5)
+
+# @app.route('/practice/full_mode')
+# @state_machine('show_pratice_full_mode')
+# def show_pratice_full_mode():
+#     pairs = dl.load_data_from_csv('data/practice_full_mode.csv')
+#     pairs_formatted = dd.format_data(pairs, 'full')
+#     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+#     icons = dd.generate_icon(pairs)
+#     return render_template('record_linkage_d.html', data=data, icons=icons, title='Practice 1', thisurl='/practice/full_mode', page_number=7)
 
 
-@app.route('/practice/minimum_mode')
-@state_machine('show_pratice_minimum_mode')
-def show_pratice_minimum_mode():
-    pairs = dl.load_data_from_csv('data/practice_minimum_mode.csv')
-    pairs_formatted = dd.format_data(pairs, 'minimum')
-    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
-    icons = dd.generate_icon(pairs)
-    return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/minimum_mode', page_number=12)
+# @app.route('/practice/masked_mode')
+# @state_machine('show_pratice_masked_mode')
+# def show_pratice_masked_mode():
+#     pairs = dl.load_data_from_csv('data/practice_masked_mode.csv')
+#     pairs_formatted = dd.format_data(pairs, 'masked')
+#     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+#     icons = dd.generate_icon(pairs)
+#     return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/masked_mode', page_number=10)
 
 
-@app.route('/practice/moderate_mode')
-@state_machine('show_pratice_moderate_mode')
-def show_pratice_moderate_mode():
-    pairs = dl.load_data_from_csv('data/practice_moderate_mode.csv')
-    pairs_formatted = dd.format_data(pairs, 'moderate')
-    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
-    icons = dd.generate_icon(pairs)
-    return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/moderate_mode', page_number=14)
+# @app.route('/practice/minimum_mode')
+# @state_machine('show_pratice_minimum_mode')
+# def show_pratice_minimum_mode():
+#     pairs = dl.load_data_from_csv('data/practice_minimum_mode.csv')
+#     pairs_formatted = dd.format_data(pairs, 'minimum')
+#     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+#     icons = dd.generate_icon(pairs)
+#     return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/minimum_mode', page_number=12)
 
 
-@app.route('/practice/<table_mode>/grading')
-def grade_pratice_full_mode(table_mode):
-    data_file = 'practice_' + str(table_mode) + '.csv'
+# @app.route('/practice/moderate_mode')
+# @state_machine('show_pratice_moderate_mode')
+# def show_pratice_moderate_mode():
+#     pairs = dl.load_data_from_csv('data/practice_moderate_mode.csv')
+#     pairs_formatted = dd.format_data(pairs, 'moderate')
+#     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+#     icons = dd.generate_icon(pairs)
+#     return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/moderate_mode', page_number=14)
+
+
+@app.route('/tutorial/<tutorial_section>/<page>/grading')
+def grade_pratice_full_mode(tutorial_section, page):
+    # data_file = 'practice_' + str(table_mode) + '.csv'
+    print "HIIIIIIIIIIIIIIIIIIII",tutorial_section
+
+    data_file = 'data/tutorial/' + str(tutorial_section) + "/" + str(page) + '.csv'
+    pairs = dl.load_data_from_csv(data_file)
+    print pairs
     ret = list()
     responses = request.args.get('response').split(',')
-    pairs = dl.load_data_from_csv('data/' + data_file)
     j = 0
     all_correct = True
     for i in range(0, len(pairs), 2):
@@ -510,7 +591,7 @@ def show_tutorial_sec3_clickable():
             r.set(key, 'M')
 
     DATASET_T = dl.load_data_from_csv('data/tutorial1.csv')
-    print DATASET_T
+    # print DATASET_T
     # get the delta information
     delta = list()
     for i in range(1):
@@ -618,5 +699,5 @@ def show_tutorial_sec3_practice():
         data_pair = DATA_tut3.get_data_pair_by_index(i)
         delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_tut3.size())
 
-    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Practice 3 ', thisurl='/tutorial_sec3_practice', page_number=" ", delta=delta)
+    return render_template('tutorial_sec3_practice.html', data=data, icons=icons, ids=ids, title='Practice 3 ', thisurl='/tutorial_sec3_practice', page_number=" ", delta=delta)
 

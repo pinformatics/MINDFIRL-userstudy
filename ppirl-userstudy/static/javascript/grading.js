@@ -6,7 +6,8 @@
 */
 
 function get_response() {
-    var responses = new Array()
+    
+    var responses = new Array();
     var i = 0;
     var c = $(".ion-android-radio-button-on").each(function() {
         responses[i] = this.id;
@@ -21,13 +22,13 @@ function get_response() {
 $(function() {
     $('#submit_btn').bind('click', function() {
         // save the click data
+        
         $this_click = "user click: Attemp";
         var dt = new Date();
         $click_time = "click time: " + dt.getHours() + "h" + dt.getMinutes() + "m" + dt.getSeconds() + "s";
         $click_timestamp = "click timestamp: " + dt.getTime();
         $data = [$this_click, $click_time, $click_timestamp].join()
         $user_data += $data + ";";
-
         $.getJSON($SCRIPT_ROOT + $THIS_URL + '/grading', get_response(), function(data) {
             $("#feedback").html(data.result);
             $("#submit_btn").css({"display": "none"});
