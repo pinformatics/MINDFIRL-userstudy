@@ -1,7 +1,7 @@
 /*
     Author: Qinbo Li
     Date: 12/22/2017
-    Requirement: jquery-3.2.1
+    Requirement: jquery-3.2.1, clickable.js
     This file is for form submit, and sending user click data
 */
 
@@ -13,51 +13,6 @@ function post(path, params, method) {
     var request = new XMLHttpRequest();
     request.open("POST", path);
     request.send(formData);
-}
-
-function make_cell_clickable() {
-    // mark the double missing cell as unclickable
-    $('.clickable_cell').each(function() {
-        if( this.children[0].innerHTML.indexOf('missing') != -1 && this.children[2].innerHTML.indexOf('missing') != -1 ) {
-            this.classList.remove("clickable_cell");
-        }
-    });
-
-    // bind the clickable cell to ajax openning cell action
-    $('.clickable_cell').bind('click', function() {
-        var current_cell = this;
-        if(current_cell.getAttribute("mode") != "full") {
-            get_cell_ajax(current_cell);
-        }
-        return false;
-    });
-
-    // big cell is the name swap cell
-    $('.clickable_big_cell').bind('click', function() {
-        var first_name_cell = this.children[0];
-        var last_name_cell = this.children[2];
-        if(first_name_cell.getAttribute("mode") != "full") {
-            get_cell_ajax(first_name_cell);
-        }
-        if(last_name_cell.getAttribute("mode") != "full") {
-            get_cell_ajax(last_name_cell);
-        }
-        this.classList.remove("clickable_big_cell");
-        return false;
-    });
-}
-
-function refresh_delta() {
-    $('.clickable_cell').hover(function() {
-        var id1 = this.children[0].getAttribute("id");
-        var d = $DELTA[id1];
-        var bar_style = 'width:' + d + '%';
-        $("#privacy-risk-delta").attr("style", bar_style);
-        $("#privacy-risk-delta-value").html(" + " + d + "%");
-    }, function() {
-        $("#privacy-risk-delta").attr("style", 'width: 0%');
-        $("#privacy-risk-delta-value").html(" ")
-    });
 }
 
 function reset_choice_panel() {
@@ -88,7 +43,21 @@ function reset_choice_panel() {
         var dt = new Date();
         $click_time = "time: " + dt.getHours() + "h" + dt.getMinutes() + "m" + dt.getSeconds() + "s";
         $click_timestamp = "timestamp: " + dt.getTime();
-        $data = [$type, $this_click, $click_time, $click_timestamp].join()
+        $url = "url: " + $THIS_URL;
+        $data = [$type, $this_click, $click_time, $click_timestamp, $url].join()
+        $user_data += $data + ";\n";
+    });
+}
+
+function get_summitted_answers() {
+    var c = $(".ion-android-radio-button-on").each(function() {
+        $type = "type: final_answer";
+        $this_click = "id: " + this.id;
+        var dt = new Date();
+        $click_time = "time: " + dt.getHours() + "h" + dt.getMinutes() + "m" + dt.getSeconds() + "s";
+        $click_timestamp = "timestamp: " + dt.getTime();
+        $url = "url: " + $THIS_URL;
+        $data = [$type, $this_click, $click_time, $click_timestamp, $url].join()
         $user_data += $data + ";\n";
     });
 }
@@ -100,10 +69,31 @@ function reset_choice_panel() {
 */
 $(function() {
     $('#button_next').bind('click', function() {
+        // save this click data
+        $type = "type: jumping";
+        var dt = new Date();
+        $click_time = "time: " + dt.getHours() + "h" + dt.getMinutes() + "m" + dt.getSeconds() + "s";
+        $click_timestamp = "timestamp: " + dt.getTime();
+        $url = "url: " + $THIS_URL;
+        $data = [$type, $click_time, $click_timestamp, $url].join()
+        $user_data += $data + ";\n";
+
+        get_summitted_answers();
         post($SCRIPT_ROOT+'/save_data', $user_data, "post");
+        $user_data = "";
         window.location.href = $NEXT_URL;
     });
 });
+
+
+function all_questions_answered() {
+    var i = 0;
+    var c = $(".ion-android-radio-button-on").each(function() {
+        i += 1;
+    });
+    return true; // disable this feature for dev.
+    return (i == 6);
+}
 
 /*
     This function defines the behavior of the next button in record linkage page:
@@ -115,33 +105,49 @@ $(function() {
 */
 $(function() {
     $('#button_next_rl').bind('click', function() {
-        $('#button_next_rl').attr("disabled", "disabled");
-        post($SCRIPT_ROOT+'/save_data', $user_data, "post");
-        $.ajax({
-            url: $SCRIPT_ROOT + $THIS_URL + '/next',
-            data: {},
-            error: function() {},
-            dataType: 'json',
-            success: function(data) {
-                // update delta
-                $DELTA = data['delta'];
-                // update table content
-                $("#table_content").html(data['page_content']);
-                // update page number
-                $("#page-number").html(data['page_number']);
-                make_cell_clickable();
-                refresh_delta();
-                reset_choice_panel();
-                if(data['is_last_page'] == 0) {
-                    $('#button_next_rl').attr("disabled", false);
-                }
-                else {
-                    $('#button_next_rl').css("display", "none");
-                    $('#button_next').css("display", "inline");
-                }
-            },
-            type: 'GET'
-        });
+        if( !all_questions_answered() ) {
+            alert("Please answer all questions to continue.");
+        }
+        else {
+            // save this click data
+            $type = "type: moving";
+            var dt = new Date();
+            $click_time = "time: " + dt.getHours() + "h" + dt.getMinutes() + "m" + dt.getSeconds() + "s";
+            $click_timestamp = "timestamp: " + dt.getTime();
+            $url = "url: " + $THIS_URL;
+            $data = [$type, $click_time, $click_timestamp, $url].join()
+            $user_data += $data + ";\n";
+
+            $('#button_next_rl').attr("disabled", "disabled");
+            get_summitted_answers();
+            post($SCRIPT_ROOT+'/save_data', $user_data, "post");
+            $user_data = "";
+            $.ajax({
+                url: $SCRIPT_ROOT + $THIS_URL + '/next',
+                data: {},
+                error: function() {},
+                dataType: 'json',
+                success: function(data) {
+                    // update delta
+                    $DELTA = data['delta'];
+                    // update table content
+                    $("#table_content").html(data['page_content']);
+                    // update page number
+                    $("#page-number").html(data['page_number']);
+                    make_cell_clickable();
+                    refresh_delta();
+                    reset_choice_panel();
+                    if(data['is_last_page'] == 0) {
+                        $('#button_next_rl').attr("disabled", false);
+                    }
+                    else {
+                        $('#button_next_rl').css("display", "none");
+                        $('#button_next').css("display", "inline");
+                    }
+                },
+                type: 'GET'
+            });
+        }
         return false;
     });
 });

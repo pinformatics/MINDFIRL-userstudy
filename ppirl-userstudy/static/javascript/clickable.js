@@ -151,7 +151,6 @@ function get_big_cell_ajax(current_cell1, current_cell2) {
     });
 }
 
-// mirror: this function has a mirror at form_submit.js
 function make_cell_clickable() {
     // mark the double missing cell as unclickable
     $('.clickable_cell').each(function() {
@@ -168,12 +167,13 @@ function make_cell_clickable() {
         }
 
         // save the user click data
-        $type = "type: cell";
+        $type = "type: open_cell";
         $this_click = "id: " + current_cell.children[0].id;
         var dt = new Date();
-        $click_time = "click time: " + dt.getHours() + "h" + dt.getMinutes() + "m" + dt.getSeconds() + "s";
-        $click_timestamp = "click timestamp: " + dt.getTime();
-        $data = [$type, $this_click, $click_time, $click_timestamp].join()
+        $click_time = "time: " + dt.getHours() + "h" + dt.getMinutes() + "m" + dt.getSeconds() + "s";
+        $click_timestamp = "timestamp: " + dt.getTime();
+        $url = "url: " + $THIS_URL;
+        $data = [$type, $this_click, $click_time, $click_timestamp, $url].join();
         $user_data += $data + ";\n";
         return false;
     });
@@ -190,19 +190,19 @@ function make_cell_clickable() {
         }
 
         // save the user click data
-        $type = "type: cell";
+        $type = "type: open_cell";
         $this_click = "id: " + first_name_cell.children[0].id;
         var dt = new Date();
-        $click_time = "click time: " + dt.getHours() + "h" + dt.getMinutes() + "m" + dt.getSeconds() + "s";
-        $click_timestamp = "click timestamp: " + dt.getTime();
-        $data = [$type, $this_click, $click_time, $click_timestamp].join()
+        $click_time = "time: " + dt.getHours() + "h" + dt.getMinutes() + "m" + dt.getSeconds() + "s";
+        $click_timestamp = "timestamp: " + dt.getTime();
+        $url = "url: " + $THIS_URL;
+        $data = [$type, $this_click, $click_time, $click_timestamp, $url].join();
         $user_data += $data + ";\n";
         
         return false;
     });
 }
 
-// mirror: this function has a mirror at form_submit.js
 function refresh_delta() {
     $('.clickable_cell').hover(function() {
         var id1 = this.children[0].getAttribute("id");

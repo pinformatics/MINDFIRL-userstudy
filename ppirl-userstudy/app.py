@@ -1,4 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, session, jsonify, request, g
+from flask_mail import Mail, Message
 from functools import wraps
 import time
 from random import *
@@ -16,7 +17,11 @@ import data_model as dm
 import config
 
 
+
 app = Flask(__name__)
+
+app.config.from_pyfile('email_config.py')
+mail = Mail(app)
 
 
 if config.ENV == 'production':
@@ -53,7 +58,7 @@ def state_machine(function_name):
 def show_record_linkages():
     session['user_cookie'] = hashlib.sha224("salt12138" + str(time.time()) + '.' + str(randint(1,10000))).hexdigest()
     user_data_key = session['user_cookie'] + '_user_data'
-    r.set(user_data_key, 'Session start time: ' + str(time.time()) + ';\n')
+    r.set(user_data_key, 'type: session_start,timestamp: ' + str(time.time()) + ';\n')
 
     return redirect(url_for('show_introduction'))
 
@@ -281,9 +286,13 @@ def show_record_linkage_task():
 @state_machine('show_thankyou')
 def show_thankyou():
     user_data_key = session['user_cookie'] + '_user_data'
-    r.append(user_data_key, 'Session end time: '+str(time.time())+';\n')
+    r.append(user_data_key, 'type: session_end,timestamp: '+str(time.time())+';\n')
     user_data = r.get(user_data_key)
     dl.save_data_to_json('data/saved/'+str(session['user_cookie'])+'.json', user_data)
+
+    # send the data to email.
+    msg = Message(subject='user data: ' + session['user_cookie'], body=user_data, recipients=['mindfil.ppirl@gmail.com'])
+    mail.send(msg)
 
     # clear user data in redis
     for key in r.scan_iter("prefix:"+session['user_cookie']):

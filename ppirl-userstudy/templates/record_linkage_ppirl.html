@@ -19,13 +19,13 @@
         <script src="../static/javascript/site.js"></script>
         <script src="../static/javascript/choice_panel.js?v=4"></script>
         <script src="../static/javascript/grading.js"></script>
-        <script src="../static/javascript/form_submit.js?v=8"></script>
-        <script src="../static/javascript/clickable.js?v=27"></script>
+        <script src="../static/javascript/clickable.js?v=28"></script>
+        <script src="../static/javascript/form_submit.js?v=19"></script>
         <script type=text/javascript>
             $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
             $THIS_URL = "{{ thisurl }}";
             $NEXT_URL = $SCRIPT_ROOT + "{{ url_for('next') }}";
-            $user_data = "user in url: " + $THIS_URL + ";";
+            $user_data = "type: info, url: " + $THIS_URL + ";";
             $DELTA = {
             {% for d in delta %}
                 "{{ d[0] }}":{{ d[1]}},
