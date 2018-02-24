@@ -27,9 +27,12 @@ elif config.ENV == 'development':
 # global data, this should be common across all users, not affected by multiple process
 DATASET = dl.load_data_from_csv('data/section2.csv')
 DATA_PAIR_LIST = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/ppirl.csv'))
-DATA_TUTORIAL1 = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial1.csv'))
-DATA_inc3 = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial_sec3_incremental3_data.csv'))
-DATA_tut3 = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial3.csv'))
+DATA_CLICKABLE_DEMO = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial/clickable/demo.csv'))
+
+DATA_DM_DEMO = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial/clickable/decision_making_demo.csv'))
+# DATA_TUTORIAL1 = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial1.csv'))
+
+DATA_CLICKABLE_PRACTICE = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial/clickable/practice.csv'))
 # DATA_inc3 = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/video_decisonmaking.csv'))
 # DATA_PAIR_LIST = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial_sec3_incremental3_data.csv'))
 
@@ -81,64 +84,46 @@ def show_tutorial_privacy_pdf():
     return render_template('tutorial/privacy/tutorial_pdf.html')
 
 
-@app.route('/instructions/base_mode')
-@state_machine('show_instruction_base_mode')
-def show_instruction_base_mode():
-    return render_template('instruction_base_mode.html')
+# @app.route('/instructions/base_mode')
+# @state_machine('show_instruction_base_mode')
+# def show_instruction_base_mode():
+#     return render_template('instruction_base_mode.html')
 
 
-@app.route('/instructions/full_mode')
-@state_machine('show_instruction_full_mode')
-def show_instruction_full_mode():
-    return render_template('instruction_full_mode.html')
+# @app.route('/instructions/full_mode')
+# @state_machine('show_instruction_full_mode')
+# def show_instruction_full_mode():
+#     return render_template('instruction_full_mode.html')
 
 
-@app.route('/instructions/masked_mode')
-@state_machine('show_instruction_masked_mode')
-def show_instruction_masked_mode():
-    return render_template('instruction_masked_mode.html')
+# @app.route('/instructions/masked_mode')
+# @state_machine('show_instruction_masked_mode')
+# def show_instruction_masked_mode():
+#     return render_template('instruction_masked_mode.html')
 
 
-@app.route('/instructions/minimum_mode')
-@state_machine('show_instruction_minimum_mode')
-def show_instruction_minimum_mode():
-    return render_template('instruction_minimum_mode.html')
+# @app.route('/instructions/minimum_mode')
+# @state_machine('show_instruction_minimum_mode')
+# def show_instruction_minimum_mode():
+#     return render_template('instruction_minimum_mode.html')
 
 
-@app.route('/instructions/moderate_mode')
-@state_machine('show_instruction_moderate_mode')
-def show_instruction_moderate_mode():
-    return render_template('instruction_moderate_mode.html')
+# @app.route('/instructions/moderate_mode')
+# @state_machine('show_instruction_moderate_mode')
+# def show_instruction_moderate_mode():
+#     return render_template('instruction_moderate_mode.html')
 
 
-@app.route('/instructions/encrypted_mode')
-@state_machine('show_instruction_encrypted_mode')
-def show_instruction_encrypted_mode():
-    return render_template('instruction_encrypted_mode.html')
+# @app.route('/instructions/encrypted_mode')
+# @state_machine('show_instruction_encrypted_mode')
+# def show_instruction_encrypted_mode():
+#     return render_template('instruction_encrypted_mode.html')
 
 
 @app.route('/instructions/ppirl')
 @state_machine('show_instruction_ppirl')
 def show_instruction_ppirl():
     return render_template('instruction_ppirl.html')
-
-# def set_session_state(function_name):
-#     sequence = config.SEQUENCE
-#     for i in range(len(sequence)):
-#         if sequence[i] == function_name:
-#             session['state'] = i
-#             break
-
-# @app.route('/tutorial/')
-# @app.route('/tutorial/rl/')
-# @app.route('/tutorial/<tutorial_section>/<page>')
-# # @state_machine('show_tutorial_'+page)
-# def show_tutorial_id_1(tutorial_section = "rl", page = "id_1"):
-#     pairs = dl.load_data_from_csv('data/tutorial/rl/id_1.csv')
-#     pairs_formatted = dd.format_data(pairs, 'full')
-#     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
-#     icons = dd.generate_icon(pairs)
-#     return render_template('tutorial/rl/id_1.html', data=data, icons=icons, title='Section 1: practice', thisurl='/tutorial/rl/id_1', page_number=5)
 
 
 @app.route('/tutorial/rl/id')
@@ -210,51 +195,9 @@ def show_tutorial_privacy_practice():
     icons = dd.generate_icon(pairs)
     return render_template('tutorial/privacy/practice.html', data=data, icons=icons, title='Section 2: practice', thisurl='/tutorial/privacy/practice',  page_number=5)
 
-# @app.route('/practice/full_mode')
-# @state_machine('show_pratice_full_mode')
-# def show_pratice_full_mode():
-#     pairs = dl.load_data_from_csv('data/practice_full_mode.csv')
-#     pairs_formatted = dd.format_data(pairs, 'full')
-#     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
-#     icons = dd.generate_icon(pairs)
-#     return render_template('record_linkage_d.html', data=data, icons=icons, title='Practice 1', thisurl='/practice/full_mode', page_number=7)
-
-
-# @app.route('/practice/masked_mode')
-# @state_machine('show_pratice_masked_mode')
-# def show_pratice_masked_mode():
-#     pairs = dl.load_data_from_csv('data/practice_masked_mode.csv')
-#     pairs_formatted = dd.format_data(pairs, 'masked')
-#     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
-#     icons = dd.generate_icon(pairs)
-#     return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/masked_mode', page_number=10)
-
-
-# @app.route('/practice/minimum_mode')
-# @state_machine('show_pratice_minimum_mode')
-# def show_pratice_minimum_mode():
-#     pairs = dl.load_data_from_csv('data/practice_minimum_mode.csv')
-#     pairs_formatted = dd.format_data(pairs, 'minimum')
-#     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
-#     icons = dd.generate_icon(pairs)
-#     return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/minimum_mode', page_number=12)
-
-
-# @app.route('/practice/moderate_mode')
-# @state_machine('show_pratice_moderate_mode')
-# def show_pratice_moderate_mode():
-#     pairs = dl.load_data_from_csv('data/practice_moderate_mode.csv')
-#     pairs_formatted = dd.format_data(pairs, 'moderate')
-#     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
-#     icons = dd.generate_icon(pairs)
-#     return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/moderate_mode', page_number=14)
-
-
 @app.route('/tutorial/<tutorial_section>/<page>/grading')
 def grade_pratice_full_mode(tutorial_section, page):
     # data_file = 'practice_' + str(table_mode) + '.csv'
-    print "HIIIIIIIIIIIIIIIIIIII",tutorial_section
-
     data_file = 'data/tutorial/' + str(tutorial_section) + "/" + str(page) + '.csv'
     pairs = dl.load_data_from_csv(data_file)
     print pairs
@@ -533,11 +476,6 @@ def pull_data():
 
 app.secret_key = 'a9%z$/`9h8FMnh893;*g783'
 
-@app.route('/tutorial_sec3_start')
-@state_machine('show_tutorial_sec3_start')
-def show_tutorial_sec3_start():
-    return render_template('tutorial_sec3_start.html')
-
 
 
 # @app.route('/ppirl_tutorial1')
@@ -568,15 +506,20 @@ def show_tutorial_sec3_start():
 
 #     return render_template('tutorial1.html', data=data, icons=icons, ids=ids, title='Practice 2', thisurl='/ppirl_tutorial1', page_number=" ", delta=delta)
 
+@app.route('/tutorial/clickable')
+@state_machine('show_tutorial_clickable_start')
+def show_tutorial_clickable_start():
+    return render_template('tutorial/clickable/start.html')
 
 
-@app.route('/tutorial_sec3_clickable')
-@state_machine('show_tutorial_sec3_clickable')
-def show_tutorial_sec3_clickable():
-    pairs_formatted = DATA_TUTORIAL1.get_data_display('masked')
+
+@app.route('/tutorial/clickable/demo')
+@state_machine('show_tutorial_clickable_demo')
+def show_tutorial_clickable_demo():
+    pairs_formatted = DATA_CLICKABLE_DEMO.get_data_display('masked')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
-    icons = DATA_TUTORIAL1.get_icons()
-    ids_list = DATA_TUTORIAL1.get_ids()
+    icons = DATA_CLICKABLE_DEMO.get_icons()
+    ids_list = DATA_CLICKABLE_DEMO.get_ids()
     ids = zip(ids_list[0::2], ids_list[1::2])
 
     # KAPR - K-Anonymity privacy risk
@@ -589,24 +532,58 @@ def show_tutorial_sec3_clickable():
         for i in range(attribute_size):
             key = session['user_cookie'] + '-' + id1[i]
             r.set(key, 'M')
-
-    DATASET_T = dl.load_data_from_csv('data/tutorial1.csv')
-    # print DATASET_T
-    # get the delta information
+    
     delta = list()
     for i in range(1):
-        data_pair = DATA_TUTORIAL1.get_data_pair_by_index(i)
-        delta += dm.KAPR_delta(DATASET_T, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_TUTORIAL1.size())
+        data_pair = DATA_CLICKABLE_DEMO.get_data_pair_by_index(i)
+        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_CLICKABLE_DEMO.size())
 
-    return render_template('tutorial_sec3_clickable.html', data=data, icons=icons, ids=ids, title='Tutorial 3', thisurl='/tutorial_sec3_clickable', page_number=" ", delta=delta)
+    return render_template('tutorial/clickable/demo.html', data=data, icons=icons, ids=ids, title='Tutorial 3', thisurl='/tutorial/clickable/demo', page_number=" ", delta=delta)
 
-@app.route('/tutorial_sec3_incremental3')
-@state_machine('show_tutorial_sec3_incremental3')
-def show_tutorial_sec3_incremental3():
-    pairs_formatted =  DATA_inc3.get_data_display('masked')
+
+@app.route('/tutorial/clickable/incremental1')
+@state_machine('show_tutorial_clickable_incremental1')
+def show_tutorial_clickable_incremental1():
+    return render_template('tutorial/clickable/incremental1.html')
+
+
+@app.route('/tutorial/clickable/incremental2')
+@state_machine('show_tutorial_clickable_incremental2')
+def show_tutorial_clickable_incremental2():
+    return render_template('tutorial/clickable/incremental2.html')
+
+@app.route('/tutorial/clickable/whatopen')
+@state_machine('show_tutorial_clickable_whatopen')
+def show_tutorial_clickable_whatopen():
+    return render_template('/tutorial/clickable/whatopen.html')
+
+@app.route('/tutorial/clickable/whatnotopen')
+@state_machine('show_tutorial_clickable_whatnotopen')
+def show_tutorial_clickable_whatnotopen():
+    return render_template('/tutorial/clickable/whatnotopen.html')
+
+@app.route('/tutorial/clickable/decision_making_1')
+@state_machine('show_tutorial_clickable_decision_making_1')
+def show_tutorial_clickable_decision_making_1():
+    return render_template('tutorial/clickable/decision_making_1.html')
+
+@app.route('/tutorial/clickable/decision_making_2')
+@state_machine('show_tutorial_clickable_decision_making_2')
+def show_tutorial_clickable_decision_making_2():
+    return render_template('tutorial/clickable/decision_making_2.html')
+
+@app.route('/tutorial/clickable/decision_making_3')
+@state_machine('show_tutorial_clickable_decision_making_3')
+def show_tutorial_clickable_decision_making_3():
+    return render_template('tutorial/clickable/decision_making_3.html')
+
+@app.route('/tutorial/clickable/decision_making_demo')
+@state_machine('show_tutorial_clickable_decision_making_demo')
+def show_tutorial_clickable_decision_making_demo():
+    pairs_formatted =  DATA_DM_DEMO.get_data_display('masked')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
-    icons = DATA_inc3.get_icons()
-    ids_list = DATA_inc3.get_ids()
+    icons = DATA_DM_DEMO.get_icons()
+    ids_list = DATA_DM_DEMO.get_ids()
     ids = zip(ids_list[0::2], ids_list[1::2])
 
     # KAPR - K-Anonymity privacy risk
@@ -625,59 +602,51 @@ def show_tutorial_sec3_incremental3():
     # get the delta information
     delta = list()
     for i in range(1):
-        data_pair = DATA_inc3.get_data_pair_by_index(i)
-        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_inc3.size())
+        data_pair = DATA_DM_DEMO.get_data_pair_by_index(i)
+        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_DM_DEMO.size())
 
-    return render_template('tutorial_sec3_incremental3.html', data=data, icons=icons, ids=ids, title='Tutorial 3', thisurl='/tutorial_sec3_clickable', page_number=" ", delta=delta)
-
-
-@app.route('/tutorial_sec3_incremental1')
-@state_machine('show_tutorial_sec3_incremental1')
-def show_tutorial_sec3_incremental1():
-    return render_template('tutorial_sec3_incremental1.html')
+    return render_template('tutorial/clickable/decision_making_demo.html', data=data, icons=icons, ids=ids, title='Tutorial 3', thisurl='/tutorial/clickable/clickable/decision_making_demo', page_number=" ", delta=delta)
 
 
-@app.route('/tutorial_sec3_incremental2')
-@state_machine('show_tutorial_sec3_incremental2')
-def show_tutorial_sec3_incremental2():
-    return render_template('tutorial_sec3_incremental2.html')
 
-@app.route('/tutorial_sec3_howto')
-@state_machine('show_tutorial_sec3_howto')
-def show_tutorial_sec3_howto():
-    return render_template('tutorial_sec3_howto.html')
+@app.route('/tutorial/clickable/budgetmeter')
+@state_machine('show_tutorial_clickable_budgetmeter')
+def show_tutorial_clickable_budgetmeter():
+    return render_template('tutorial/clickable/budgetmeter.html')
 
-@app.route('/tutorial_sec3_howto2')
-@state_machine('show_tutorial_sec3_howto2')
-def show_tutorial_sec3_howto2():
-    return render_template('tutorial_sec3_howto2.html')
+@app.route('/tutorial/clickable/budgetlimit')
+@state_machine('show_tutorial_clickable_budgetlimit')
+def show_tutorial_clickable_budgetlimit():
+    return render_template('tutorial/clickable/budgetlimit.html')
 
-@app.route('/tutorial_sec3_prepractice')
-@state_machine('show_tutorial_sec3_prepractice')
-def show_tutorial_sec3_prepractice():
-    return render_template('tutorial_sec3_prepractice.html')
+
+@app.route('/tutorial/clickable/budgetmeter_vid')
+@state_machine('show_tutorial_clickable_budgetmeter_vid')
+def show_tutorial_clickable_budgetmeter_vid():
+    return render_template('tutorial/clickable/budgetmeter_vid.html')
+
+
+@app.route('/tutorial/clickable/prepractice')
+@state_machine('show_tutorial_clickable_prepractice')
+def show_tutorial_clickable_prepractice():
+    return render_template('tutorial/clickable/prepractice.html')
 
     
 
-@app.route('/tutorial_sec3_decision_making')
-@state_machine('show_tutorial_sec3_decision_making')
-def show_tutorial_sec3_decision_making():
-    return render_template('tutorial_sec3_decision_making.html')
+# @app.route('/tutorial_clickable_decision_making')
+# @state_machine('show_tutorial_clickable_decision_making')
+# def show_tutorial_clickable_decision_making():
+#     return render_template('tutorial_clickable_decision_making.html')
 
 
-@app.route('/tutorial_sec3_privacy_budget_vid')
-@state_machine('show_tutorial_sec3_privacy_budget_vid')
-def show_tutorial_sec3_privacy_budget_vid():
-    return render_template('tutorial_sec3_privacy_budget_vid.html')
 
-
-@app.route('/tutorial_sec3_practice')
-@state_machine('show_tutorial_sec3_practice')
-def show_tutorial_sec3_practice():
-    pairs_formatted = DATA_tut3.get_data_display('masked')
+@app.route('/tutorial/clickable/practice')
+@state_machine('show_tutorial_clickable_practice')
+def show_tutorial_clickable_practice():
+    pairs_formatted = DATA_CLICKABLE_PRACTICE.get_data_display('masked')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
-    icons = DATA_tut3.get_icons()
-    ids_list = DATA_tut3.get_ids()
+    icons = DATA_CLICKABLE_PRACTICE.get_icons()
+    ids_list = DATA_CLICKABLE_PRACTICE.get_ids()
     ids = zip(ids_list[0::2], ids_list[1::2])
 
     # KAPR - K-Anonymity privacy risk
@@ -696,8 +665,8 @@ def show_tutorial_sec3_practice():
     # get the delta information
     delta = list()
     for i in range(1):
-        data_pair = DATA_tut3.get_data_pair_by_index(i)
-        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_tut3.size())
+        data_pair = DATA_CLICKABLE_PRACTICE.get_data_pair_by_index(i)
+        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_CLICKABLE_PRACTICE.size())
 
-    return render_template('tutorial_sec3_practice.html', data=data, icons=icons, ids=ids, title='Practice 3 ', thisurl='/tutorial_sec3_practice', page_number=" ", delta=delta)
+    return render_template('tutorial/clickable/practice.html', data=data, icons=icons, ids=ids, title='Practice 3 ', thisurl='/tutorial_clickable_practice', page_number=" ", delta=delta)
 
