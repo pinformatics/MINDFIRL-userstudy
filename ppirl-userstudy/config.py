@@ -35,7 +35,9 @@ SEQUENCE = [
     'show_tutorial_clickable_prepractice',
     'show_tutorial_clickable_practice',
     'show_record_linkage_task',
+    'show_section2',
     'show_thankyou'
 ]
 
 DATA_PAIR_PER_PAGE = 6
+KAPR_LIMIT = 5.0
