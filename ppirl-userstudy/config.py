@@ -19,23 +19,22 @@ SEQUENCE = [
     'show_tutorial_privacy_pdf',
     'show_tutorial_privacy_practice',
     'show_tutorial_clickable_start',
-    'show_tutorial_clickable_demo',
+    'show_tutorial_clickable_demo',  # DATA_CLICKABLE_DEMO
     'show_tutorial_clickable_incremental1',
     'show_tutorial_clickable_incremental2',
-    # 'show_tutorial_clickable_incremental3',
     'show_tutorial_clickable_whatopen',
     'show_tutorial_clickable_decision_making_1',
     'show_tutorial_clickable_decision_making_2',
     'show_tutorial_clickable_decision_making_3',
     'show_tutorial_clickable_whatnotopen',
     'show_tutorial_clickable_whenidentical',
-    'show_tutorial_clickable_decision_making_demo',
+    'show_tutorial_clickable_decision_making_demo', # DATA_DM_DEMO
     'show_tutorial_clickable_budgetmeter',
     'show_tutorial_clickable_budgetlimit',
     'show_tutorial_clickable_budgeting',
     # 'show_tutorial_clickable_budgetmeter_vid',
     'show_tutorial_clickable_prepractice',
-    'show_tutorial_clickable_practice',
+    'show_tutorial_clickable_practice', # DATA_CLICKABLE_PRACTICE
     'show_record_linkage_task',
     'show_section2',
     'show_thankyou'

@@ -29,35 +29,25 @@ if config.ENV == 'production':
 elif config.ENV == 'development':
     r = redis.Redis(host='localhost', port=6379, db=0)
 
-# DATASET = dl.load_data_from_csv('data/section2.csv')
-# DATA_PAIR_LIST = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/section2.csv'))
-# DATA_CLICKABLE_DEMO = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial/clickable/demo.csv'))
-
-# DATA_DM_DEMO = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial/clickable/decision_making_demo.csv'))
-# # DATA_TUTORIAL1 = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial1.csv'))
-
-# DATA_CLICKABLE_PRACTICE = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial/clickable/practice.csv'))
-
-
 
 # global data, this should be common across all users, not affected by multiple process
 # this is the full database for section 1
 DATASET = dl.load_data_from_csv('data/section1_full.csv')
 # this is the full database for section 2
-DATASET2 = dl.load_data_from_csv('data/section1_full.csv')
+DATASET2 = dl.load_data_from_csv('data/section2.csv')
 DATA_PAIR_LIST = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/section1_full.csv'))
+
 
 DATA_CLICKABLE_DEMO = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial/clickable/demo.csv'))
 
-DATA_SECTION2 = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/section1_full.csv'))
+DATA_SECTION2 = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/section2.csv'))
 DATA_TUTORIAL1 = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial1.csv'))
 
 DATA_DM_DEMO = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial/clickable/decision_making_demo.csv'))
 # DATA_TUTORIAL1 = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial1.csv'))
 
 DATA_CLICKABLE_PRACTICE = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial/clickable/practice.csv'))
-# DATA_inc3 = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/video_decisonmaking.csv'))
-# DATA_PAIR_LIST = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial_sec3_incremental3_data.csv'))
+
 
 def state_machine(function_name):
     def wrapper(f):
@@ -104,42 +94,6 @@ def show_tutorial_rl_pdf():
 @state_machine('show_tutorial_privacy_pdf')
 def show_tutorial_privacy_pdf():
     return render_template('tutorial/privacy/tutorial_pdf.html')
-
-
-# @app.route('/instructions/base_mode')
-# @state_machine('show_instruction_base_mode')
-# def show_instruction_base_mode():
-#     return render_template('instruction_base_mode.html')
-
-
-# @app.route('/instructions/full_mode')
-# @state_machine('show_instruction_full_mode')
-# def show_instruction_full_mode():
-#     return render_template('instruction_full_mode.html')
-
-
-# @app.route('/instructions/masked_mode')
-# @state_machine('show_instruction_masked_mode')
-# def show_instruction_masked_mode():
-#     return render_template('instruction_masked_mode.html')
-
-
-# @app.route('/instructions/minimum_mode')
-# @state_machine('show_instruction_minimum_mode')
-# def show_instruction_minimum_mode():
-#     return render_template('instruction_minimum_mode.html')
-
-
-# @app.route('/instructions/moderate_mode')
-# @state_machine('show_instruction_moderate_mode')
-# def show_instruction_moderate_mode():
-#     return render_template('instruction_moderate_mode.html')
-
-
-# @app.route('/instructions/encrypted_mode')
-# @state_machine('show_instruction_encrypted_mode')
-# def show_instruction_encrypted_mode():
-#     return render_template('instruction_encrypted_mode.html')
 
 
 @app.route('/instructions/ppirl')
@@ -353,10 +307,17 @@ def save_data():
 def open_cell():
     ret = dict()
     kapr_limit = 0
-    if session['state'] == 5:
-        working_data = DATA_TUTORIAL1
+    
+    if session['state'] == 13:
+        working_data = DATA_CLICKABLE_DEMO
         full_data = DATASET
-    elif session['state'] == 7:
+    elif session['state'] == 22:
+        working_data = DATA_DM_DEMO
+        full_data = DATASET
+    elif session['state'] == 27:
+        working_data = DATA_CLICKABLE_PRACTICE
+        full_data = DATASET
+    elif session['state'] == 28:
         working_data = DATA_PAIR_LIST
         full_data = DATASET
         kapr_limit = config.KAPR_LIMIT
@@ -381,16 +342,24 @@ def open_big_cell():
     ret = dict()
 
     kapr_limit = 0
-    if session['state'] == 5:
-        working_data = DATA_TUTORIAL1
+    if session['state'] == 13:
+        working_data = DATA_CLICKABLE_DEMO
         full_data = DATASET
-    elif session['state'] == 7:
+    elif session['state'] == 22:
+        working_data = DATA_DM_DEMO
+        full_data = DATASET
+    elif session['state'] == 27:
+        working_data = DATA_CLICKABLE_PRACTICE
+        full_data = DATASET
+    elif session['state'] == 28:
         working_data = DATA_PAIR_LIST
         full_data = DATASET
         kapr_limit = config.KAPR_LIMIT
     else:
         working_data = DATA_PAIR_LIST
         full_data = DATASET2
+        # working_data = DATA_SECTION2
+        # full_data = DATASET2
 
         
     id1 = request.args.get('id1')
