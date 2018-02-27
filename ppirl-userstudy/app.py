@@ -29,17 +29,27 @@ if config.ENV == 'production':
 elif config.ENV == 'development':
     r = redis.Redis(host='localhost', port=6379, db=0)
 
+# DATASET = dl.load_data_from_csv('data/section2.csv')
+# DATA_PAIR_LIST = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/section2.csv'))
+# DATA_CLICKABLE_DEMO = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial/clickable/demo.csv'))
+
+# DATA_DM_DEMO = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial/clickable/decision_making_demo.csv'))
+# # DATA_TUTORIAL1 = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial1.csv'))
+
+# DATA_CLICKABLE_PRACTICE = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial/clickable/practice.csv'))
+
+
 
 # global data, this should be common across all users, not affected by multiple process
 # this is the full database for section 1
 DATASET = dl.load_data_from_csv('data/section1_full.csv')
 # this is the full database for section 2
-DATASET2 = dl.load_data_from_csv('data/section2.csv')
-DATA_PAIR_LIST = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/ppirl.csv'))
+DATASET2 = dl.load_data_from_csv('data/section1_full.csv')
+DATA_PAIR_LIST = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/section1_full.csv'))
 
 DATA_CLICKABLE_DEMO = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial/clickable/demo.csv'))
 
-DATA_SECTION2 = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/section2.csv'))
+DATA_SECTION2 = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/section1_full.csv'))
 DATA_TUTORIAL1 = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial1.csv'))
 
 DATA_DM_DEMO = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial/clickable/decision_making_demo.csv'))
@@ -351,8 +361,10 @@ def open_cell():
         full_data = DATASET
         kapr_limit = config.KAPR_LIMIT
     else:
-        working_data = DATA_SECTION2
+        working_data = DATA_PAIR_LIST
         full_data = DATASET2
+        # working_data = DATA_SECTION2
+        # full_data = DATASET2
 
     id1 = request.args.get('id1')
     id2 = request.args.get('id2')
@@ -377,9 +389,10 @@ def open_big_cell():
         full_data = DATASET
         kapr_limit = config.KAPR_LIMIT
     else:
-        working_data = DATA_SECTION2
+        working_data = DATA_PAIR_LIST
         full_data = DATASET2
 
+        
     id1 = request.args.get('id1')
     id2 = request.args.get('id2')
     id3 = request.args.get('id3')
@@ -643,6 +656,11 @@ def show_tutorial_clickable_incremental2():
 def show_tutorial_clickable_whatopen():
     return render_template('/tutorial/clickable/whatopen.html')
 
+@app.route('/tutorial/clickable/whenidentical')
+@state_machine('show_tutorial_clickable_whenidentical')
+def show_tutorial_clickable_whenidentical():
+    return render_template('/tutorial/clickable/whenidentical.html')
+
 @app.route('/tutorial/clickable/whatnotopen')
 @state_machine('show_tutorial_clickable_whatnotopen')
 def show_tutorial_clickable_whatnotopen():
@@ -704,6 +722,11 @@ def show_tutorial_clickable_budgetmeter():
 @state_machine('show_tutorial_clickable_budgetlimit')
 def show_tutorial_clickable_budgetlimit():
     return render_template('tutorial/clickable/budgetlimit.html')
+
+@app.route('/tutorial/clickable/budgeting')
+@state_machine('show_tutorial_clickable_budgeting')
+def show_tutorial_clickable_budgeting():
+    return render_template('tutorial/clickable/budgeting.html')
 
 
 @app.route('/tutorial/clickable/budgetmeter_vid')

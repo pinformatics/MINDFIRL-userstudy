@@ -24,14 +24,16 @@ SEQUENCE = [
     'show_tutorial_clickable_incremental2',
     # 'show_tutorial_clickable_incremental3',
     'show_tutorial_clickable_whatopen',
-    'show_tutorial_clickable_whatnotopen',
     'show_tutorial_clickable_decision_making_1',
     'show_tutorial_clickable_decision_making_2',
     'show_tutorial_clickable_decision_making_3',
+    'show_tutorial_clickable_whatnotopen',
+    'show_tutorial_clickable_whenidentical',
     'show_tutorial_clickable_decision_making_demo',
     'show_tutorial_clickable_budgetmeter',
     'show_tutorial_clickable_budgetlimit',
-    'show_tutorial_clickable_budgetmeter_vid',
+    'show_tutorial_clickable_budgeting',
+    # 'show_tutorial_clickable_budgetmeter_vid',
     'show_tutorial_clickable_prepractice',
     'show_tutorial_clickable_practice',
     'show_record_linkage_task',
@@ -40,4 +42,4 @@ SEQUENCE = [
 ]
 
 DATA_PAIR_PER_PAGE = 6
-KAPR_LIMIT = 5.0
+KAPR_LIMIT = 100.0
