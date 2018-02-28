@@ -29,18 +29,21 @@ if config.ENV == 'production':
 elif config.ENV == 'development':
     r = redis.Redis(host='localhost', port=6379, db=0)
 
-
+# kum csv file
 # global data, this should be common across all users, not affected by multiple process
 # this is the full database for section 1
-DATASET = dl.load_data_from_csv('data/section1_full.csv')
+DATASET = dl.load_data_from_csv('data/main_section_full.csv')
 # this is the full database for section 2
-DATASET2 = dl.load_data_from_csv('data/section2.csv')
-DATA_PAIR_LIST = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/section1_full.csv'))
+DATASET2 = dl.load_data_from_csv('data/main_section_full.csv')
+
+# this is the dataset used in section 1
+DATA_PAIR_LIST = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/section1.csv'))
+# this is the dataset used in section 2, NOTE: the question number has to be a factor of 6!
+DATA_SECTION2 = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/section2.csv'))
 
 
 DATA_CLICKABLE_DEMO = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial/clickable/demo.csv'))
 
-DATA_SECTION2 = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/section2.csv'))
 DATA_TUTORIAL1 = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial1.csv'))
 
 DATA_DM_DEMO = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial/clickable/decision_making_demo.csv'))
@@ -230,10 +233,6 @@ def show_ppirl_tutorial1():
 @app.route('/record_linkage')
 @state_machine('show_record_linkage_task')
 def show_record_linkage_task():
-    #pairs = dl.load_data_from_csv('data/ppirl.csv')
-    #total_characters = dd.get_total_characters(pairs)
-    #pairs = pairs[0:12]
-
     dp_size = config.DATA_PAIR_PER_PAGE
     attribute_size = 6
     dp_list_size = DATA_PAIR_LIST.get_size()
@@ -248,14 +247,6 @@ def show_record_linkage_task():
     icons = DATA_PAIR_LIST.get_icons()[0:dp_size]
     ids_list = DATA_PAIR_LIST.get_ids()[0:2*dp_size]
     ids = zip(ids_list[0::2], ids_list[1::2])
-
-    # percentage of character disclosure
-    """
-    mindfil_total_characters_key = session['user_cookie'] + '_mindfil_total_characters'
-    r.set(mindfil_total_characters_key, total_characters)
-    mindfil_disclosed_characters_key = session['user_cookie'] + '_mindfil_disclosed_characters'
-    r.set(mindfil_disclosed_characters_key, 0)
-    """
 
     # KAPR - K-Anonymity privacy risk
     KAPR_key = session['user_cookie'] + '_KAPR'
@@ -273,7 +264,10 @@ def show_record_linkage_task():
         data_pair = DATA_PAIR_LIST.get_data_pair_by_index(i)
         delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_PAIR_LIST.size())
 
-    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 1', thisurl='/record_linkage', page_number="1/6", delta=delta, kapr_limit = config.KAPR_LIMIT)
+    kapr_limit = dm.get_kaprlimit(DATASET, DATA_PAIR_LIST, 'moderate')
+    r.set(session['user_cookie']+'section1_kapr_limit', kapr_limit)
+
+    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 1', thisurl='/record_linkage', page_number="1/6", delta=delta, kapr_limit = kapr_limit)
 
 
 @app.route('/thankyou')
@@ -320,12 +314,10 @@ def open_cell():
     elif session['state'] == 28:
         working_data = DATA_PAIR_LIST
         full_data = DATASET
-        kapr_limit = config.KAPR_LIMIT
+        kapr_limit = float(r.get(session['user_cookie']+'section1_kapr_limit'))
     else:
-        working_data = DATA_PAIR_LIST
+        working_data = DATA_SECTION2
         full_data = DATASET2
-        # working_data = DATA_SECTION2
-        # full_data = DATASET2
 
     id1 = request.args.get('id1')
     id2 = request.args.get('id2')
@@ -354,14 +346,11 @@ def open_big_cell():
     elif session['state'] == 28:
         working_data = DATA_PAIR_LIST
         full_data = DATASET
-        kapr_limit = config.KAPR_LIMIT
+        kapr_limit = float(r.get(session['user_cookie']+'section1_kapr_limit'))
     else:
-        working_data = DATA_PAIR_LIST
+        working_data = DATA_SECTION2
         full_data = DATASET2
-        # working_data = DATA_SECTION2
-        # full_data = DATASET2
 
-        
     id1 = request.args.get('id1')
     id2 = request.args.get('id2')
     id3 = request.args.get('id3')
@@ -482,7 +471,7 @@ def show_section2():
         data_pair = DATA_SECTION2.get_data_pair_by_index(i)
         delta += dm.KAPR_delta(DATASET2, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*dp_list_size)
 
-    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 2', thisurl='/section2', page_number="1/55", delta=delta, kapr_limit=0)
+    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 2', thisurl='/section2', page_number="1/"+str(page_size), delta=delta, kapr_limit=0)
 
 
 @app.route('/section2/next')
@@ -742,7 +731,7 @@ def show_tutorial_clickable_practice():
     # print DATASET_T
     # get the delta information
     delta = list()
-    for i in range(1):
+    for i in range(DATA_CLICKABLE_PRACTICE.size()):
         data_pair = DATA_CLICKABLE_PRACTICE.get_data_pair_by_index(i)
         delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_CLICKABLE_PRACTICE.size())
 

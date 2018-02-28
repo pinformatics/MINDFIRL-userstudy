@@ -316,6 +316,23 @@ class DataPairList(object):
             pair_num = int(data_pairs[i][0])
             location = i/2
             self._id_hash[pair_num] = location
+        self.idx = 0
+
+
+    def __iter__(self):
+        return self
+
+
+    def __next__(self):
+        self.idx += 1
+        try:
+            return self._data[self.idx-1]
+        except IndexError:
+            self.idx = 0
+            raise StopIteration  # Done iterating.
+
+
+    next = __next__
 
 
     def append_data_pair(self, dp):
@@ -555,3 +572,15 @@ def open_cell(user_key, full_data, working_data, pair_num, attr_num, mode, r, ka
 
     return ret
 
+
+def get_kaprlimit(full_data, working_data, data_mode):
+    if data_mode == 'moderate':
+        mode = [s[0].upper() for s in dd.DATA_MODE_MODERATE]
+    else:
+        logging.error('unsupported data mode: ' + data_mode)
+
+    KAPR = 0.0
+    for i in working_data:
+        KAPR += get_KAPR_for_dp(full_data, i, mode, 2*working_data.size())
+
+    return 100.0*KAPR
