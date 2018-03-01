@@ -14,6 +14,7 @@ import copy
 import data_loader as dl
 import data_display as dd
 import data_model as dm
+import user_data as ud
 import config
 
 
@@ -28,6 +29,7 @@ if config.ENV == 'production':
     r = redis.from_url(os.environ.get("REDIS_URL"))
 elif config.ENV == 'development':
     r = redis.Redis(host='localhost', port=6379, db=0)
+r.set('user_id_generator', 0)
 
 # kum csv file
 # global data, this should be common across all users, not affected by multiple process
@@ -70,7 +72,11 @@ def state_machine(function_name):
 def show_record_linkages():
     session['user_cookie'] = hashlib.sha224("salt12138" + str(time.time()) + '.' + str(randint(1,10000))).hexdigest()
     user_data_key = session['user_cookie'] + '_user_data'
-    r.set(user_data_key, 'type: session_start,timestamp: ' + str(time.time()) + ';\n')
+    user_id = r.incr('user_id_generator')
+    session['user_id'] = user_id
+    data = 'type: user_id,id: ' + str(user_id) + ';\n'
+    data += 'type: session_start,timestamp: ' + str(time.time()) + ';\n'
+    r.set(user_data_key, data)
 
     return redirect(url_for('show_introduction'))
 
@@ -268,25 +274,6 @@ def show_record_linkage_task():
     r.set(session['user_cookie']+'section1_kapr_limit', kapr_limit)
 
     return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 1', thisurl='/record_linkage', page_number="1/6", delta=delta, kapr_limit = kapr_limit)
-
-
-@app.route('/thankyou')
-@state_machine('show_thankyou')
-def show_thankyou():
-    user_data_key = session['user_cookie'] + '_user_data'
-    r.append(user_data_key, 'type: session_end,timestamp: '+str(time.time())+';\n')
-    user_data = r.get(user_data_key)
-    dl.save_data_to_json('data/saved/'+str(session['user_cookie'])+'.json', user_data)
-
-    # send the data to email.
-    msg = Message(subject='user data: ' + session['user_cookie'], body=user_data, recipients=['mindfil.ppirl@gmail.com'])
-    mail.send(msg)
-
-    # clear user data in redis
-    for key in r.scan_iter("prefix:"+session['user_cookie']):
-        r.delete(key)
-
-    return render_template('thankyou.html')
 
 
 @app.route('/save_data', methods=['GET', 'POST'])
@@ -528,7 +515,47 @@ def next():
 def pull_data():
     user_data_key = session['user_cookie'] + '_user_data'
     user_data = r.get(user_data_key)
+
+    data = ud.parse_user_data(user_data)
+    result = ud.grade_final_answer(data, DATA_PAIR_LIST)
+    performance1 = 'type:performance1,content:' + str(result[0]) + ' out of ' + str(result[1]) + ';\n'
+    user_data += performance1
+
+    result2 = ud.grade_final_answer(data, DATA_SECTION2)
+    performance2 = 'type:performance1,content:' + str(result2[0]) + ' out of ' + str(result2[1]) + ';\n'
+    user_data += performance2
+
     return user_data
+
+
+@app.route('/pull_data_all')
+def pull_data_all():
+    ret = ''
+    for key in r.scan_iter("*_user_data"):
+        user_data = r.get(key)
+        ret = ret + user_data + '<br/><br/>'
+    return ret
+
+
+@app.route('/thankyou')
+@state_machine('show_thankyou')
+def show_thankyou():
+    user_data_key = session['user_cookie'] + '_user_data'
+    r.append(user_data_key, 'type: session_end,timestamp: '+str(time.time())+';\n')
+    user_data = pull_data()
+    r.set(user_data_key, user_data)
+
+    dl.save_data_to_json('data/saved/'+str(session['user_cookie'])+'.json', user_data)
+
+    # send the data to email.
+    msg = Message(subject='user data: ' + session['user_cookie'], body=user_data, recipients=['mindfil.ppirl@gmail.com'])
+    mail.send(msg)
+
+    # clear user data in redis
+    #for key in r.scan_iter("prefix:"+session['user_cookie']):
+    #    r.delete(key)
+
+    return render_template('thankyou.html')
 
 
 app.secret_key = 'a9%z$/`9h8FMnh893;*g783'
@@ -736,4 +763,10 @@ def show_tutorial_clickable_practice():
         delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_CLICKABLE_PRACTICE.size())
 
     return render_template('tutorial/clickable/practice.html', data=data, icons=icons, ids=ids, title='Practice 3 ', thisurl='/tutorial_clickable_practice', page_number=" ", delta=delta)
+
+
+@app.route('/id')
+def get_id():
+    return session['user_id']
+
 

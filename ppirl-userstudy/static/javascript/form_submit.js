@@ -69,6 +69,8 @@ function get_summitted_answers() {
 */
 $(function() {
     $('#button_next').bind('click', function() {
+        $('#button_next').attr("disabled", "disabled");
+        
         // save this click data
         $type = "type: jumping";
         var dt = new Date();

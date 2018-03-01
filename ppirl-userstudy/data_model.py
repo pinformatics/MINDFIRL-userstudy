@@ -290,6 +290,20 @@ class DataPair(object):
         return data[col]
 
 
+    def grade(self, answer):
+        """
+        grade the answer, where the answer is:
+        1, 2, 3: different
+        4, 5, 6: same
+        """
+        truth = self._data1_raw[17].rstrip('\n')
+        if truth == '0' and answer <= 3:
+            return True
+        if truth == '1' and answer > 3:
+            return True
+        return False
+
+
 class DataPairList(object):
     """
     a list of DataPair, this object only hold DataPair object
@@ -357,7 +371,7 @@ class DataPairList(object):
 
     def get_data_pair(self, pair_num):
         if pair_num not in self._id_hash:
-            logging.warning('Warning: no data pair for the pair_num: ' + str(pair_num))
+            return None
         return self._data[self._id_hash[pair_num]]
 
 
