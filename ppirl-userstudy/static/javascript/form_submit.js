@@ -96,7 +96,7 @@ function all_questions_answered() {
         i += 1;
     });
     return true; // disable this feature for dev.
-    return (i == 6);
+    // return (i == 6);
 }
 
 /*

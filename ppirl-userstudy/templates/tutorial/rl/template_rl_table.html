@@ -35,10 +35,19 @@
         <div style="margin-left: 5%; margin-top: 1%;">
             <h3>Tutorial 1</h3>
 
-            <div id="content">
+            <div class="FeedbackNImg">
 
-            {% block content %}
-            {% endblock %}
+                <div id="content">
+
+                <div id="feedback" class="TblFeedback"></div>
+
+                {% block content %}
+                {% endblock %}
+
+                
+
+            </div>
+
 
             <br>
 
@@ -198,14 +207,13 @@
                 </div>
             </div>
 
-            <div id="feedback">
-            </div>
-
+           
             <div class="submit_div">
-                {% if title != 'PPIRL Framework' %}
+                <!-- {% if title != 'PPIRL Framework' %} -->
                     <button id="submit_btn" class="submit_button">Submit</button>
-                {% endif %}
-                <button id="button_next" class="submit_button" {% if title != 'PPIRL Framework' %} style="display: none;"{% endif %}>Next</button>
+                <!-- {% endif %} -->
+                <!-- {% if title != 'PPIRL Framework' %}{% endif %} -->
+                <button id="button_next" class="submit_button"  style="display: none;">Next</button>
                 <!-- <button id="button_next" class="submit_button" >Next</button> -->
             </div>
 

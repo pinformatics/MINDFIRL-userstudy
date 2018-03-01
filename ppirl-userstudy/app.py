@@ -182,6 +182,7 @@ def show_tutorial_privacy_practice():
 
 @app.route('/tutorial/<tutorial_section>/<page>/grading')
 def grade_pratice_full_mode(tutorial_section, page):
+    # print 'hi'
     # data_file = 'practice_' + str(table_mode) + '.csv'
     data_file = 'data/tutorial/' + str(tutorial_section) + "/" + str(page) + '.csv'
     pairs = dl.load_data_from_csv(data_file)
@@ -694,7 +695,15 @@ def show_tutorial_clickable_decision_making_demo():
         data_pair = DATA_DM_DEMO.get_data_pair_by_index(i)
         delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_DM_DEMO.size())
 
-    return render_template('tutorial/clickable/decision_making_demo.html', data=data, icons=icons, ids=ids, title='Tutorial 3', thisurl='/tutorial/clickable/clickable/decision_making_demo', page_number=" ", delta=delta)
+    return render_template('tutorial/clickable/decision_making_demo.html', 
+        data=data, 
+        icons=icons, 
+        ids=ids, 
+        title='Tutorial 3', 
+        thisurl='/tutorial/clickable/decision_making_demo', 
+        page_number=" ", 
+        delta=delta,
+        kapr_limit = 60)
 
 
 
@@ -762,7 +771,7 @@ def show_tutorial_clickable_practice():
         data_pair = DATA_CLICKABLE_PRACTICE.get_data_pair_by_index(i)
         delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_CLICKABLE_PRACTICE.size())
 
-    return render_template('tutorial/clickable/practice.html', data=data, icons=icons, ids=ids, title='Practice 3 ', thisurl='/tutorial_clickable_practice', page_number=" ", delta=delta)
+    return render_template('tutorial/clickable/practice.html', data=data, icons=icons, ids=ids, title='Practice 3 ', thisurl='/tutorial/clickable/practice', page_number=" ", delta=delta, kapr_limit = 60)
 
 
 @app.route('/id')

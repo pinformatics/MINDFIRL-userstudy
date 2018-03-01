@@ -22,7 +22,7 @@ function get_response() {
 $(function() {
     $('#submit_btn').bind('click', function() {
         // save the click data
-        // console.log("js");
+        
         $this_click = "user click: Attemp";
         var dt = new Date();
         $click_time = "click time: " + dt.getHours() + "h" + dt.getMinutes() + "m" + dt.getSeconds() + "s";
@@ -31,15 +31,8 @@ $(function() {
         $user_data += $data + ";";
         $.getJSON($SCRIPT_ROOT + $THIS_URL + '/grading', get_response(), function(data) {
             $("#feedback").html(data.result);
-            // console.log(data.result);
-            // console.log(data.result[0]);
-            if(data.result[0].indexOf("Good job") >= 0){
-                $("#submit_btn").css({"display": "none"});
-                $("#button_next").css({"display": "inline"})
-            } else{
-                $("#submit_btn").text("Resubmit");
-            }
-            
+            $("#submit_btn").css({"display": "none"});
+            $("#button_next").css({"display": "inline"})
         });
         return false;
     });
