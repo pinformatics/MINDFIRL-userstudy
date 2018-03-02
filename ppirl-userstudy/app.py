@@ -332,13 +332,15 @@ def open_big_cell():
     if session['state'] == 13:
         working_data = DATA_CLICKABLE_DEMO
         full_data = DATASET_TUTORIAL
-    elif session['state'] == 22:
+    elif session['state'] == 24:
         working_data = DATA_DM_DEMO
         full_data = DATASET_TUTORIAL
-    elif session['state'] == 27:
+        kapr_limit = 60
+    elif session['state'] == 29:
         working_data = DATA_CLICKABLE_PRACTICE
         full_data = DATASET
-    elif session['state'] == 28:
+        kapr_limit = 60
+    elif session['state'] == 30:
         working_data = DATA_PAIR_LIST
         full_data = DATASET
         kapr_limit = float(r.get(session['user_cookie']+'section1_kapr_limit'))
