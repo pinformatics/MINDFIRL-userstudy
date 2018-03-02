@@ -528,7 +528,6 @@ def open_cell(user_key, full_data, working_data, pair_num, attr_num, mode, r, ka
     ret = dict()
 
     pair_id = int(pair_num)
-    print(pair_id)
     attr_id = int(attr_num)
 
     pair = working_data.get_data_pair(pair_id)

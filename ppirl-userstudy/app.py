@@ -526,14 +526,7 @@ def pull_data():
     user_data_key = session['user_cookie'] + '_user_data'
     user_data = r.get(user_data_key)
 
-    data = ud.parse_user_data(user_data)
-    result = ud.grade_final_answer(data, DATA_PAIR_LIST)
-    performance1 = 'type:performance1,content:' + str(result[0]) + ' out of ' + str(result[1]) + ';\n'
-    user_data += performance1
-
-    result2 = ud.grade_final_answer(data, DATA_SECTION2)
-    performance2 = 'type:performance1,content:' + str(result2[0]) + ' out of ' + str(result2[1]) + ';\n'
-    user_data += performance2
+    
 
     return user_data
 
@@ -552,14 +545,24 @@ def pull_data_all():
 def show_thankyou():
     user_data_key = session['user_cookie'] + '_user_data'
     r.append(user_data_key, 'type: session_end,timestamp: '+str(time.time())+';\n')
-    user_data = pull_data()
+    user_data = r.get(user_data_key)
+
+    data = ud.parse_user_data(user_data)
+    result = ud.grade_final_answer(data, DATA_PAIR_LIST)
+    performance1 = 'type:performance1,content:' + str(result[0]) + ' out of ' + str(result[1]) + ';\n'
+    user_data += performance1
+
+    result2 = ud.grade_final_answer(data, DATA_SECTION2)
+    performance2 = 'type:performance2,content:' + str(result2[0]) + ' out of ' + str(result2[1]) + ';\n'
+    user_data += performance2
+
     r.set(user_data_key, user_data)
 
     dl.save_data_to_json('data/saved/'+str(session['user_cookie'])+'.json', user_data)
 
     # send the data to email.
-    msg = Message(subject='user data: ' + session['user_cookie'], body=user_data, recipients=['mindfil.ppirl@gmail.com'])
-    mail.send(msg)
+    #msg = Message(subject='user data: ' + session['user_cookie'], body=user_data, recipients=['mindfil.ppirl@gmail.com'])
+    #mail.send(msg)
 
     # clear user data in redis
     #for key in r.scan_iter("prefix:"+session['user_cookie']):
