@@ -310,15 +310,15 @@ def open_cell():
     if session['state'] == 13:
         working_data = DATA_CLICKABLE_DEMO
         full_data = DATASET_TUTORIAL
-    elif session['state'] == 22:
+    elif session['state'] == 24:
         working_data = DATA_DM_DEMO
         full_data = DATASET_TUTORIAL
         kapr_limit = 60
-    elif session['state'] == 27:
+    elif session['state'] == 29:
         working_data = DATA_CLICKABLE_PRACTICE
         full_data = DATASET_TUTORIAL
         kapr_limit = 60
-    elif session['state'] == 28:
+    elif session['state'] == 30:
         working_data = DATA_PAIR_LIST
         full_data = DATASET
         kapr_limit = float(r.get(session['user_cookie']+'section1_kapr_limit'))
@@ -645,6 +645,16 @@ def show_tutorial_clickable_decision_making_2():
 @state_machine('show_tutorial_clickable_decision_making_3')
 def show_tutorial_clickable_decision_making_3():
     return render_template('tutorial/clickable/decision_making_3.html')
+
+@app.route('/tutorial/clickable/decision_making_4')
+@state_machine('show_tutorial_clickable_decision_making_4')
+def show_tutorial_clickable_decision_making_4():
+    return render_template('tutorial/clickable/decision_making_4.html')
+
+@app.route('/tutorial/clickable/decision_making_5')
+@state_machine('show_tutorial_clickable_decision_making_5')
+def show_tutorial_clickable_decision_making_5():
+    return render_template('tutorial/clickable/decision_making_5.html')
 
 @app.route('/tutorial/clickable/decision_making_demo')
 @state_machine('show_tutorial_clickable_decision_making_demo')
