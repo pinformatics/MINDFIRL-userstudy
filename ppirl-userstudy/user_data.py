@@ -12,8 +12,15 @@ def parse_user_data(user_data):
     for i in range(len(user_data_list)):
         data = user_data_list[i].strip().rstrip('\n').rstrip(';')
         if data:
-            data_dict = {k:v.strip() for k,v in (x.split(':') for x in data.split(','))}
-            ret.append(data_dict)
+            data_dict = dict()
+            kv_pairs = data.split(',')
+            for kv in kv_pairs:
+                if len(kv.split(':')) == 2:
+                    k = kv.split(':')[0].strip()
+                    v = kv.split(':')[1].strip()
+                    data_dict[k] = v
+            if len(data_dict) > 0:
+                ret.append(data_dict)
     return ret
 
 
@@ -21,7 +28,9 @@ def grade_final_answer(data, data_pair_list):
     size = data_pair_list.size()
     correct = 0
     for d in data:
-        if d['type'] != 'final_answer':
+        if 'type' not in d or d['type'] != 'final_answer':
+            continue
+        if 'url' not in d or d['url'] not in ['/record_linkage', '/section2']:
             continue
 
         answer_id = d['id']

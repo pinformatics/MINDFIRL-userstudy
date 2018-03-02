@@ -29,7 +29,8 @@ if config.ENV == 'production':
     r = redis.from_url(os.environ.get("REDIS_URL"))
 elif config.ENV == 'development':
     r = redis.Redis(host='localhost', port=6379, db=0)
-r.set('user_id_generator', 0)
+if not r.exists('user_id_generator'):
+    r.set('user_id_generator', 0)
 
 # kum csv file
 # global data, this should be common across all users, not affected by multiple process
@@ -776,6 +777,8 @@ def show_tutorial_clickable_practice():
 
 @app.route('/id')
 def get_id():
-    return session['user_id']
+    if session['user_id']:
+        return str(session['user_id'])
+    return 'Null'
 
 
