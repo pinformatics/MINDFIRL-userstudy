@@ -26,6 +26,8 @@ SEQUENCE = [
     'show_tutorial_clickable_decision_making_1',
     'show_tutorial_clickable_decision_making_2',
     'show_tutorial_clickable_decision_making_3',
+    'show_tutorial_clickable_decision_making_4',
+    'show_tutorial_clickable_decision_making_5',
     'show_tutorial_clickable_whatnotopen',
     'show_tutorial_clickable_whenidentical',
     'show_tutorial_clickable_decision_making_demo', # DATA_DM_DEMO
