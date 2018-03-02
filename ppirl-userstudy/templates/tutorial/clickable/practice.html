@@ -34,9 +34,9 @@
                     $KAPR_LIMIT = {{ kapr_limit }};
                     $KAPR = 0;
 
-                    $(window).on("beforeunload", function() {
-                        return "Are you sure? You will lose all the date if you leave!";
-                    });
+                    // $(window).on("beforeunload", function() {
+                    //     return "Are you sure? You will lose all the date if you leave!";
+                    // });
                 </script>
     </head>
 
@@ -80,7 +80,7 @@
                      <!-- display: inline-block; float: left; -->
 
                     <div id="div_feedback" style="position: absolute; margin-left: 50%; width: 45%; margin-top: 0%;">
-                        <h5 id="feedback"></h5>
+                        <h5 id="feedback_clicks"></h5>
                     </div>
 
                 </div>
@@ -293,16 +293,14 @@
                         {% endfor %}
                     </div>
                 </div>
+                <div id="feedback"></div>
 
-               {% include 'tutorial/clickable/submit_button.html' %}
+               <!-- {% include 'tutorial/clickable/submit_button.html' %} -->
 
-              <!--  <div class="submit_div">
-                               
-                    <button id="submit_btn" class="submit_button">Submit</button>
-                           
-                    <button id="button_next" class="submit_button"  style="display: none;">Next</button>
-                              
-                    </div> -->
+              <div class="submit_div">
+                  <button id="submit_btn" class="submit_button">Submit</button>
+                  <button id="button_next" class="submit_button"  style="display: none;">Next</button>
+              </div>
             </div>
             <!-- End of div content -->
         </div>
@@ -324,7 +322,7 @@
 //    })
     
     function change_feedback(text){
-        var feedback = $("#feedback");
+        var feedback = $("#feedback_clicks");
         feedback.fadeOut(500, function(){
           feedback.text(text);  
         })

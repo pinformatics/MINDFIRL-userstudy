@@ -36,6 +36,9 @@ DATASET = dl.load_data_from_csv('data/main_section_full.csv')
 # this is the full database for section 2
 DATASET2 = dl.load_data_from_csv('data/main_section_full.csv')
 
+# this is the full database for tutorial
+DATASET_TUTORIAL =  dl.load_data_from_csv('data/tutorial/all_tutorial_questions.csv')
+
 # this is the dataset used in section 1
 DATA_PAIR_LIST = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/section1.csv'))
 # this is the dataset used in section 2, NOTE: the question number has to be a factor of 6!
@@ -180,7 +183,7 @@ def grade_pratice_full_mode(tutorial_section, page):
     # data_file = 'practice_' + str(table_mode) + '.csv'
     data_file = 'data/tutorial/' + str(tutorial_section) + "/" + str(page) + '.csv'
     pairs = dl.load_data_from_csv(data_file)
-    print pairs
+    # print pairs
     ret = list()
     responses = request.args.get('response').split(',')
     j = 0
@@ -199,6 +202,7 @@ def grade_pratice_full_mode(tutorial_section, page):
             all_correct = False
     if all_correct:
         ret.append('<div>Good job!</div>')
+    print ret
     return jsonify(result=ret)
 
 
@@ -305,13 +309,15 @@ def open_cell():
     
     if session['state'] == 13:
         working_data = DATA_CLICKABLE_DEMO
-        full_data = DATASET
+        full_data = DATASET_TUTORIAL
     elif session['state'] == 22:
         working_data = DATA_DM_DEMO
-        full_data = DATASET
+        full_data = DATASET_TUTORIAL
+        kapr_limit = 60
     elif session['state'] == 27:
         working_data = DATA_CLICKABLE_PRACTICE
-        full_data = DATASET
+        full_data = DATASET_TUTORIAL
+        kapr_limit = 60
     elif session['state'] == 28:
         working_data = DATA_PAIR_LIST
         full_data = DATASET
@@ -337,10 +343,10 @@ def open_big_cell():
     kapr_limit = 0
     if session['state'] == 13:
         working_data = DATA_CLICKABLE_DEMO
-        full_data = DATASET
+        full_data = DATASET_TUTORIAL
     elif session['state'] == 22:
         working_data = DATA_DM_DEMO
-        full_data = DATASET
+        full_data = DATASET_TUTORIAL
     elif session['state'] == 27:
         working_data = DATA_CLICKABLE_PRACTICE
         full_data = DATASET
@@ -594,9 +600,9 @@ def show_tutorial_clickable_demo():
     delta = list()
     for i in range(1):
         data_pair = DATA_CLICKABLE_DEMO.get_data_pair_by_index(i)
-        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_CLICKABLE_DEMO.size())
+        delta += dm.KAPR_delta(DATASET_TUTORIAL, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_CLICKABLE_DEMO.size())
 
-    return render_template('tutorial/clickable/demo.html', data=data, icons=icons, ids=ids, title='Tutorial 3', thisurl='/tutorial/clickable/demo', page_number=" ", delta=delta)
+    return render_template('tutorial/clickable/demo.html', data=data, icons=icons, ids=ids, title='Tutorial 3', thisurl='/tutorial/clickable/demo', page_number=" ", delta=delta, kapr_limit = 100)
 
 
 @app.route('/tutorial/clickable/incremental1')
@@ -664,9 +670,9 @@ def show_tutorial_clickable_decision_making_demo():
     # print DATASET_T
     # get the delta information
     delta = list()
-    for i in range(1):
+    for i in range(DATA_DM_DEMO.size()):
         data_pair = DATA_DM_DEMO.get_data_pair_by_index(i)
-        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_DM_DEMO.size())
+        delta += dm.KAPR_delta(DATASET_TUTORIAL, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_DM_DEMO.size())
 
     return render_template('tutorial/clickable/decision_making_demo.html', 
         data=data, 
@@ -742,7 +748,7 @@ def show_tutorial_clickable_practice():
     delta = list()
     for i in range(DATA_CLICKABLE_PRACTICE.size()):
         data_pair = DATA_CLICKABLE_PRACTICE.get_data_pair_by_index(i)
-        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_CLICKABLE_PRACTICE.size())
+        delta += dm.KAPR_delta(DATASET_TUTORIAL, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_CLICKABLE_PRACTICE.size())
 
     return render_template('tutorial/clickable/practice.html', data=data, icons=icons, ids=ids, title='Practice 3 ', thisurl='/tutorial/clickable/practice', page_number=" ", delta=delta, kapr_limit = 60)
 

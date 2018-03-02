@@ -19,6 +19,8 @@
         <script src="/static/javascript/bootstrap.min.js"></script>
         <script src="/static/javascript/site.js"></script>
         <script src="/static/javascript/choice_panel.js?v=3"></script>
+        <script src="/static/javascript/grading.js"></script>
+        <script src="/static/javascript/form_submit.js"></script>
         <script src="/static/javascript/clickable.js?v=13"></script>
         <script type=text/javascript>
                     $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
@@ -33,9 +35,9 @@
                     $KAPR_LIMIT = {{ kapr_limit }};
                     $KAPR = 0;
 
-                    $(window).on("beforeunload", function() {
-                        return "Are you sure? You will lose all the date if you leave!";
-                    });
+                    // $(window).on("beforeunload", function() {
+                    //     return "Are you sure? You will lose all the date if you leave!";
+                    // });
                 </script>
     </head>
 
@@ -49,12 +51,6 @@
             {% endblock %}
 
 
-<!-- 
-             <div class="submit_div">
-                        <form>
-                            <button formaction="{{ url_for('next') }}" id="button_3" class="submit_button">Next</button>
-                        </form>
-            </div> -->
         </div>    
 
         <div id="footer_filler"></div>
