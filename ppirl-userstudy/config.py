@@ -42,7 +42,6 @@ SEQUENCE = [
     'show_section2_guide',    #32
     'show_section2',    #33
     'show_thankyou'    #34
-
 ]
 
 

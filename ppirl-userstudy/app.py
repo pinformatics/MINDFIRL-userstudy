@@ -87,8 +87,8 @@ def show_record_linkages():
     data_num = user_id%10
     if data_num == 0:
         data_num = 10
-    data_file_section1 = 'data/section1_' + str(data_num)
-    data_file_section2 = 'data/section2_' + str(data_num)
+    data_file_section1 = 'data/main_section/section1_' + str(data_num) + '.csv'
+    data_file_section2 = 'data/main_section/section2_' + str(data_num) + '.csv'
     DATA_PAIR_LIST = dm.DataPairList(data_pairs = dl.load_data_from_csv(data_file_section1))
     DATA_SECTION2 = dm.DataPairList(data_pairs = dl.load_data_from_csv(data_file_section2))
 
