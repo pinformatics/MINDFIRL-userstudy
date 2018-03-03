@@ -5,7 +5,7 @@
     This file is for practice grading
 */
 
-function get_response() {
+function get_responses() {
     
     var responses = new Array();
     var i = 0;
@@ -22,17 +22,24 @@ function get_response() {
 $(function() {
     $('#submit_btn').bind('click', function() {
         // save the click data
-        
+        // console.log("js");
         $this_click = "user click: Attemp";
         var dt = new Date();
         $click_time = "click time: " + dt.getHours() + "h" + dt.getMinutes() + "m" + dt.getSeconds() + "s";
         $click_timestamp = "click timestamp: " + dt.getTime();
         $data = [$this_click, $click_time, $click_timestamp].join()
         $user_data += $data + ";";
-        $.getJSON($SCRIPT_ROOT + $THIS_URL + '/grading', get_response(), function(data) {
+        $.getJSON($SCRIPT_ROOT + $THIS_URL + '/grading', get_responses(), function(data) {
             $("#feedback").html(data.result);
-            $("#submit_btn").css({"display": "none"});
-            $("#button_next").css({"display": "inline"})
+            // console.log(data.result);
+            // console.log(data.result[0]);
+            if(data.result[0].indexOf("Good job") >= 0){
+                $("#submit_btn").css({"display": "none"});
+                $("#button_next").css({"display": "inline"})
+            } else{
+                $("#submit_btn").text("Resubmit");
+            }
+            
         });
         return false;
     });

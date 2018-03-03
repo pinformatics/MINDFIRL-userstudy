@@ -17,9 +17,23 @@
 .TblFeedback
 {
     position: absolute;
-    margin-top: 2%;
+    margin-top: 10%;
     margin-left: 50%;
     width: 30%;
+    font-size: 200px;
+    color: black;
+    /*padding:1px;*/
+    /*border:thin solid black;*/
+}
+
+.TblFeedbackShort
+{
+    position: absolute;
+    margin-top: 5%;
+    margin-left: 50%;
+    width: 30%;
+    font-size: 200px;
+    color: black;
     /*padding:1px;*/
     /*border:thin solid black;*/
 }

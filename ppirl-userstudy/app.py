@@ -205,11 +205,11 @@ def grade_pratice_full_mode(tutorial_section, page):
         if answer == '0' and (q+'a1' in responses or q+'a2' in responses or q+'a3' in responses):
             result = True
         if not result:
-            ret.append('<div>' + pairs[i][18] + '</div>')
+            ret.append('<h5>' + ", ".join(pairs[i][18:]) + '</h5>')
             all_correct = False
     if all_correct:
-        ret.append('<div>Good job!</div>')
-    print ret
+        ret.append('<h5>Good job!</h5>')
+    # print ret
     return jsonify(result=ret)
 
 
@@ -306,7 +306,7 @@ def open_cell():
         working_data = DATA_CLICKABLE_PRACTICE
         full_data = DATASET_TUTORIAL
         kapr_limit = 60
-    elif session['state'] == 30:
+    elif session['state'] == 31:
         working_data = DATA_PAIR_LIST
         full_data = DATASET
         kapr_limit = float(r.get(session['user_cookie']+'section1_kapr_limit'))
@@ -340,7 +340,7 @@ def open_big_cell():
         working_data = DATA_CLICKABLE_PRACTICE
         full_data = DATASET
         kapr_limit = 60
-    elif session['state'] == 30:
+    elif session['state'] == 31:
         working_data = DATA_PAIR_LIST
         full_data = DATASET
         kapr_limit = float(r.get(session['user_cookie']+'section1_kapr_limit'))
@@ -518,6 +518,11 @@ def next():
     state = session['state'] + 1
     session['state'] += 1
 
+    #timing info on next click 
+    # timing_info = sequence[session['state']-1] + ": " + time.strftime("%a, %d %b %Y %H:%M:%S")
+    # msg = Message(subject='user click: ' + session['user_cookie'], body=timing_info, recipients=['ppirl.mindfil@gmail.com'])
+    # mail.send(msg)
+ 
     return redirect(url_for(sequence[state]))
 
 
@@ -758,13 +763,6 @@ def show_tutorial_clickable_prepractice():
 
     
 
-# @app.route('/tutorial_clickable_decision_making')
-# @state_machine('show_tutorial_clickable_decision_making')
-# def show_tutorial_clickable_decision_making():
-#     return render_template('tutorial_clickable_decision_making.html')
-
-
-
 @app.route('/tutorial/clickable/practice')
 @state_machine('show_tutorial_clickable_practice')
 def show_tutorial_clickable_practice():
@@ -796,10 +794,22 @@ def show_tutorial_clickable_practice():
     return render_template('tutorial/clickable/practice.html', data=data, icons=icons, ids=ids, title='Practice 3 ', thisurl='/tutorial/clickable/practice', page_number=" ", delta=delta, kapr_limit = 60)
 
 
+@app.route('/section1_start')
+@state_machine('show_section1_startpage')
+def show_section1_startpage():
+    return render_template('section1_start.html')
+
+
 @app.route('/id')
 def get_id():
     if session['user_id']:
         return str(session['user_id'])
     return 'Null'
 
-
+@app.route('/save_data_choice', methods=['POST'])
+def save_data_choice():
+    time_stamp = str(time.time())
+    data_choice = request.form.get('data_choice_')
+    r.set("data_choice_" + session['user_cookie'], data_choice)
+    return redirect(url_for('next'))
+        

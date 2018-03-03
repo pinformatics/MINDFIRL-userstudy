@@ -1,8 +1,8 @@
 #! /usr/bin/python
 # encoding=utf-8
 
-#ENV = 'development'
-ENV = 'production'
+ENV = 'development'
+# ENV = 'production'
 
 
 SEQUENCE = [
@@ -37,10 +37,28 @@ SEQUENCE = [
     # 'show_tutorial_clickable_budgetmeter_vid',
     'show_tutorial_clickable_prepractice',
     'show_tutorial_clickable_practice', # DATA_CLICKABLE_PRACTICE
+    'show_section1_startpage',
     'show_record_linkage_task',
     'show_section2',
     'show_thankyou'
 ]
 
+
 DATA_PAIR_PER_PAGE = 6
 KAPR_LIMIT = 5.0
+
+
+# email server
+MAIL_SERVER = 'smtp.googlemail.com'
+
+MAIL_PORT = 465
+
+MAIL_USE_TLS = False
+
+MAIL_USE_SSL = True
+
+MAIL_USERNAME = 'ppirl.mindfil@gmail.com'
+
+MAIL_PASSWORD = 'Abcd1234$'
+
+MAIL_DEFAULT_SENDER = 'ppirl.mindfil@gmail.com'
