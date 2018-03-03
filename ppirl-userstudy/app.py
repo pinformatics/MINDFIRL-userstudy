@@ -577,10 +577,25 @@ def show_section2_guide():
     # grading section 1
     user_data_key = session['user_cookie'] + '_user_data'
     user_data = r.get(user_data_key)
-<<<<<<< HEAD
+    data = ud.parse_user_data(user_data)
+    result = ud.grade_final_answer(data, DATA_PAIR_LIST)
+    performance1 = 'type:performance1,content:' + str(result[0]) + ' out of ' + str(result[1]) + ';\n'
+    r.append(user_data_key, performance1)
+    return render_template('section2_guide.html', uid=str(session['user_id']))
 
-    if r.get("data_choice_" + session['user_cookie']) == "collect": 
-        # print "collcted"
+
+
+
+
+@app.route('/thankyou')
+@state_machine('show_thankyou')
+def show_thankyou():
+    # grading section 2
+    user_data_key = session['user_cookie'] + '_user_data'
+    r.append(user_data_key, 'type: session_end,timestamp: '+str(time.time())+';\n')
+    user_data = r.get(user_data_key)
+    
+    if r.get("data_choice_" + session['user_cookie']) == "collect":
         data = ud.parse_user_data(user_data)
         result = ud.grade_final_answer(data, DATA_PAIR_LIST)
         performance1 = 'type:performance1,content:' + str(result[0]) + ' out of ' + str(result[1]) + ';\n'
@@ -591,29 +606,6 @@ def show_section2_guide():
         user_data += performance2
 
         r.set(user_data_key, user_data)
-=======
-    data = ud.parse_user_data(user_data)
-    result = ud.grade_final_answer(data, DATA_PAIR_LIST)
-    performance1 = 'type:performance1,content:' + str(result[0]) + ' out of ' + str(result[1]) + ';\n'
-    r.append(user_data_key, performance1)
-
-    return render_template('section2_guide.html', uid=str(session['user_id']))
-
-
-@app.route('/thankyou')
-@state_machine('show_thankyou')
-def show_thankyou():
-    # grading section 2
-    user_data_key = session['user_cookie'] + '_user_data'
-    r.append(user_data_key, 'type: session_end,timestamp: '+str(time.time())+';\n')
-    user_data = r.get(user_data_key)
-    data = ud.parse_user_data(user_data)
-    result = ud.grade_final_answer(data, DATA_SECTION2)
-    performance2 = 'type:performance2,content:' + str(result[0]) + ' out of ' + str(result[1]) + ';\n'
-    r.append(user_data_key, performance2)
->>>>>>> 84d3913200769168254a1ef4d15dd3015ff4dba3
-
-        dl.save_data_to_json('data/saved/'+str(session['user_cookie'])+'.json', user_data)
 
     else:
         # print "discareded"
@@ -630,34 +622,6 @@ def show_thankyou():
 
     return render_template('thankyou.html', uid=str(session['user_id']))
 
-
-# @app.route('/ppirl_tutorial1')
-# @state_machine('show_ppirl_tutorial1')
-# def show_ppirl_tutorial1():
-#     pairs_formatted = DATA_TUTORIAL1.get_data_display('masked')
-#     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
-#     icons = DATA_TUTORIAL1.get_icons()
-#     ids_list = DATA_TUTORIAL1.get_ids()
-#     ids = zip(ids_list[0::2], ids_list[1::2])
-
-#     # KAPR - K-Anonymity privacy risk
-#     KAPR_key = session['user_cookie'] + '_KAPR'
-#     r.set(KAPR_key, 0)
-
-#     # set the user-display-status as masked for all cell
-#     attribute_size = 6
-#     for id1 in ids_list:
-#         for i in range(attribute_size):
-#             key = session['user_cookie'] + '-' + id1[i]
-#             r.set(key, 'M')
-
-#     # get the delta information
-#     delta = list()
-#     for i in range(len(icons)):
-#         data_pair = DATA_TUTORIAL1.get_data_pair_by_index(i)
-#         delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_TUTORIAL1.size())
-
-#     return render_template('tutorial1.html', data=data, icons=icons, ids=ids, title='Practice 2', thisurl='/ppirl_tutorial1', page_number=" ", delta=delta)
 
 @app.route('/tutorial/clickable')
 @state_machine('show_tutorial_clickable_start')
