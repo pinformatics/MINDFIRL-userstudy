@@ -577,6 +577,21 @@ def show_section2_guide():
     # grading section 1
     user_data_key = session['user_cookie'] + '_user_data'
     user_data = r.get(user_data_key)
+<<<<<<< HEAD
+
+    if r.get("data_choice_" + session['user_cookie']) == "collect": 
+        # print "collcted"
+        data = ud.parse_user_data(user_data)
+        result = ud.grade_final_answer(data, DATA_PAIR_LIST)
+        performance1 = 'type:performance1,content:' + str(result[0]) + ' out of ' + str(result[1]) + ';\n'
+        user_data += performance1
+
+        result2 = ud.grade_final_answer(data, DATA_SECTION2)
+        performance2 = 'type:performance2,content:' + str(result2[0]) + ' out of ' + str(result2[1]) + ';\n'
+        user_data += performance2
+
+        r.set(user_data_key, user_data)
+=======
     data = ud.parse_user_data(user_data)
     result = ud.grade_final_answer(data, DATA_PAIR_LIST)
     performance1 = 'type:performance1,content:' + str(result[0]) + ' out of ' + str(result[1]) + ';\n'
@@ -608,6 +623,23 @@ def show_thankyou():
 
     # dl.save_data_to_json('data/saved/'+str(session['user_cookie'])+'.json', user_data)
 
+    if r.get("data_choice_" + session['user_cookie']) == "collect": 
+        # print "collcted"
+        data = ud.parse_user_data(user_data)
+        result = ud.grade_final_answer(data, DATA_PAIR_LIST)
+        performance1 = 'type:performance1,content:' + str(result[0]) + ' out of ' + str(result[1]) + ';\n'
+        user_data += performance1
+
+        result2 = ud.grade_final_answer(data, DATA_SECTION2)
+        performance2 = 'type:performance2,content:' + str(result2[0]) + ' out of ' + str(result2[1]) + ';\n'
+        user_data += performance2
+
+        r.set(user_data_key, user_data)
+    else:
+        # print "discareded"
+        r.delete(user_data_key)
+        # print r.get(user_data_key)
+
     # send the data to email.
     #msg = Message(subject='user data: ' + session['user_cookie'], body=user_data, recipients=['mindfil.ppirl@gmail.com'])
     #mail.send(msg)
@@ -619,39 +651,10 @@ def show_thankyou():
     return render_template('thankyou.html', uid=str(session['user_id']))
 
 
-# @app.route('/ppirl_tutorial1')
-# @state_machine('show_ppirl_tutorial1')
-# def show_ppirl_tutorial1():
-#     pairs_formatted = DATA_TUTORIAL1.get_data_display('masked')
-#     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
-#     icons = DATA_TUTORIAL1.get_icons()
-#     ids_list = DATA_TUTORIAL1.get_ids()
-#     ids = zip(ids_list[0::2], ids_list[1::2])
-
-#     # KAPR - K-Anonymity privacy risk
-#     KAPR_key = session['user_cookie'] + '_KAPR'
-#     r.set(KAPR_key, 0)
-
-#     # set the user-display-status as masked for all cell
-#     attribute_size = 6
-#     for id1 in ids_list:
-#         for i in range(attribute_size):
-#             key = session['user_cookie'] + '-' + id1[i]
-#             r.set(key, 'M')
-
-#     # get the delta information
-#     delta = list()
-#     for i in range(len(icons)):
-#         data_pair = DATA_TUTORIAL1.get_data_pair_by_index(i)
-#         delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_TUTORIAL1.size())
-
-#     return render_template('tutorial1.html', data=data, icons=icons, ids=ids, title='Practice 2', thisurl='/ppirl_tutorial1', page_number=" ", delta=delta)
-
 @app.route('/tutorial/clickable')
 @state_machine('show_tutorial_clickable_start')
 def show_tutorial_clickable_start():
     return render_template('tutorial/clickable/start.html')
-
 
 
 @app.route('/tutorial/clickable/demo')
@@ -848,7 +851,7 @@ def get_id():
 @app.route('/save_data_choice', methods=['POST'])
 def save_data_choice():
     time_stamp = str(time.time())
-    data_choice = request.form.get('data_choice_')
+    data_choice = request.form.get('data_choice')
     r.set("data_choice_" + session['user_cookie'], data_choice)
     return redirect(url_for('next'))
         
