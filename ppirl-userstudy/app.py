@@ -588,16 +588,25 @@ def show_section2_guide():
 @app.route('/thankyou')
 @state_machine('show_thankyou')
 def show_thankyou():
-    # grading section 2
+    # grading section 1
     user_data_key = session['user_cookie'] + '_user_data'
     r.append(user_data_key, 'type: session_end,timestamp: '+str(time.time())+';\n')
+    user_data = r.get(user_data_key)
+    data = ud.parse_user_data(user_data)
+    result = ud.grade_final_answer(data, DATA_PAIR_LIST)
+    performance1 = 'type:performance1,content:' + str(result[0]) + ' out of ' + str(result[1]) + ';\n'
+    r.append(user_data_key, performance1)
+
+    # grading section 2
+    user_data_key = session['user_cookie'] + '_user_data'
+    #r.append(user_data_key, 'type: session_end,timestamp: '+str(time.time())+';\n')
     user_data = r.get(user_data_key)
     data = ud.parse_user_data(user_data)
     result = ud.grade_final_answer(data, DATA_SECTION2)
     performance2 = 'type:performance2,content:' + str(result[0]) + ' out of ' + str(result[1]) + ';\n'
     r.append(user_data_key, performance2)
 
-    dl.save_data_to_json('data/saved/'+str(session['user_cookie'])+'.json', user_data)
+    # dl.save_data_to_json('data/saved/'+str(session['user_cookie'])+'.json', user_data)
 
     # send the data to email.
     #msg = Message(subject='user data: ' + session['user_cookie'], body=user_data, recipients=['mindfil.ppirl@gmail.com'])

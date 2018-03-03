@@ -39,8 +39,8 @@ SEQUENCE = [
     'show_tutorial_clickable_practice', #29 DATA_CLICKABLE_PRACTICE
     'show_section1_guide',    #30
     'show_record_linkage_task',    #31
-    'show_section2_guide',    #32
-    'show_section2',    #33
+    #'show_section2_guide',    #32
+    #'show_section2',    #33
     'show_thankyou'    #34
 ]
 
