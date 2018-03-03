@@ -9,7 +9,7 @@
                         <div>Privacy risk: <span id="privacy-risk-value">0%</span><span id="privacy-risk-delta-value"></span></div>
                         <div class="progress border" style="height: 20px;">
                             {% if kapr_limit > 0 %}
-                            <div style="width: 3px; height: 18px; position: absolute; background: red; margin-left: {{ kapr_limit*8 }}px;" title="privacy risk cannot exceed this limit">
+                            <div style="width: 6px; height: 18px; position: absolute; background: red; margin-left: {{ kapr_limit*8 }}px;" title="privacy risk cannot exceed this limit">
                             </div>
                             {% endif %}
                             <div id="privacy-risk-bar" class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 0%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
