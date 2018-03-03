@@ -552,18 +552,25 @@ def show_thankyou():
     r.append(user_data_key, 'type: session_end,timestamp: '+str(time.time())+';\n')
     user_data = r.get(user_data_key)
 
-    data = ud.parse_user_data(user_data)
-    result = ud.grade_final_answer(data, DATA_PAIR_LIST)
-    performance1 = 'type:performance1,content:' + str(result[0]) + ' out of ' + str(result[1]) + ';\n'
-    user_data += performance1
+    if r.get("data_choice_" + session['user_cookie']) == "collect": 
+        # print "collcted"
+        data = ud.parse_user_data(user_data)
+        result = ud.grade_final_answer(data, DATA_PAIR_LIST)
+        performance1 = 'type:performance1,content:' + str(result[0]) + ' out of ' + str(result[1]) + ';\n'
+        user_data += performance1
 
-    result2 = ud.grade_final_answer(data, DATA_SECTION2)
-    performance2 = 'type:performance2,content:' + str(result2[0]) + ' out of ' + str(result2[1]) + ';\n'
-    user_data += performance2
+        result2 = ud.grade_final_answer(data, DATA_SECTION2)
+        performance2 = 'type:performance2,content:' + str(result2[0]) + ' out of ' + str(result2[1]) + ';\n'
+        user_data += performance2
 
-    r.set(user_data_key, user_data)
+        r.set(user_data_key, user_data)
 
-    dl.save_data_to_json('data/saved/'+str(session['user_cookie'])+'.json', user_data)
+        dl.save_data_to_json('data/saved/'+str(session['user_cookie'])+'.json', user_data)
+
+    else:
+        # print "discareded"
+        r.delete(user_data_key)
+        # print r.get(user_data_key)
 
     # send the data to email.
     #msg = Message(subject='user data: ' + session['user_cookie'], body=user_data, recipients=['mindfil.ppirl@gmail.com'])
@@ -809,7 +816,7 @@ def get_id():
 @app.route('/save_data_choice', methods=['POST'])
 def save_data_choice():
     time_stamp = str(time.time())
-    data_choice = request.form.get('data_choice_')
+    data_choice = request.form.get('data_choice')
     r.set("data_choice_" + session['user_cookie'], data_choice)
     return redirect(url_for('next'))
         
