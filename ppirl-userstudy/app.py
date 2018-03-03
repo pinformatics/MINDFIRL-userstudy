@@ -608,19 +608,7 @@ def show_thankyou():
 
     # dl.save_data_to_json('data/saved/'+str(session['user_cookie'])+'.json', user_data)
 
-    if r.get("data_choice_" + session['user_cookie']) == "collect": 
-        # print "collcted"
-        data = ud.parse_user_data(user_data)
-        result = ud.grade_final_answer(data, DATA_PAIR_LIST)
-        performance1 = 'type:performance1,content:' + str(result[0]) + ' out of ' + str(result[1]) + ';\n'
-        user_data += performance1
-
-        result2 = ud.grade_final_answer(data, DATA_SECTION2)
-        performance2 = 'type:performance2,content:' + str(result2[0]) + ' out of ' + str(result2[1]) + ';\n'
-        user_data += performance2
-
-        r.set(user_data_key, user_data)
-    else:
+    if r.get("data_choice_" + session['user_cookie']) != "collect":
         # print "discareded"
         r.delete(user_data_key)
         # print r.get(user_data_key)
