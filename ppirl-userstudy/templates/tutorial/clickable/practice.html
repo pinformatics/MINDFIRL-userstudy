@@ -68,7 +68,8 @@
                             </div>
                         </div>
                     </div>
-                <h5 id="feedback_clicks" style="position: absolute; margin-left: 50%; width: 45%; margin-top: 0.85%;"></h5>
+
+                <!-- <h5 id="feedback_clicks" style="position: absolute; margin-left: 50%; width: 45%; margin-top: 0.85%;"></h5> -->
 
                 <div style="clear:both"></div>
 
@@ -301,7 +302,7 @@
 //    })
     
     function change_feedback(text){
-        var feedback = $("#feedback_clicks");
+        var feedback = $("#feedback");
         feedback.fadeOut(500, function(){
           feedback.text(text);  
         })
