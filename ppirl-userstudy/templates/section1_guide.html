@@ -8,33 +8,29 @@
         <link rel="stylesheet" href="../static/css/instructions.css?q=26" type="text/css">
         <link rel="stylesheet" href="../static/css/bootstrap.min.css" type="text/css">
         <link rel="stylesheet" href="../static/css/footer.css" type="text/css">
-        <style type="text/css">
-            a:hover {
-                cursor: default;
-            }
-        </style>
         <script src="../static/javascript/jquery-3.2.1.min.js"></script>
         <script src="../static/javascript/popper.min.js"></script>
         <script src="../static/javascript/bootstrap.min.js"></script>
         <script src="../static/javascript/instructions.js"></script>
         <script src="../static/javascript/site.js"></script>
-        <script type=text/javascript>
-            $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-        </script>
     </head>
 
     <body>
         <div id="wrapper">
             <div id="title">
-                <h3>Thank you<a href="/pull_data" style="color: black;text-decoration: none;">!</a></h3>
+                <h3>Instructions</h3>
             </div>
             <div id="content">
                 <div>
-I hope you enjoyed doing the tutorial.<br/>
+Now you are moving to the main sections:<br/>
 <br/>
-Having good data is a requirement for generating good information from it to support good evidence based decisions. Balancing high quality record linkage to support good evidence based research requires hitting the sweet spot in balancing patient privacy and sharing just the right amount of information needed for good record linkage decisions.<br/>
-<br/>
-We hope you got a glimpse of what it takes to hit the sweet spot.<br/>
+There will be two sections. For section 1, you will get 36 questions, with a limit to open cells. You are required to finish all the questions in this section.<br/>
+For section 2, there will be much more questions, but you do not need to finish them all. And there is no limit to open cells in section 2.<br/>
+                </div>
+                <div class="submit_div">
+                    <form>
+                    <button formaction="{{ url_for('next') }}" id="button_0" class="submit_button">Next</button>
+                    </form>
                 </div>
             </div>
         </div>

@@ -95,8 +95,8 @@ function all_questions_answered() {
     var c = $(".ion-android-radio-button-on").each(function() {
         i += 1;
     });
-    return true; // disable this feature for dev.
-    // return (i == 6);
+    //return true; // disable this feature for dev.
+    return (i == 6);
 }
 
 /*

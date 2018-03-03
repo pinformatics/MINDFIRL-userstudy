@@ -20,6 +20,7 @@ import config
 
 
 app = Flask(__name__)
+app.secret_key = 'a9%z$/`9h8FMnh893;*g783'
 
 app.config.from_pyfile('email_config.py')
 mail = Mail(app)
@@ -82,19 +83,28 @@ def show_record_linkages():
     data += 'type: session_start,timestamp: ' + str(time.time()) + ';\n'
     r.set(user_data_key, data)
 
+    # get random scrambled data for section 1 and 2
+    data_num = user_id%10
+    if data_num == 0:
+        data_num = 10
+    data_file_section1 = 'data/section1_' + str(data_num)
+    data_file_section2 = 'data/section2_' + str(data_num)
+    DATA_PAIR_LIST = dm.DataPairList(data_pairs = dl.load_data_from_csv(data_file_section1))
+    DATA_SECTION2 = dm.DataPairList(data_pairs = dl.load_data_from_csv(data_file_section2))
+
     return redirect(url_for('show_introduction'))
 
 
 @app.route('/introduction')
 @state_machine('show_introduction')
 def show_introduction():
-    return render_template('introduction.html')
+    return render_template('introduction.html', uid=str(session['user_id']))
 
 
 @app.route('/introduction2')
 @state_machine('show_introduction2')
 def show_introduction2():
-    return render_template('introduction2.html')
+    return render_template('introduction2.html', uid=str(session['user_id']))
 
 @app.route('/tutorial/')
 @app.route('/tutorial/rl/')
@@ -279,7 +289,7 @@ def show_record_linkage_task():
     kapr_limit = dm.get_kaprlimit(DATASET, DATA_PAIR_LIST, 'moderate')
     r.set(session['user_cookie']+'section1_kapr_limit', kapr_limit)
 
-    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 1', thisurl='/record_linkage', page_number="1/6", delta=delta, kapr_limit = kapr_limit)
+    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 1', thisurl='/record_linkage', page_number="1/6", delta=delta, kapr_limit = kapr_limit, uid=str(session['user_id']))
 
 
 @app.route('/save_data', methods=['GET', 'POST'])
@@ -306,7 +316,7 @@ def open_cell():
         working_data = DATA_CLICKABLE_PRACTICE
         full_data = DATASET_TUTORIAL
         kapr_limit = 60
-    elif session['state'] == 30:
+    elif session['state'] == 31:
         working_data = DATA_PAIR_LIST
         full_data = DATASET
         kapr_limit = float(r.get(session['user_cookie']+'section1_kapr_limit'))
@@ -340,7 +350,7 @@ def open_big_cell():
         working_data = DATA_CLICKABLE_PRACTICE
         full_data = DATASET
         kapr_limit = 60
-    elif session['state'] == 30:
+    elif session['state'] == 31:
         working_data = DATA_PAIR_LIST
         full_data = DATASET
         kapr_limit = float(r.get(session['user_cookie']+'section1_kapr_limit'))
@@ -468,7 +478,7 @@ def show_section2():
         data_pair = DATA_SECTION2.get_data_pair_by_index(i)
         delta += dm.KAPR_delta(DATASET2, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*dp_list_size)
 
-    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 2', thisurl='/section2', page_number="1/"+str(page_size), delta=delta, kapr_limit=0)
+    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 2', thisurl='/section2', page_number="1", delta=delta, kapr_limit=0, uid=str(session['user_id']))
 
 
 @app.route('/section2/next')
@@ -506,7 +516,7 @@ def show_section2_next():
     ret = {
         'delta': delta_dict,
         'is_last_page': is_last_page,
-        'page_number': 'page: ' + str(current_page+1)+'/'+str(page_size),
+        'page_number': 'page: ' + str(current_page+1),
         'page_content': page_content
     }
     return jsonify(ret)
@@ -525,10 +535,20 @@ def next():
 def pull_data():
     user_data_key = session['user_cookie'] + '_user_data'
     user_data = r.get(user_data_key)
+    data = ud.parse_user_data(user_data)
 
+    ret = ''
+    for d in data:
+        if 'type' in d and d['type'] == 'performance1':
+            ret += ('section 1: ' + d['content'] + '\n')
+    for d in data:
+        if 'type' in d and d['type'] == 'performance2':
+            ret += ('section 2: ' + d['content'] + '\n')
     
+    ret = ret + '\n' + user_data
+    ret = ret.replace('\n', '<br />')
 
-    return user_data
+    return render_template('show_data.html', data=ret, uid=str(session['user_id']))
 
 
 @app.route('/pull_data_all')
@@ -540,23 +560,37 @@ def pull_data_all():
     return ret
 
 
-@app.route('/thankyou')
-@state_machine('show_thankyou')
-def show_thankyou():
-    user_data_key = session['user_cookie'] + '_user_data'
-    r.append(user_data_key, 'type: session_end,timestamp: '+str(time.time())+';\n')
-    user_data = r.get(user_data_key)
+@app.route('/section1_guide')
+@state_machine('show_section1_guide')
+def show_section1_guide():
+    return render_template('section1_guide.html', uid=str(session['user_id']))
 
+
+@app.route('/section2_guide')
+@state_machine('show_section2_guide')
+def show_section2_guide():
+    # grading section 1
+    user_data_key = session['user_cookie'] + '_user_data'
+    user_data = r.get(user_data_key)
     data = ud.parse_user_data(user_data)
     result = ud.grade_final_answer(data, DATA_PAIR_LIST)
     performance1 = 'type:performance1,content:' + str(result[0]) + ' out of ' + str(result[1]) + ';\n'
-    user_data += performance1
+    r.append(user_data_key, performance1)
 
-    result2 = ud.grade_final_answer(data, DATA_SECTION2)
-    performance2 = 'type:performance2,content:' + str(result2[0]) + ' out of ' + str(result2[1]) + ';\n'
-    user_data += performance2
+    return render_template('section2_guide.html', uid=str(session['user_id']))
 
-    r.set(user_data_key, user_data)
+
+@app.route('/thankyou')
+@state_machine('show_thankyou')
+def show_thankyou():
+    # grading section 2
+    user_data_key = session['user_cookie'] + '_user_data'
+    r.append(user_data_key, 'type: session_end,timestamp: '+str(time.time())+';\n')
+    user_data = r.get(user_data_key)
+    data = ud.parse_user_data(user_data)
+    result = ud.grade_final_answer(data, DATA_SECTION2)
+    performance2 = 'type:performance2,content:' + str(result[0]) + ' out of ' + str(result[1]) + ';\n'
+    r.append(user_data_key, performance2)
 
     dl.save_data_to_json('data/saved/'+str(session['user_cookie'])+'.json', user_data)
 
@@ -568,11 +602,7 @@ def show_thankyou():
     #for key in r.scan_iter("prefix:"+session['user_cookie']):
     #    r.delete(key)
 
-    return render_template('thankyou.html')
-
-
-app.secret_key = 'a9%z$/`9h8FMnh893;*g783'
-
+    return render_template('thankyou.html', uid=str(session['user_id']))
 
 
 # @app.route('/ppirl_tutorial1')

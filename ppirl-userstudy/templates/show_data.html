@@ -8,11 +8,6 @@
         <link rel="stylesheet" href="../static/css/instructions.css?q=26" type="text/css">
         <link rel="stylesheet" href="../static/css/bootstrap.min.css" type="text/css">
         <link rel="stylesheet" href="../static/css/footer.css" type="text/css">
-        <style type="text/css">
-            a:hover {
-                cursor: default;
-            }
-        </style>
         <script src="../static/javascript/jquery-3.2.1.min.js"></script>
         <script src="../static/javascript/popper.min.js"></script>
         <script src="../static/javascript/bootstrap.min.js"></script>
@@ -20,24 +15,17 @@
         <script src="../static/javascript/site.js"></script>
         <script type=text/javascript>
             $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+            $(function() {
+                $('#get_data').bind('click', function() {
+                    window.location.href = $SCRIPT_ROOT + "/pull_data";
+                });
+            });
         </script>
     </head>
 
     <body>
         <div id="wrapper">
-            <div id="title">
-                <h3>Thank you<a href="/pull_data" style="color: black;text-decoration: none;">!</a></h3>
-            </div>
-            <div id="content">
-                <div>
-I hope you enjoyed doing the tutorial.<br/>
-<br/>
-Having good data is a requirement for generating good information from it to support good evidence based decisions. Balancing high quality record linkage to support good evidence based research requires hitting the sweet spot in balancing patient privacy and sharing just the right amount of information needed for good record linkage decisions.<br/>
-<br/>
-We hope you got a glimpse of what it takes to hit the sweet spot.<br/>
-                </div>
-            </div>
-        </div>
+            {{ data | safe }}
         {% include "footer.html" ignore missing %}
     </body>
 </html>
