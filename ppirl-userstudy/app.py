@@ -581,10 +581,8 @@ def show_section2_guide():
     result = ud.grade_final_answer(data, DATA_PAIR_LIST)
     performance1 = 'type:performance1,content:' + str(result[0]) + ' out of ' + str(result[1]) + ';\n'
     r.append(user_data_key, performance1)
+
     return render_template('section2_guide.html', uid=str(session['user_id']))
-
-
-
 
 
 @app.route('/thankyou')
@@ -594,21 +592,23 @@ def show_thankyou():
     user_data_key = session['user_cookie'] + '_user_data'
     r.append(user_data_key, 'type: session_end,timestamp: '+str(time.time())+';\n')
     user_data = r.get(user_data_key)
+    data = ud.parse_user_data(user_data)
+    result = ud.grade_final_answer(data, DATA_PAIR_LIST)
+    performance1 = 'type:performance1,content:' + str(result[0]) + ' out of ' + str(result[1]) + ';\n'
+    r.append(user_data_key, performance1)
 
+    # grading section 2
+    user_data_key = session['user_cookie'] + '_user_data'
+    #r.append(user_data_key, 'type: session_end,timestamp: '+str(time.time())+';\n')
+    user_data = r.get(user_data_key)
+    data = ud.parse_user_data(user_data)
+    result = ud.grade_final_answer(data, DATA_SECTION2)
+    performance2 = 'type:performance2,content:' + str(result[0]) + ' out of ' + str(result[1]) + ';\n'
+    r.append(user_data_key, performance2)
 
-    if r.get("data_choice_" + session['user_cookie']) == "collect": 
-        # print "collcted"
-        data = ud.parse_user_data(user_data)
-        result = ud.grade_final_answer(data, DATA_PAIR_LIST)
-        performance1 = 'type:performance1,content:' + str(result[0]) + ' out of ' + str(result[1]) + ';\n'
-        user_data += performance1
+    # dl.save_data_to_json('data/saved/'+str(session['user_cookie'])+'.json', user_data)
 
-        result2 = ud.grade_final_answer(data, DATA_SECTION2)
-        performance2 = 'type:performance2,content:' + str(result2[0]) + ' out of ' + str(result2[1]) + ';\n'
-        user_data += performance2
-
-        r.set(user_data_key, user_data)
-    else:
+    if r.get("data_choice_" + session['user_cookie']) != "collect":
         # print "discareded"
         r.delete(user_data_key)
         # print r.get(user_data_key)
