@@ -30,7 +30,13 @@ $(function() {
         $data = [$this_click, $click_time, $click_timestamp].join()
         $user_data += $data + ";";
         $.getJSON($SCRIPT_ROOT + $THIS_URL + '/grading', get_responses(), function(data) {
-            $("#feedback").html(data.result);
+            var feedback = $("#feedback");
+            feedback.fadeOut(500, function(){
+              feedback.html(data.result);  
+              feedback.css("color","#660000");
+            })
+            feedback.fadeIn(500);
+            // $("#feedback").html(data.result);
             $("#submit_btn").css({"display": "none"});
             $("#button_next").css({"display": "inline"})
         });
