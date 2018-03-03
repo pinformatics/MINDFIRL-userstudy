@@ -540,6 +540,9 @@ def next():
 def pull_data():
     user_data_key = session['user_cookie'] + '_user_data'
     user_data = r.get(user_data_key)
+    if not user_data:
+        return render_template('show_data.html', data='No data is collected for this user.', uid=str(session['user_id']))
+
     data = ud.parse_user_data(user_data)
 
     ret = ''
@@ -820,6 +823,12 @@ def get_id():
     if session['user_id']:
         return str(session['user_id'])
     return 'Null'
+
+
+@app.route('/flushdb_522006058')
+def flush_redis():
+    r.flushdb()
+    return 'redis flushed.'
 
 @app.route('/save_data_choice', methods=['POST'])
 def save_data_choice():

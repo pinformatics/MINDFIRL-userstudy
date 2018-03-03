@@ -7,6 +7,8 @@ import data_model as dm
 
 
 def parse_user_data(user_data):
+    if not user_data:
+        return []
     user_data_list = user_data.split(';')
     ret = list()
     for i in range(len(user_data_list)):
