@@ -77,16 +77,23 @@ All research on human volunteers is reviewed by a committee that works to protec
                 </div>
                 <form class="confirm_form">
                     <div>
-                        <input type="checkbox" value ="1" id="checkbox_1" name=""/>
+                        <!-- <input type="checkbox" value ="1" id="checkbox_1" name=""/>
                         <label for="checkbox_1">
                             I have read the information provided above and I have asked all the questions I have at this time.
                             By checking this box, I am agreeing to participate in the study voluntarily.
-                        </label>
+                        </label> -->
                     </div>
                 </form>
                 <div class="submit_div">
-                    <form>
-                        <button formaction="{{ url_for('next') }}" id="button_1" class="submit_button" disabled>Next</button>
+                    <form action="save_data_choice"  method="post">
+                        <input type="radio" name="data_choice" value="collect" id="data_choice_collect" checked>
+                        <label for="data_choice_collect">I agree to let the software collect anonymous data during my use</label> 
+                        </br>
+                        <input type="radio" name="data_choice" value="dont_collect" id="data_choice_dont_collect">
+                        <label for="data_choice_dont_collect">The software may not collect anonymous data during my use</label>
+                        </br>
+                        <input type="submit" id="submit" value="Submit" class="submit_button" >
+                        <!-- <button formaction="{{ url_for('next') }}" id="button_1" class="submit_button" disabled>Next</button> -->
                     </form>
                 </div>
             </div>

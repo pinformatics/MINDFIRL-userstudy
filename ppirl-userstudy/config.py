@@ -42,7 +42,25 @@ SEQUENCE = [
     'show_section2_guide',    #32
     'show_section2',    #33
     'show_thankyou'    #34
+
 ]
+
 
 DATA_PAIR_PER_PAGE = 6
 KAPR_LIMIT = 5.0
+
+
+# email server
+MAIL_SERVER = 'smtp.googlemail.com'
+
+MAIL_PORT = 465
+
+MAIL_USE_TLS = False
+
+MAIL_USE_SSL = True
+
+MAIL_USERNAME = 'ppirl.mindfil@gmail.com'
+
+MAIL_PASSWORD = 'Abcd1234$'
+
+MAIL_DEFAULT_SENDER = 'ppirl.mindfil@gmail.com'
