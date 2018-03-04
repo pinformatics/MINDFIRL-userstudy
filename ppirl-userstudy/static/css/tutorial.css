@@ -1,3 +1,21 @@
+.videoInsert {
+    /*position: absolute; 
+    right: 0; 
+    bottom: 0;*/
+    min-width: 85%; 
+    min-height: 100%;
+    /*width: auto; */
+    /*height: auto; */
+    z-index: -100;
+    background-size: cover;
+    overflow: hidden;
+    border-width: 3px;
+    margin-left: 0%;
+    border-style: solid;
+    width: 85%;
+}
+
+
 .ImageBorder
 {
     width: 65%;
