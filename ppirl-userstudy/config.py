@@ -46,7 +46,13 @@ SEQUENCE = [
 
 
 DATA_PAIR_PER_PAGE = 6
-KAPR_LIMIT = 5.0
+'''
+KAPR_LIMIT can take following parameters:
+'moderate'
+any number from 0 to 100
+'''
+KAPR_LIMIT = 'moderate'
+KAPR_LIMIT = 20.4
 
 
 # email server

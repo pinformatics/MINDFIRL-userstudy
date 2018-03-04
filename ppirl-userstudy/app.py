@@ -312,7 +312,16 @@ def show_record_linkage_task():
         data_pair = working_data.get_data_pair_by_index(i)
         delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*working_data.size())
 
-    kapr_limit = dm.get_kaprlimit(DATASET, working_data, 'moderate')
+    if config.KAPR_LIMIT == 'moderate':
+        kapr_limit = dm.get_kaprlimit(DATASET, working_data, 'moderate')
+    elif type(config.KAPR_LIMIT) is int or type(config.KAPR_LIMIT) is float:
+        if config.KAPR_LIMIT > 0 and config.KAPR_LIMIT <= 100:
+            kapr_limit = config.KAPR_LIMIT
+        else:
+            kapr_limit = 0
+    else:
+        kapr_limit = 0
+
     r.set(session['user_cookie']+'section1_kapr_limit', kapr_limit)
 
     return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 1', thisurl='/record_linkage', page_number="1/6", delta=delta, kapr_limit = kapr_limit, uid=str(session['user_id']))
@@ -449,7 +458,7 @@ def show_record_linkage_next():
     for d in delta:
         delta_dict[d[0]] = d[1]
 
-    page_content = render_template('record_linkage_next.html', data=data, icons=icons, ids=ids)
+    page_content = render_template('record_linkage_next.html', data=data, icons=icons, ids=ids, pair_num_base=6*current_page+1)
     ret = {
         'delta': delta_dict,
         'is_last_page': is_last_page,
@@ -543,7 +552,7 @@ def show_section2_next():
     for d in delta:
         delta_dict[d[0]] = d[1]
 
-    page_content = render_template('record_linkage_next.html', data=data, icons=icons, ids=ids)
+    page_content = render_template('record_linkage_next.html', data=data, icons=icons, ids=ids, pair_num_base=6*current_page+1)
     ret = {
         'delta': delta_dict,
         'is_last_page': is_last_page,
@@ -583,6 +592,9 @@ def pull_data():
     for d in data:
         if 'type' in d and d['type'] == 'performance2':
             ret += ('section 2: ' + d['content'] + '\n')
+    for d in data:
+        if 'type' in d and d['type'] == 'final_KAPR_section1':
+            ret += ('Final privacy budget used in section 1: ' + str(round(100*float(d['value']), 2)) + '%\n')
     
     ret = ret + '\n' + user_data
     ret = ret.replace('\n', '<br />')
@@ -641,6 +653,12 @@ def show_thankyou():
     result = ud.grade_final_answer(data, get_main_section_data(session['user_id'], 2))
     performance2 = 'type:performance2,content:' + str(result[0]) + ' out of ' + str(result[1]) + ';\n'
     r.append(user_data_key, performance2)
+
+    # get final KAPR
+    KAPR_key = session['user_cookie'] + '_KAPR'
+    final_KAPR = r.get(KAPR_key)
+    kapr_info = 'type:final_KAPR_section1, value:' + str(final_KAPR) + ';\n'
+    r.append(user_data_key, kapr_info)
 
     # dl.save_data_to_json('data/saved/'+str(session['user_cookie'])+'.json', user_data)
 

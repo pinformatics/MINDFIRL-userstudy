@@ -5,7 +5,7 @@
                             {% else %}
                         <div class="table_row table_row_odd">
                             {% endif %}
-                            <div class="table_col1 pair_number">{{ loop.index+6 }}</div>
+                            <div class="table_col1 pair_number">{{ loop.index0+pair_num_base }}</div>
                             <div class="table_col2 clickable_cell" id = "test_col" mode="masked">
                                 <div class="sub_row1" id="{{ ids[loop.index0][0][0] }}">
                                     {{ r[0][1]|safe }}
