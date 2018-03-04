@@ -353,7 +353,8 @@ def open_cell():
     elif session['state'] == 29:
         working_data = DATA_CLICKABLE_PRACTICE
         full_data = DATASET_TUTORIAL
-        kapr_limit = float(r.get(session['user_cookie']+'tutorial_practice_kapr_limit'))
+        kapr_limit = 20
+        # float(r.get(session['user_cookie']+'tutorial_practice_kapr_limit'))
     elif session['state'] == 31:
         working_data = get_main_section_data(session['user_id'], 1)
         full_data = DATASET
@@ -387,7 +388,8 @@ def open_big_cell():
     elif session['state'] == 29:
         working_data = DATA_CLICKABLE_PRACTICE
         full_data = DATASET_TUTORIAL
-        kapr_limit = float(r.get(session['user_cookie']+'tutorial_practice_kapr_limit'))
+        kapr_limit = 20
+        # float(r.get(session['user_cookie']+'tutorial_practice_kapr_limit'))
     elif session['state'] == 31:
         working_data = get_main_section_data(session['user_id'], 1)
         full_data = DATASET
@@ -868,12 +870,12 @@ def show_tutorial_clickable_practice():
         data_pair = DATA_CLICKABLE_PRACTICE.get_data_pair_by_index(i)
         delta += dm.KAPR_delta(DATASET_TUTORIAL, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_CLICKABLE_PRACTICE.size())
 
-    kapr_limit = dm.get_kaprlimit(DATASET_TUTORIAL, DATA_CLICKABLE_PRACTICE, 'moderate')
-    r.set(session['user_cookie']+'tutorial_practice_kapr_limit', kapr_limit)
+    # kapr_limit = dm.get_kaprlimit(DATASET_TUTORIAL, DATA_CLICKABLE_PRACTICE, 'moderate')
+    # r.set(session['user_cookie']+'tutorial_practice_kapr_limit', kapr_limit)
 
     return render_template('tutorial/clickable/practice.html', 
         data=data, icons=icons, ids=ids, title='Practice 3 ', 
-        thisurl='/tutorial/clickable/practice', page_number=" ", delta=delta, kapr_limit = kapr_limit)
+        thisurl='/tutorial/clickable/practice', page_number=" ", delta=delta, kapr_limit = 20)
 
 
 @app.route('/section1_start')
