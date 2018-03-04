@@ -483,6 +483,15 @@ def get_KAPR_for_dp(dataset, data_pair, display_status, M):
         if match_flag:
             K2 += 1
 
+    if M == 0:
+        logging.error('Empty dataset to calculate kapr.')
+    if K1 == 0:
+        logging.error('Cannot find data in full dataset.')
+        K1 = 1
+    if K2 == 0:
+        logging.error('Cannot find data in full dataset.')
+        K2 = 1
+    
     KAPR1 = (1.0/M)*(1.0/K1)*P1
     KAPR2 = (1.0/M)*(1.0/K2)*P2
     KAPR = KAPR1 + KAPR2
@@ -531,7 +540,6 @@ def open_cell(user_key, full_data, working_data, pair_num, attr_num, mode, r, ka
     attr_id = int(attr_num)
 
     pair = working_data.get_data_pair(pair_id)
-    print(type(pair))
     attr = pair.get_attributes(attr_id)
     attr1 = attr[0]
     attr2 = attr[1]

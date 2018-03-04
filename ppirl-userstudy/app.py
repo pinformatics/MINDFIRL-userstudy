@@ -44,9 +44,31 @@ DATASET2 = dl.load_data_from_csv('data/main_section_full.csv')
 DATASET_TUTORIAL =  dl.load_data_from_csv('data/tutorial/all_tutorial_questions.csv')
 
 # this is the dataset used in section 1
-DATA_PAIR_LIST = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/section1.csv'))
+DATA_SECTION1 = [
+    dm.DataPairList(data_pairs = dl.load_data_from_csv('data/main_section/section1_1.csv')),
+    dm.DataPairList(data_pairs = dl.load_data_from_csv('data/main_section/section1_2.csv')),
+    dm.DataPairList(data_pairs = dl.load_data_from_csv('data/main_section/section1_3.csv')),
+    dm.DataPairList(data_pairs = dl.load_data_from_csv('data/main_section/section1_4.csv')),
+    dm.DataPairList(data_pairs = dl.load_data_from_csv('data/main_section/section1_5.csv')),
+    dm.DataPairList(data_pairs = dl.load_data_from_csv('data/main_section/section1_6.csv')),
+    dm.DataPairList(data_pairs = dl.load_data_from_csv('data/main_section/section1_7.csv')),
+    dm.DataPairList(data_pairs = dl.load_data_from_csv('data/main_section/section1_8.csv')),
+    dm.DataPairList(data_pairs = dl.load_data_from_csv('data/main_section/section1_9.csv')),
+    dm.DataPairList(data_pairs = dl.load_data_from_csv('data/main_section/section1_10.csv'))
+]
 # this is the dataset used in section 2, NOTE: the question number has to be a factor of 6!
-DATA_SECTION2 = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/section2.csv'))
+DATA_SECTION2 = [
+    dm.DataPairList(data_pairs = dl.load_data_from_csv('data/main_section/section2_1.csv')),
+    dm.DataPairList(data_pairs = dl.load_data_from_csv('data/main_section/section2_2.csv')),
+    dm.DataPairList(data_pairs = dl.load_data_from_csv('data/main_section/section2_3.csv')),
+    dm.DataPairList(data_pairs = dl.load_data_from_csv('data/main_section/section2_4.csv')),
+    dm.DataPairList(data_pairs = dl.load_data_from_csv('data/main_section/section2_5.csv')),
+    dm.DataPairList(data_pairs = dl.load_data_from_csv('data/main_section/section2_6.csv')),
+    dm.DataPairList(data_pairs = dl.load_data_from_csv('data/main_section/section2_7.csv')),
+    dm.DataPairList(data_pairs = dl.load_data_from_csv('data/main_section/section2_8.csv')),
+    dm.DataPairList(data_pairs = dl.load_data_from_csv('data/main_section/section2_9.csv')),
+    dm.DataPairList(data_pairs = dl.load_data_from_csv('data/main_section/section2_10.csv'))
+]
 
 
 DATA_CLICKABLE_DEMO = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/tutorial/clickable/demo.csv'))
@@ -73,6 +95,18 @@ def state_machine(function_name):
     return wrapper
 
 
+def get_main_section_data(uid, section):
+    data_num = uid%10
+    if data_num == 0:
+        data_num = 10
+    data_num -= 1
+
+    if section == 1:
+        return DATA_SECTION1[data_num]
+    else:
+        return DATA_SECTION2[data_num]
+
+
 @app.route('/')
 def show_record_linkages():
     session['user_cookie'] = hashlib.sha224("salt12138" + str(time.time()) + '.' + str(randint(1,10000))).hexdigest()
@@ -82,15 +116,6 @@ def show_record_linkages():
     data = 'type: user_id,id: ' + str(user_id) + ';\n'
     data += 'type: session_start,timestamp: ' + str(time.time()) + ';\n'
     r.set(user_data_key, data)
-
-    # get random scrambled data for section 1 and 2
-    data_num = user_id%10
-    if data_num == 0:
-        data_num = 10
-    data_file_section1 = 'data/main_section/section1_' + str(data_num) + '.csv'
-    data_file_section2 = 'data/main_section/section2_' + str(data_num) + '.csv'
-    DATA_PAIR_LIST = dm.DataPairList(data_pairs = dl.load_data_from_csv(data_file_section1))
-    DATA_SECTION2 = dm.DataPairList(data_pairs = dl.load_data_from_csv(data_file_section2))
 
     return redirect(url_for('show_introduction'))
 
@@ -255,19 +280,20 @@ def show_ppirl_tutorial1():
 @app.route('/record_linkage')
 @state_machine('show_record_linkage_task')
 def show_record_linkage_task():
+    working_data = get_main_section_data(session['user_id'], 1)
     dp_size = config.DATA_PAIR_PER_PAGE
     attribute_size = 6
-    dp_list_size = DATA_PAIR_LIST.get_size()
+    dp_list_size = working_data.get_size()
     page_size = int(math.ceil(1.0*dp_list_size/config.DATA_PAIR_PER_PAGE))
     page_size_key = session['user_cookie'] + '_page_size'
     r.set(page_size_key, str(page_size))
     current_page_key = session['user_cookie'] + '_current_page'
     r.set(current_page_key, '0')
 
-    pairs_formatted = DATA_PAIR_LIST.get_data_display('masked')[0:2*dp_size]
+    pairs_formatted = working_data.get_data_display('masked')[0:2*dp_size]
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
-    icons = DATA_PAIR_LIST.get_icons()[0:dp_size]
-    ids_list = DATA_PAIR_LIST.get_ids()[0:2*dp_size]
+    icons = working_data.get_icons()[0:dp_size]
+    ids_list = working_data.get_ids()[0:2*dp_size]
     ids = zip(ids_list[0::2], ids_list[1::2])
 
     # KAPR - K-Anonymity privacy risk
@@ -283,10 +309,10 @@ def show_record_linkage_task():
     # get the delta information
     delta = list()
     for i in range(dp_size):
-        data_pair = DATA_PAIR_LIST.get_data_pair_by_index(i)
-        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_PAIR_LIST.size())
+        data_pair = working_data.get_data_pair_by_index(i)
+        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*working_data.size())
 
-    kapr_limit = dm.get_kaprlimit(DATASET, DATA_PAIR_LIST, 'moderate')
+    kapr_limit = dm.get_kaprlimit(DATASET, working_data, 'moderate')
     r.set(session['user_cookie']+'section1_kapr_limit', kapr_limit)
 
     return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 1', thisurl='/record_linkage', page_number="1/6", delta=delta, kapr_limit = kapr_limit, uid=str(session['user_id']))
@@ -317,11 +343,11 @@ def open_cell():
         full_data = DATASET_TUTORIAL
         kapr_limit = 60
     elif session['state'] == 31:
-        working_data = DATA_PAIR_LIST
+        working_data = get_main_section_data(session['user_id'], 1)
         full_data = DATASET
         kapr_limit = float(r.get(session['user_cookie']+'section1_kapr_limit'))
     else:
-        working_data = DATA_SECTION2
+        working_data = get_main_section_data(session['user_id'], 2)
         full_data = DATASET2
 
     id1 = request.args.get('id1')
@@ -351,11 +377,11 @@ def open_big_cell():
         full_data = DATASET
         kapr_limit = 60
     elif session['state'] == 31:
-        working_data = DATA_PAIR_LIST
+        working_data = get_main_section_data(session['user_id'], 1)
         full_data = DATASET
         kapr_limit = float(r.get(session['user_cookie']+'section1_kapr_limit'))
     else:
-        working_data = DATA_SECTION2
+        working_data = get_main_section_data(session['user_id'], 2)
         full_data = DATASET2
 
     id1 = request.args.get('id1')
@@ -391,6 +417,8 @@ def open_big_cell():
 
 @app.route('/record_linkage/next')
 def show_record_linkage_next():
+    working_data = get_main_section_data(session['user_id'], 1)
+
     current_page = int(r.get(session['user_cookie']+'_current_page'))+1
     r.incr(session['user_cookie']+'_current_page')
     page_size = int(r.get(session['user_cookie'] + '_page_size'))
@@ -398,10 +426,10 @@ def show_record_linkage_next():
     if current_page == page_size - 1:
         is_last_page = 1
 
-    pairs_formatted = DATA_PAIR_LIST.get_data_display('masked')[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
+    pairs_formatted = working_data.get_data_display('masked')[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
-    icons = DATA_PAIR_LIST.get_icons()[config.DATA_PAIR_PER_PAGE*current_page:config.DATA_PAIR_PER_PAGE*(current_page+1)]
-    ids_list = DATA_PAIR_LIST.get_ids()[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
+    icons = working_data.get_icons()[config.DATA_PAIR_PER_PAGE*current_page:config.DATA_PAIR_PER_PAGE*(current_page+1)]
+    ids_list = working_data.get_ids()[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
     ids = zip(ids_list[0::2], ids_list[1::2])
 
     # set the user-display-status as masked for all cell
@@ -411,11 +439,11 @@ def show_record_linkage_next():
             r.set(key, 'M')
 
     # get the delta information
-    #delta = dm.get_delta_for_dataset(DATASET, DATA_PAIR_LIST.get_raw_data()[12:])
+    #delta = dm.get_delta_for_dataset(DATASET, working_data.get_raw_data()[12:])
     delta = list()
     for i in range(config.DATA_PAIR_PER_PAGE*current_page, config.DATA_PAIR_PER_PAGE*(current_page+1)):
-        data_pair = DATA_PAIR_LIST.get_data_pair_by_index(i)
-        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_PAIR_LIST.size())
+        data_pair = working_data.get_data_pair_by_index(i)
+        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*working_data.size())
     # make delta to be a dict
     delta_dict = dict()
     for d in delta:
@@ -438,20 +466,21 @@ def show_section2():
     section 2 contains 300 questions. The students don't need to finish them all, it just for those who 
     finish section 1 very fast.
     """
+    working_data = get_main_section_data(session['user_id'], 2)
 
     dp_size = config.DATA_PAIR_PER_PAGE
     attribute_size = 6
-    dp_list_size = DATA_SECTION2.get_size()
+    dp_list_size = working_data.get_size()
     page_size = int(math.ceil(1.0*dp_list_size/config.DATA_PAIR_PER_PAGE))
     page_size_key = session['user_cookie'] + '_section2_page_size'
     r.set(page_size_key, str(page_size))
     current_page_key = session['user_cookie'] + '_section2_current_page'
     r.set(current_page_key, '0')
 
-    pairs_formatted = DATA_SECTION2.get_data_display('masked')[0:2*dp_size]
+    pairs_formatted = working_data.get_data_display('masked')[0:2*dp_size]
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
-    icons = DATA_SECTION2.get_icons()[0:dp_size]
-    ids_list = DATA_SECTION2.get_ids()[0:2*dp_size]
+    icons = working_data.get_icons()[0:dp_size]
+    ids_list = working_data.get_ids()[0:2*dp_size]
     ids = zip(ids_list[0::2], ids_list[1::2])
 
     # percentage of character disclosure
@@ -475,7 +504,7 @@ def show_section2():
     # get the delta information
     delta = list()
     for i in range(dp_size):
-        data_pair = DATA_SECTION2.get_data_pair_by_index(i)
+        data_pair = working_data.get_data_pair_by_index(i)
         delta += dm.KAPR_delta(DATASET2, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*dp_list_size)
 
     return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 2', thisurl='/section2', page_number="1", delta=delta, kapr_limit=0, uid=str(session['user_id']))
@@ -483,7 +512,9 @@ def show_section2():
 
 @app.route('/section2/next')
 def show_section2_next():
-    dp_list_size = DATA_SECTION2.get_size()
+    working_data = get_main_section_data(session['user_id'], 2)
+
+    dp_list_size = working_data.get_size()
     current_page = int(r.get(session['user_cookie']+'_section2_current_page'))+1
     r.incr(session['user_cookie']+'_section2_current_page')
     page_size = int(r.get(session['user_cookie'] + '_section2_page_size'))
@@ -491,10 +522,10 @@ def show_section2_next():
     if current_page == page_size - 1:
         is_last_page = 1
 
-    pairs_formatted = DATA_SECTION2.get_data_display('masked')[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
+    pairs_formatted = working_data.get_data_display('masked')[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
-    icons = DATA_SECTION2.get_icons()[config.DATA_PAIR_PER_PAGE*current_page:config.DATA_PAIR_PER_PAGE*(current_page+1)]
-    ids_list = DATA_SECTION2.get_ids()[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
+    icons = working_data.get_icons()[config.DATA_PAIR_PER_PAGE*current_page:config.DATA_PAIR_PER_PAGE*(current_page+1)]
+    ids_list = working_data.get_ids()[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
     ids = zip(ids_list[0::2], ids_list[1::2])
 
     # set the user-display-status as masked for all cell
@@ -505,7 +536,7 @@ def show_section2_next():
 
     delta = list()
     for i in range(config.DATA_PAIR_PER_PAGE*current_page, config.DATA_PAIR_PER_PAGE*(current_page+1)):
-        data_pair = DATA_SECTION2.get_data_pair_by_index(i)
+        data_pair = working_data.get_data_pair_by_index(i)
         delta += dm.KAPR_delta(DATASET2, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*dp_list_size)
     # make delta to be a dict
     delta_dict = dict()
@@ -581,7 +612,7 @@ def show_section2_guide():
     user_data_key = session['user_cookie'] + '_user_data'
     user_data = r.get(user_data_key)
     data = ud.parse_user_data(user_data)
-    result = ud.grade_final_answer(data, DATA_PAIR_LIST)
+    result = ud.grade_final_answer(data, get_main_section_data(session['user_id'], 1))
     performance1 = 'type:performance1,content:' + str(result[0]) + ' out of ' + str(result[1]) + ';\n'
     r.append(user_data_key, performance1)
 
@@ -596,7 +627,7 @@ def show_thankyou():
     r.append(user_data_key, 'type: session_end,timestamp: '+str(time.time())+';\n')
     user_data = r.get(user_data_key)
     data = ud.parse_user_data(user_data)
-    result = ud.grade_final_answer(data, DATA_PAIR_LIST)
+    result = ud.grade_final_answer(data, get_main_section_data(session['user_id'], 1))
     performance1 = 'type:performance1,content:' + str(result[0]) + ' out of ' + str(result[1]) + ';\n'
     r.append(user_data_key, performance1)
 
@@ -605,7 +636,9 @@ def show_thankyou():
     #r.append(user_data_key, 'type: session_end,timestamp: '+str(time.time())+';\n')
     user_data = r.get(user_data_key)
     data = ud.parse_user_data(user_data)
-    result = ud.grade_final_answer(data, DATA_SECTION2)
+    # TODO! TODO! TODO! TODO! TODO! TODO! TODO! TODO! TODO! TODO! 
+    # SECTION 2 pair num must be different from section 1!
+    result = ud.grade_final_answer(data, get_main_section_data(session['user_id'], 2))
     performance2 = 'type:performance2,content:' + str(result[0]) + ' out of ' + str(result[1]) + ';\n'
     r.append(user_data_key, performance2)
 
