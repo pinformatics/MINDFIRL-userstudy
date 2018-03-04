@@ -491,6 +491,10 @@ def get_KAPR_for_dp(dataset, data_pair, display_status, M):
     if K2 == 0:
         logging.error('Cannot find data in full dataset.')
         K2 = 1
+    # if everything is opened for a data, the K-anonymity should be 1
+    if display_status.count('F') == 6:
+        K1 = 1
+        K2 = 1
     
     KAPR1 = (1.0/M)*(1.0/K1)*P1
     KAPR2 = (1.0/M)*(1.0/K2)*P2

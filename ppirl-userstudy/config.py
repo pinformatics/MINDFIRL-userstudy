@@ -1,8 +1,8 @@
 #! /usr/bin/python
 # encoding=utf-8
 
-ENV = 'development'
-#ENV = 'production'
+#ENV = 'development'
+ENV = 'production'
 
 
 SEQUENCE = [
@@ -46,7 +46,19 @@ SEQUENCE = [
 
 
 DATA_PAIR_PER_PAGE = 6
-KAPR_LIMIT = 5.0
+'''
+KAPR_LIMIT can take following parameters:
+'moderate'
+any number from 0 to 100
+'''
+#KAPR_LIMIT = 'moderate'
+KAPR_LIMIT = 50.0
+
+'''
+    This factor will multiple the KAPR_LIMIT: KAPR_LIMIT_FACTOR * KAPR_LIMIT
+    Valid value: 0 to 1
+'''
+KAPR_LIMIT_FACTOR = 0.5
 
 
 # email server
