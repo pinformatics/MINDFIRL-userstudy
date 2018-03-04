@@ -348,7 +348,8 @@ def open_cell():
     elif session['state'] == 24:
         working_data = DATA_DM_DEMO
         full_data = DATASET_TUTORIAL
-        kapr_limit = float(r.get(session['user_cookie']+'tutorial_dmdemo_kapr_limit'))
+        # kapr_limit = 100
+        # float(r.get(session['user_cookie']+'tutorial_dmdemo_kapr_limit'))
     elif session['state'] == 29:
         working_data = DATA_CLICKABLE_PRACTICE
         full_data = DATASET_TUTORIAL
@@ -382,10 +383,10 @@ def open_big_cell():
     elif session['state'] == 24:
         working_data = DATA_DM_DEMO
         full_data = DATASET_TUTORIAL
-        kapr_limit = float(r.get(session['user_cookie']+'tutorial_dmdemo_kapr_limit'))
+        # kapr_limit = float(r.get(session['user_cookie']+'tutorial_dmdemo_kapr_limit'))
     elif session['state'] == 29:
         working_data = DATA_CLICKABLE_PRACTICE
-        full_data = DATASET
+        full_data = DATASET_TUTORIAL
         kapr_limit = float(r.get(session['user_cookie']+'tutorial_practice_kapr_limit'))
     elif session['state'] == 31:
         working_data = get_main_section_data(session['user_id'], 1)
@@ -795,8 +796,8 @@ def show_tutorial_clickable_decision_making_demo():
         data_pair = DATA_DM_DEMO.get_data_pair_by_index(i)
         delta += dm.KAPR_delta(DATASET_TUTORIAL, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_DM_DEMO.size())
 
-    kapr_limit = dm.get_kaprlimit(DATASET_TUTORIAL, DATA_DM_DEMO, 'moderate')
-    r.set(session['user_cookie']+'tutorial_dmdemo_kapr_limit', kapr_limit)
+    # kapr_limit = dm.get_kaprlimit(DATASET_TUTORIAL, DATA_DM_DEMO, 'moderate')
+    # r.set(session['user_cookie']+'tutorial_dmdemo_kapr_limit', kapr_limit)
 
     return render_template('tutorial/clickable/decision_making_demo.html', 
         data=data, 
@@ -806,7 +807,7 @@ def show_tutorial_clickable_decision_making_demo():
         thisurl='/tutorial/clickable/decision_making_demo', 
         page_number=" ", 
         delta=delta,
-        kapr_limit = kapr_limit)
+        kapr_limit=100)
 
 
 
