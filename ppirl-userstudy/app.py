@@ -322,6 +322,8 @@ def show_record_linkage_task():
     else:
         kapr_limit = 0
 
+    kapr_limit = config.KAPR_LIMIT_FACTOR * kapr_limit
+
     r.set(session['user_cookie']+'section1_kapr_limit', kapr_limit)
 
     return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 1', thisurl='/record_linkage', page_number="1/6", delta=delta, kapr_limit = kapr_limit, uid=str(session['user_id']))
@@ -594,7 +596,7 @@ def pull_data():
             ret += ('section 2: ' + d['content'] + '\n')
     for d in data:
         if 'type' in d and d['type'] == 'final_KAPR_section1':
-            ret += ('Final privacy budget used in section 1: ' + str(round(100*float(d['value']), 2)) + '%\n')
+            ret += ('Final privacy budget used in section 1: ' + str(round(100*float(d['value']), 2)) + '% out of ' + d['total'] + '%\n')
     
     ret = ret + '\n' + user_data
     ret = ret.replace('\n', '<br />')
@@ -657,8 +659,10 @@ def show_thankyou():
     # get final KAPR
     KAPR_key = session['user_cookie'] + '_KAPR'
     final_KAPR = r.get(KAPR_key)
-    kapr_info = 'type:final_KAPR_section1, value:' + str(final_KAPR) + ';\n'
-    r.append(user_data_key, kapr_info)
+    kapr_limit = r.get(session['user_cookie']+'section1_kapr_limit')
+    if final_KAPR:
+        kapr_info = 'type:final_KAPR_section1, value:' + str(final_KAPR) + ',total:' + kapr_limit + ';\n'
+        r.append(user_data_key, kapr_info)
 
     # dl.save_data_to_json('data/saved/'+str(session['user_cookie'])+'.json', user_data)
 
