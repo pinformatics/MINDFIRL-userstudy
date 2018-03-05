@@ -132,6 +132,11 @@ function get_big_cell_ajax(current_cell1, current_cell2) {
             current_cell2.children[0].innerHTML = data.value3;
             current_cell2.children[2].innerHTML = data.value4;
             current_cell2.setAttribute("mode", data.mode);
+
+            if(data.mode == "full") {
+                current_cell1.parentElement.classList.remove("clickable_big_cell");
+            }
+
             $KAPR = data.KAPR;
             
             var bar_style2 = 'width:' + data.KAPR + '%';
@@ -184,9 +189,6 @@ function make_cell_clickable() {
         var last_name_cell = this.children[2];
         if(first_name_cell.getAttribute("mode") != "full") {
             flag = get_big_cell_ajax(first_name_cell, last_name_cell);
-            if( flag ) {
-                this.classList.remove("clickable_big_cell");
-            }
         }
 
         // save the user click data

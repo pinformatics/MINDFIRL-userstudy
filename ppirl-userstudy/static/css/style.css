@@ -145,7 +145,7 @@
 
 .diff_icon {
     width: 35px;
-    height: 35px;
+    height: 25px;
 }
 
 .replace_icon {
@@ -185,7 +185,8 @@
 
 .name_swap_icon {
     width: 70px;
-    height: 110px;
+    height: 70px;
+    margin-top: 24px;
 }
 
 .transpose_text {

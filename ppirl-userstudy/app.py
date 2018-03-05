@@ -673,6 +673,9 @@ def show_thankyou():
         # print "discareded"
         r.delete(user_data_key)
         # print r.get(user_data_key)
+        user_data = 'type:user_id,id:'+str(session['user_id'])+';\n'
+        user_data = user_data + 'type:consent,value:NoDataCollection;\n'
+        r.set(user_data_key, user_data)
 
     # send the data to email.
     msg = Message(subject='user data: ' + session['user_cookie'], body=user_data, recipients=['mindfil.ppirl@gmail.com'])

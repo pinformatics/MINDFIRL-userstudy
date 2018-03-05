@@ -6,9 +6,9 @@
         <link rel="shortcut icon" href="../static/images/site/favicon.ico" type="image/x-icon" />
 
         <link rel="stylesheet" href="../static/css/site.css?q=2" type="text/css">
-        <link rel="stylesheet" href="../static/css/style.css?q=47" type="text/css">
+        <link rel="stylesheet" href="../static/css/style.css?q=51" type="text/css">
         <link rel="stylesheet" href="../static/css/ionicons.min.css" type="text/css">
-        <link rel="stylesheet" href="../static/css/select.css?q=12" type="text/css">
+        <link rel="stylesheet" href="../static/css/select.css?q=13" type="text/css">
         <link rel="stylesheet" href="../static/css/bootstrap.min.css" type="text/css">
         <link rel="stylesheet" href="../static/css/footer.css" type="text/css">
         <link rel="stylesheet" href="../static/css/animate.min.css">
@@ -19,7 +19,7 @@
         <script src="../static/javascript/site.js"></script>
         <script src="../static/javascript/choice_panel.js?v=4"></script>
         <script src="../static/javascript/grading.js"></script>
-        <script src="../static/javascript/clickable.js?v=28"></script>
+        <script src="../static/javascript/clickable.js?v=29"></script>
         <script src="../static/javascript/form_submit.js?v=21"></script>
         <script type=text/javascript>
             $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
@@ -143,8 +143,8 @@
                                 </div>
                             </div>
                             
-                            <div class="{% if 'svg' in icons[loop.index0][2] %}names_big_cell clickable_big_cell{% endif %}">
-                            <div class="table_col4 table_names {% if 'svg' not in icons[loop.index0][2] %}clickable_cell{% endif %}" mode="masked">
+                            <div class="{% if 'name_swap' in icons[loop.index0][2] %}names_big_cell clickable_big_cell{% endif %}">
+                            <div class="table_col4 table_names {% if 'name_swap' not in icons[loop.index0][2] %}clickable_cell{% endif %}" mode="masked">
                                 <div class="sub_row1" id="{{ ids[loop.index0][0][1] }}">
                                     {{ r[0][3]|safe }}
                                 </div>
@@ -158,7 +158,7 @@
                             <div class="table_col4_5">
                                 {{ icons[loop.index0][2]|safe }}
                             </div>
-                            <div class="table_col5 table_names {% if 'svg' not in icons[loop.index0][2] %}clickable_cell{% endif %}" mode="masked">
+                            <div class="table_col5 table_names {% if 'name_swap' not in icons[loop.index0][2] %}clickable_cell{% endif %}" mode="masked">
                                 <div class="sub_row1" id="{{ ids[loop.index0][0][2] }}">
                                     {{ r[0][4]|safe }}
                                 </div>
