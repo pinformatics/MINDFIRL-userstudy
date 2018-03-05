@@ -20,6 +20,7 @@ import config
 
 
 app = Flask(__name__)
+app.debug = False
 app.secret_key = 'a9%z$/`9h8FMnh893;*g783'
 
 app.config.from_pyfile('email_config.py')
