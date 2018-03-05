@@ -38,13 +38,14 @@ $(function() {
                   var expenditure = $("#privacy-risk-value").text().replace("%","").trim();
                   expenditure = parseFloat(expenditure);
 
-                  if(expenditure > 10.0){
-                      feedback.prepend("<h5>" + "You have used more than half your budget! Did you need to see all this information?" + "</h5>");
-                  } else if((feedback.html().match(/review/g) || []).length > 0){
-                    if(expenditure >= 5.0){
-                        feedback.prepend("<h5>" + "Consider opening cells with more relevant information." + "</h5>");
+                  // if(expenditure > 10.0){
+                  //     feedback.prepend("<h5>" + "You have used more than half your budget! Did you need to see all this information?" + "</h5>");
+                  // } else 
+                  if((feedback.html().match(/review/g) || []).length > 0){
+                    if(expenditure >= 13.0){
+                        feedback.prepend("<h5>" + "Consider opening cells with more relevant information.</br></br>" + "</h5>");
                     } else{
-                        feedback.prepend("<h5>" + " Maybe you should open some more cells to get more information." + "</h5>");
+                        feedback.prepend("<h5>" + "Maybe you should open some more cells to get more information.</br></br>" + "</h5>");
                     }
                   }
               }

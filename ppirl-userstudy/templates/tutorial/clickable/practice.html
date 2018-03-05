@@ -139,8 +139,8 @@
                                 </div>
                             </div>
                             
-                            <div class="{% if 'svg' in icons[loop.index0][2] %}names_big_cell clickable_big_cell{% endif %}">
-                            <div class="table_col4 table_names {% if 'svg' not in icons[loop.index0][2] %}clickable_cell{% endif %}" mode="masked">
+                            <div class="{% if 'name_swap' in icons[loop.index0][2] %}names_big_cell clickable_big_cell{% endif %}">
+                            <div class="table_col4 table_names {% if 'name_swap' not in icons[loop.index0][2] %}clickable_cell{% endif %}" mode="masked">
                                 <div class="sub_row1" id="{{ ids[loop.index0][0][1] }}">
                                     {{ r[0][3]|safe }}
                                 </div>
@@ -154,7 +154,7 @@
                             <div class="table_col4_5">
                                 {{ icons[loop.index0][2]|safe }}
                             </div>
-                            <div class="table_col5 table_names {% if 'svg' not in icons[loop.index0][2] %}clickable_cell{% endif %}" mode="masked">
+                            <div class="table_col5 table_names {% if 'name_swap' not in icons[loop.index0][2] %}clickable_cell{% endif %}" mode="masked">
                                 <div class="sub_row1" id="{{ ids[loop.index0][0][2] }}">
                                     {{ r[0][4]|safe }}
                                 </div>

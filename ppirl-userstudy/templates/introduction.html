@@ -81,20 +81,17 @@
                     </div>
                 </form>
                 </br>
-                <input type="radio" name="data_choice" value="collect" id="data_choice_collect" checked>
-
+                <form action="save_data_choice"  method="post">
+                        <input type="radio" name="data_choice" value="collect" id="data_choice_collect" checked>
                         <label for="data_choice_collect">I agree to let the software <span style="color: #ff0000;">COLLECT</span> anonymous data during my use</label> 
                         </br></br>
                         <!-- </br> -->
                         <input type="radio" name="data_choice" value="dont_collect" id="data_choice_dont_collect">
                         <label for="data_choice_dont_collect">The software <span style="color: #ff0000;">MAY NOT COLLECT</span> anonymous data during my use</label>
-                <div class="submit_div">
-                    <form action="save_data_choice"  method="post">
-                        </br>
-                        <input type="submit" id="submit" value="Submit" class="submit_button" >
-                        <!-- <button formaction="{{ url_for('next') }}" id="button_1" class="submit_button" disabled>Next</button> -->
-                    </form>
-                </div>
+                        <div class="submit_div">
+                            </br><input type="submit" id="submit" value="Submit" class="submit_button" >
+                        </div>
+                </form>
             </div>
         </div>
         {% include "footer.html" ignore missing %}
