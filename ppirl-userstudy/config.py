@@ -5,6 +5,7 @@ ENV = 'development'
 # ENV = 'production'
 
 
+
 SEQUENCE = [
     'show_introduction',    #0
     'show_introduction2',    #1

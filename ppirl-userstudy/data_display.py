@@ -515,7 +515,7 @@ def get_icon_string(s1, s2, helper1, helper2):
             return ''
         else:
             if '*' not in helper1 and '*' not in helper2:
-                return '<embed class="diff_icon" src="/static/images/site/diff.svg" type="image/svg+xml" />'
+                return '<img class="diff_icon" src="/static/images/site/diff.png" alt="diff">'
             else:
                 ret = ''
                 i = 0
@@ -550,7 +550,7 @@ def get_icon_string(s1, s2, helper1, helper2):
 
 def get_icon_nameswap(n11, n12, n21, n22):
     if n11 != n21 and n12 != n22 and n11 == n22 and n21 == n12:
-        return '<embed class="name_swap_icon" src="/static/images/site/name_swap.svg" type="image/svg+xml" />'
+        return '<img class="name_swap_icon" src="/static/images/site/name_swap.png" alt="name_swap">'
     else:
         return ''
 
@@ -563,7 +563,7 @@ def get_icon_date(d1, d2, helper1, helper2):
             return ''
         else:
             if '*' not in helper1 and '*' not in helper2:
-                return '<embed class="diff_icon" src="/static/images/site/diff.svg" type="image/svg+xml" />'
+                return '<img class="diff_icon" src="/static/images/site/diff.png" alt="diff">'
             else:
                 ret = ''
                 M1 = helper1[0:2]
@@ -574,7 +574,7 @@ def get_icon_date(d1, d2, helper1, helper2):
                 Y2 = helper2[6:]
                 k = 0
                 if M1 != '**' and D1 != '**' and M1 == D2 and M2 == D1:
-                    ret += '<embed class="swap_date_icon" src="/static/images/site/swap_date.svg" type="image/svg+xml" />'
+                    ret += '<img class="swap_date_icon" src="/static/images/site/swap_date.png" alt="swap_date">'
                     k = 6
                 while k < 10:
                     if helper1[k] == '/':
@@ -594,7 +594,7 @@ def get_icon_date(d1, d2, helper1, helper2):
 
 def get_icon_character(c1, c2):
     if c1 and c2 and c1 != c2:
-        return '<embed class="diff_icon" src="/static/images/site/diff.svg" type="image/svg+xml" />'
+        return '<img class="diff_icon" src="/static/images/site/diff.png" alt="diff">'
     else:
         return ''
 
@@ -637,7 +637,7 @@ def generate_icon(data):
         ['1','1000142704,174','NELSON','MITCHELL SR','1314','07/03/1949','M','B','1000142704','******','******** SR','07/03/1949','*','*','34','6','0']
     ]
     output: [
-        ['', '', '<span class="hidden_element">MITCHELL</span><img class="indel_icon" src="/static/images/site/indel.png" alt="indel"><img class="indel_icon" src="/static/images/site/indel.png" alt="indel"><img class="indel_icon" src="/static/images/site/indel.png" alt="indel">', '<embed class="diff_icon" src="/static/images/site/diff.svg" type="image/svg+xml" />', '', '']
+        ['', '', '<span class="hidden_element">MITCHELL</span><img class="indel_icon" src="/static/images/site/indel.png" alt="indel"><img class="indel_icon" src="/static/images/site/indel.png" alt="indel"><img class="indel_icon" src="/static/images/site/indel.png" alt="indel">', '<img class="diff_icon" src="/static/images/site/diff.png" alt="diff">', '', '']
     ]
     """
     ret = list()
