@@ -901,8 +901,8 @@ def flush_redis():
 
 @app.route('/save_data_choice', methods=['POST'])
 def save_data_choice():
-    time_stamp = str(time.time())
     data_choice = request.form.get('data_choice')
     r.set("data_choice_" + session['user_cookie'], data_choice)
+    print r.get("data_choice_" + session['user_cookie'])
     return redirect(url_for('next'))
         

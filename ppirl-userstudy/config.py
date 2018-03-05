@@ -1,8 +1,8 @@
 #! /usr/bin/python
 # encoding=utf-8
 
-ENV = 'development'
-# ENV = 'production'
+# ENV = 'development'
+ENV = 'production'
 
 
 
@@ -59,7 +59,7 @@ KAPR_LIMIT = 'moderate'
     This factor will multiple the KAPR_LIMIT: KAPR_LIMIT_FACTOR * KAPR_LIMIT
     Valid value: 0 to 1 in decimal.
 '''
-KAPR_LIMIT_FACTOR = 0.333
+KAPR_LIMIT_FACTOR = 1
 #KAPR_LIMIT_FACTOR = 0.5
 
 # email server
