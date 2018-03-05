@@ -29,17 +29,33 @@ $(function() {
         $click_timestamp = "click timestamp: " + dt.getTime();
         $data = [$this_click, $click_time, $click_timestamp].join()
         $user_data += $data + ";";
+        var feedback = $("#feedback");
         $.getJSON($SCRIPT_ROOT + $THIS_URL + '/grading', get_responses(), function(data) {
-            var feedback = $("#feedback");
             feedback.fadeOut(500, function(){
               feedback.html(data.result);  
               feedback.css("color","#660000");
+              if($("#clickable_practice").length == 1) {
+                  var expenditure = $("#privacy-risk-value").text().replace("%","").trim();
+                  expenditure = parseFloat(expenditure);
+
+                  if(expenditure > 10.0){
+                      feedback.prepend("<h5>" + "You have used more than half your budget! Did you need to see all this information?" + "</h5>");
+                  } else if((feedback.html().match(/review/g) || []).length > 0){
+                    if(expenditure >= 5.0){
+                        feedback.prepend("<h5>" + "Consider opening cells with more relevant information." + "</h5>");
+                    } else{
+                        feedback.prepend("<h5>" + " Maybe you should open some more cells to get more information." + "</h5>");
+                    }
+                  }
+              }
             })
             feedback.fadeIn(500);
             // $("#feedback").html(data.result);
             $("#submit_btn").css({"display": "none"});
             $("#button_next").css({"display": "inline"})
+
         });
+
         return false;
     });
 });

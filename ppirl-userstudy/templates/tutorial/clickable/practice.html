@@ -42,8 +42,10 @@
 
     <body>
         <div id="wrapper">
-       
-            <h3 style="text-align: center;">Practice</h3>
+            <!-- used in jquery to find out if this page is clickable practice -->
+            <h3 id="clickable_practice" style="display: none;"></h3>       
+            
+            <h3 style="position: absolute; margin-left: 830px;">Practice</h3></br>
             
             <div id="content">
                 <div class="tool-bar">
@@ -54,7 +56,7 @@
 
                     <div class="privacy-budget-div" style="display: inline-block; float: left; margin-left: 0%; width: 50%;">
                         <div>Privacy risk: <span id="privacy-risk-value">0%</span><span id="privacy-risk-delta-value"></span></div>
-                        <div class="progress border" style="height: 20px;">
+                        <div class="progress border" style="height: 20px; width:800px;">
                             {% if kapr_limit > 0 %}
                             <div style="width: 6px; height: 18px; position: absolute; background: red; margin-left: {{ kapr_limit*8 }}px;" title="privacy risk cannot exceed this limit">
                             </div>
@@ -306,24 +308,37 @@
     }
     
      $(".clickable_cell").click(function(){
-         var id = $(this).children().attr("id");
-         var mode = $(this).attr("mode");
-         // change_feedback("Did you need open "+id+"?");  
-         var wrong_response = "Did you need to open this cell?"; 
-         var correct_response = "Good choice! We do need to open that cell.";
+        var id = $(this).children().attr("id");
+        var mode = $(this).attr("mode");
          
+        var delta = $("#privacy-risk-delta-value").text().replace("%","").replace("+","").trim();
+        var expenditure = $("#privacy-risk-value").text().replace("%","").trim();
+        delta = parseFloat(delta);
+        expenditure = parseFloat(expenditure);
+        if(mode == "full"){
+            change_feedback("You have already opened this cell!");
+        } else if(expenditure + delta <= 20.0){
+            var wrong_response = "Did you need to open this cell?"; 
+            var correct_response = "Good choice! We do need to open that cell.";
+            
+            if((id === "50056-1-4" && mode === "masked") ||
+               (id === "50056-1-3" && mode === "masked") ||
+               (id === "50056-1-2" && mode === "masked") ||
+               (id === "50055-1-4") ||
+               (id === "50057-1-4") ||
+               (id === "50057-1-1")) {
+                change_feedback(correct_response);             
+            } else {
+               change_feedback(wrong_response);                      
+            }
+        } else{
+            change_feedback("Sorry, you do not have enough budget left to open this cell.");
+        }
 
-         if((id === "50056-1-4" && mode === "masked") ||
-            (id === "50056-1-3" && mode === "masked") ||
-            (id === "50056-1-2" && mode === "masked") ||
-            (id === "50055-1-4") ||
-            (id === "50057-1-4") ||
-            (id === "50057-1-1")) {
-             change_feedback(correct_response);             
-         } else {
-            change_feedback(wrong_response);                      
-         } 
+         // change_feedback("Did you need open "+id+"?");  
+          
          
      })
+
     
 </script>
