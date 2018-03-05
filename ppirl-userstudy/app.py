@@ -594,13 +594,13 @@ def pull_data():
     ret = ''
     for d in data:
         if 'type' in d and d['type'] == 'performance1':
-            ret += ('section 1: ' + d['content'] + '\n')
+            ret += ('section 1: ' + d['content'] + ';\n')
     for d in data:
         if 'type' in d and d['type'] == 'performance2':
-            ret += ('section 2: ' + d['content'] + '\n')
+            ret += ('section 2: ' + d['content'] + ';\n')
     for d in data:
         if 'type' in d and d['type'] == 'final_KAPR_section1':
-            ret += ('Final privacy budget used in section 1: ' + str(round(100*float(d['value']), 2)) + '% out of ' + d['total'] + '%\n')
+            ret += ('Final privacy budget used in section 1: ' + str(round(100*float(d['value']), 2)) + '% out of ' + d['total'] + '%;\n')
     
     ret = ret + '\n' + user_data
     ret = ret.replace('\n', '<br />')
@@ -655,7 +655,7 @@ def show_thankyou():
     user_data = r.get(user_data_key)
     data = ud.parse_user_data(user_data)
     # TODO! TODO! TODO! TODO! TODO! TODO! TODO! TODO! TODO! TODO! 
-    # SECTION 2 pair num must be different from section 1!
+    # SECTION 2 pair num must be different from section 1! section 2 num be a factor of 6
     result = ud.grade_final_answer(data, get_main_section_data(session['user_id'], 2))
     performance2 = 'type:performance2,content:' + str(result[0]) + ' out of ' + str(result[1]) + ';\n'
     r.append(user_data_key, performance2)
@@ -664,11 +664,23 @@ def show_thankyou():
     KAPR_key = session['user_cookie'] + '_KAPR'
     final_KAPR = r.get(KAPR_key)
     kapr_limit = r.get(session['user_cookie']+'section1_kapr_limit')
-    if final_KAPR:
+    if final_KAPR is not None:
         kapr_info = 'type:final_KAPR_section1, value:' + str(final_KAPR) + ',total:' + kapr_limit + ';\n'
         r.append(user_data_key, kapr_info)
 
+    data = ud.parse_user_data(r.get(user_data_key))
     # dl.save_data_to_json('data/saved/'+str(session['user_cookie'])+'.json', user_data)
+    extend_data = ''
+    for d in data:
+        if 'type' in d and d['type'] == 'performance1':
+            extend_data += ('section 1: ' + d['content'] + ';\n')
+    for d in data:
+        if 'type' in d and d['type'] == 'performance2':
+            extend_data += ('section 2: ' + d['content'] + ';\n')
+    for d in data:
+        if 'type' in d and d['type'] == 'final_KAPR_section1':
+            extend_data += ('Final privacy budget used in section 1: ' + str(round(100*float(d['value']), 2)) + '% out of ' + d['total'] + '%;\n')
+    extend_data = extend_data + r.get(user_data_key)
 
     if r.get("data_choice_" + session['user_cookie']) != "collect":
         # print "discareded"
@@ -679,7 +691,7 @@ def show_thankyou():
         r.set(user_data_key, user_data)
 
     # send the data to email.
-    msg = Message(subject='user data: ' + session['user_cookie'], body=user_data, recipients=['mindfil.ppirl@gmail.com'])
+    msg = Message(subject='user data: ' + session['user_cookie'], body=extend_data, recipients=['mindfil.ppirl@gmail.com'])
     mail.send(msg)
 
     # clear user data in redis
