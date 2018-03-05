@@ -31,7 +31,7 @@ $(function() {
         $user_data += $data + ";";
         var feedback = $("#feedback");
         $.getJSON($SCRIPT_ROOT + $THIS_URL + '/grading', get_responses(), function(data) {
-            feedback.fadeOut(500, function(){
+            feedback.fadeOut(250, function(){
               feedback.html(data.result);  
               feedback.css("color","#660000");
               if($("#clickable_practice").length == 1) {
@@ -50,7 +50,7 @@ $(function() {
                   }
               }
             })
-            feedback.fadeIn(500);
+            feedback.fadeIn(250);
             // $("#feedback").html(data.result);
             $("#submit_btn").css({"display": "none"});
             $("#button_next").css({"display": "inline"})
