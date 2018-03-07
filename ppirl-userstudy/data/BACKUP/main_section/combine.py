@@ -1,5 +1,4 @@
 
-
 file_prefix = 'section1_'
 unique_data = set()
 for i in range(1, 11):
