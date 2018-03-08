@@ -1,6 +1,24 @@
 #! /usr/bin/python
 # encoding=utf-8
 
+from flask import session
+from functools import wraps
 from collections import namedtuple
+import config
+
 
 RET = namedtuple('RET', ['status', 'return_data'])
+
+
+def state_machine(function_name):
+    def wrapper(f):
+        @wraps(f)
+        def inner_wrapper(*args, **kwargs):
+            sequence = config.SEQUENCE
+            for i in range(len(sequence)):
+                if sequence[i] == function_name:
+                    session['state'] = i
+                    break
+            return f(*args, **kwargs)
+        return inner_wrapper
+    return wrapper
