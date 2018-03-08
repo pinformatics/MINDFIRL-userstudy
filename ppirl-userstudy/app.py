@@ -313,4 +313,10 @@ def save_data_choice():
     r.set("data_choice_" + session['user_cookie'], data_choice)
     print r.get("data_choice_" + session['user_cookie'])
     return redirect(url_for('next'))
-        
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html')
+
+
