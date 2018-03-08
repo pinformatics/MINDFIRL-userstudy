@@ -306,6 +306,7 @@ def flush_redis():
     r.flushdb()
     return 'redis flushed.'
 
+
 @app.route('/save_data_choice', methods=['POST'])
 def save_data_choice():
     data_choice = request.form.get('data_choice')
