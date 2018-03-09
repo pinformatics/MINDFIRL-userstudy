@@ -290,6 +290,12 @@ input[type="radio"] {
     display: inline-block;
 }
 
+.privacy-budget-div-empty {
+    width: 820px;
+    vertical-align: bottom;
+    display: inline-block;
+}
+
 .page-number-div {
     width: 110px;
     vertical-align: bottom;

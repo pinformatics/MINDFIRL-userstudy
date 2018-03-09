@@ -97,11 +97,28 @@ def show_record_linkage_task():
     kapr_limit = ustudy_budget
     r.set(session['user_cookie']+'section1_kapr_limit', kapr_limit)
 
-    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 1', thisurl='/record_linkage', page_number="1/6", delta=delta, kapr_limit = kapr_limit, uid=str(session['user_id']))
+    return render_template('record_linkage_ppirl.html', 
+        data=data, 
+        icons=icons, 
+        ids=ids, 
+        title='Section 1', 
+        thisurl='/record_linkage', 
+        page_number="1/6", 
+        delta=delta, 
+        kapr_limit = kapr_limit, 
+        uid=str(session['user_id']),
+        ustudy_mode=ustudy_mode
+    )
 
 
 @main_section.route('/record_linkage/next')
 def show_record_linkage_next():
+    ustudy_mode = int(r.get(session['user_cookie']+'_ustudy_mode'))
+    ustudy_budget = float(r.get(session['user_cookie']+'_ustudy_budget'))
+    data_mode = 'masked'
+    if ustudy_mode == 1:
+        data_mode = 'full'
+
     working_data = get_main_section_data(session['user_id'], 1)
 
     current_page = int(r.get(session['user_cookie']+'_current_page'))+1
@@ -111,7 +128,7 @@ def show_record_linkage_next():
     if current_page == page_size - 1:
         is_last_page = 1
 
-    pairs_formatted = working_data.get_data_display('masked')[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
+    pairs_formatted = working_data.get_data_display(data_mode)[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = working_data.get_icons()[config.DATA_PAIR_PER_PAGE*current_page:config.DATA_PAIR_PER_PAGE*(current_page+1)]
     ids_list = working_data.get_ids()[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
@@ -134,8 +151,16 @@ def show_record_linkage_next():
     for d in delta:
         delta_dict[d[0]] = d[1]
 
-    page_content = render_template('record_linkage_next.html', data=data, icons=icons, ids=ids, pair_num_base=6*current_page+1)
+    page_content = render_template('record_linkage_next.html', 
+        data=data, 
+        icons=icons, 
+        ids=ids, 
+        pair_num_base=6*current_page+1, 
+        ustudy_mode=ustudy_mode
+    )
+    
     ret = {
+        'ustudy_mode': ustudy_mode,
         'delta': delta_dict,
         'is_last_page': is_last_page,
         'page_number': 'page: ' + str(current_page+1)+'/'+str(page_size),

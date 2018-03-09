@@ -58,6 +58,8 @@ def index():
         ustudy_mode = '1'
     if ustudy_budget is None:
         ustudy_budget = '0'
+    if ustudy_mode != '4':
+        ustudy_budget = '0'
     if int(ustudy_mode) not in [1,2,3,4]:
         return page_not_found('page_not_found')
     if float(ustudy_budget) < 0 or float(ustudy_budget) > 100:

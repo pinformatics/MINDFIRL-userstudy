@@ -6,7 +6,7 @@
         <link rel="shortcut icon" href="../static/images/site/favicon.ico" type="image/x-icon" />
 
         <link rel="stylesheet" href="../static/css/site.css?q=2" type="text/css">
-        <link rel="stylesheet" href="../static/css/style.css?q=51" type="text/css">
+        <link rel="stylesheet" href="../static/css/style.css?q=52" type="text/css">
         <link rel="stylesheet" href="../static/css/ionicons.min.css" type="text/css">
         <link rel="stylesheet" href="../static/css/select.css?q=13" type="text/css">
         <link rel="stylesheet" href="../static/css/bootstrap.min.css" type="text/css">
@@ -19,7 +19,7 @@
         <script src="../static/javascript/site.js"></script>
         <script src="../static/javascript/choice_panel.js?v=4"></script>
         <script src="../static/javascript/grading.js"></script>
-        <script src="../static/javascript/clickable.js?v=29"></script>
+        <script src="../static/javascript/clickable.js?v=32"></script>
         <script src="../static/javascript/form_submit.js?v=21"></script>
         <script type=text/javascript>
             $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
@@ -33,6 +33,7 @@
             };
             $KAPR_LIMIT = {{ kapr_limit }};
             $KAPR = 0;
+            $USTUDY_MODE = {{ ustudy_mode }};
 
             $(window).on("beforeunload", function() {
                 return "Are you sure? You will lose all the date if you leave!";
@@ -48,6 +49,7 @@
             
             <div id="content">
                 <div class="tool-bar">
+                {% if ustudy_mode > 2 %}
                 <div class="privacy-budget-div">
                     <!--
                     <div>Character disclosed: <span id="character-disclosed-value">0%</span></div>
@@ -72,6 +74,10 @@
                         
                     </div>
                 </div>
+                {% else %}
+                <div class="privacy-budget-div-empty">
+                </div>
+                {% endif %}
                 <div id="page-number" class="page-number-div">
                     page: <span id="page-number">{{ page_number }}</span>
                 </div>
