@@ -50,9 +50,19 @@ def get_main_section_data(uid, section):
 
 
 @app.route('/')
+@app.route('/index')
 def index():
-    # print request.args.get('mode')
-    # print request.args.get('budget')
+    ustudy_mode = request.args.get('mode')
+    ustudy_budget = request.args.get('budget')
+    if ustudy_mode is None:
+        ustudy_mode = '1'
+    if ustudy_budget is None:
+        ustudy_budget = '0'
+    if int(ustudy_mode) not in [1,2,3,4]:
+        return page_not_found('page_not_found')
+    if float(ustudy_budget) < 0 or float(ustudy_budget) > 100:
+        return page_not_found('page_not_found')
+
     session['user_cookie'] = hashlib.sha224("salt12138" + str(time.time()) + '.' + str(randint(1,10000))).hexdigest()
     user_data_key = session['user_cookie'] + '_user_data'
     user_id = r.incr('user_id_generator')
@@ -60,6 +70,11 @@ def index():
     data = 'type: user_id,id: ' + str(user_id) + ';\n'
     data += 'type: session_start,timestamp: ' + str(time.time()) + ';\n'
     r.set(user_data_key, data)
+
+    r.set(session['user_cookie']+'_ustudy_mode', ustudy_mode)
+    r.set(session['user_cookie']+'_ustudy_budget', ustudy_budget)
+    #print(r.get(session['user_cookie']+'_ustudy_mode'))
+    #print(r.get(session['user_cookie']+'_ustudy_budget'))
 
     return redirect(url_for('show_introduction'))
 
