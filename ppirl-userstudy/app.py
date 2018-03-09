@@ -51,6 +51,8 @@ def get_main_section_data(uid, section):
 
 @app.route('/')
 def index():
+    # print request.args.get('mode')
+    # print request.args.get('budget')
     session['user_cookie'] = hashlib.sha224("salt12138" + str(time.time()) + '.' + str(randint(1,10000))).hexdigest()
     user_data_key = session['user_cookie'] + '_user_data'
     user_id = r.incr('user_id_generator')
