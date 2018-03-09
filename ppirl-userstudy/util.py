@@ -16,7 +16,11 @@ def state_machine(function_name):
         def inner_wrapper(*args, **kwargs):
             sequence = config.SEQUENCE
             for i in range(len(sequence)):
-                if sequence[i] == function_name:
+                current = sequence[i]
+                # handle the flask blueprint
+                if '.' in current:
+                    current = current.split('.')[1]
+                if current == function_name:
                     session['state'] = i
                     break
             return f(*args, **kwargs)
