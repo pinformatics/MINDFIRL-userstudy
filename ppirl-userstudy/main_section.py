@@ -42,7 +42,7 @@ def show_record_linkage_task():
     section 1
     """
     ustudy_mode = int(r.get(session['user_cookie']+'_ustudy_mode'))
-    ustudy_budget = float(r.get(session['user_cookie']+'_ustudy_budget'))
+    ustudy_budget = r.get(session['user_cookie']+'_ustudy_budget')
     data_mode = 'masked'
     if ustudy_mode == 1:
         data_mode = 'full'
@@ -94,7 +94,10 @@ def show_record_linkage_task():
     kapr_limit = config.KAPR_LIMIT_FACTOR * kapr_limit
     '''
     # load KAPR LIMIT from url parameter
-    kapr_limit = ustudy_budget
+    if ustudy_budget == 'moderate' or ustudy_budget == 'minimum':
+        kapr_limit = dm.get_kaprlimit(DATASET, working_data, ustudy_budget)
+    else:
+        kapr_limit = float(ustudy_budget)
     r.set(session['user_cookie']+'section1_kapr_limit', kapr_limit)
 
     return render_template('record_linkage_ppirl.html', 
@@ -158,7 +161,7 @@ def show_record_linkage_next():
         pair_num_base=6*current_page+1, 
         ustudy_mode=ustudy_mode
     )
-    
+
     ret = {
         'ustudy_mode': ustudy_mode,
         'delta': delta_dict,

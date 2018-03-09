@@ -62,8 +62,9 @@ def index():
         ustudy_budget = '0'
     if int(ustudy_mode) not in [1,2,3,4]:
         return page_not_found('page_not_found')
-    if float(ustudy_budget) < 0 or float(ustudy_budget) > 100:
-        return page_not_found('page_not_found')
+    if ustudy_budget not in ['moderate', 'minimum']:
+        if float(ustudy_budget) < 0 or float(ustudy_budget) > 100:
+            return page_not_found('page_not_found')
 
     session['user_cookie'] = hashlib.sha224("salt12138" + str(time.time()) + '.' + str(randint(1,10000))).hexdigest()
     user_data_key = session['user_cookie'] + '_user_data'
