@@ -517,7 +517,7 @@ def get_icon_string(s1, s2, helper1, helper2):
             if '*' not in helper1 and '*' not in helper2:
                 return '<img class="diff_icon" src="/static/images/site/diff.png" alt="diff">'
             else:
-                ret = ''
+                ret = '<span style="width: 1px; margin-left: 1px;"> </span>'
                 i = 0
                 j = 0
                 k = 0
@@ -533,15 +533,36 @@ def get_icon_string(s1, s2, helper1, helper2):
                         i += 2
                         j += 2
                     elif helper1[k] == '_' or helper1[k] == '?':
-                        ret += '<img class="indel_icon" src="/static/images/site/indel.png" alt="indel">'
+                        if helper1[k] == "_":
+                            if not k+1 == len(helper1) and helper1[k+1] == "_":
+                                if k == 0:
+                                    ret += '<span style="width: 1px;" class="hidden_element">|</span>'
+                                else:
+                                    ret += '<span style="width: 10px;"> </span>'
+                            else:
+                                ret += '<img class="indel_icon" src="/static/images/site/indel.png" alt="indel">'
                         k += 1
                         j += 1
                     elif helper2[k] == '_' or helper2[k] == '?':
-                        ret += '<img class="indel_icon" src="/static/images/site/indel.png" alt="indel">'
+                        if helper2[k] == '_':
+                            if not k+1 == len(helper2) and helper2[k+1] == "_":
+                                if k == 0:
+                                    ret += '<span style="width: 1px;" class="hidden_element">|</span>'
+                                else:
+                                    ret += '<span style="width: 10px;"> </span>'
+                            else:
+                                ret += '<img class="indel_icon" src="/static/images/site/indel.png" alt="indel">'
+                        # ret += '<img class="indel_icon" src="/static/images/site/indel.png" alt="indel">'
                         k += 1
                         i += 1
                     else:
-                        ret += '<img class="replace_icon" src="/static/images/site/replace.png" alt="replace">'
+                        if not k+1 == len(helper1) and not helper1[k+1] in ["*", "_", "?"]:
+                            if k == 0:
+                                ret += '<span style="width: 1px;" class="hidden_element">|</span>'
+                            else:
+                                ret += '<span style="width: 10px;"> </span>'
+                        else:
+                            ret += '<img class="replace_icon" src="/static/images/site/replace.png" alt="replace">'
                         k += 1
                         i += 1
                         j += 1
@@ -584,7 +605,10 @@ def get_icon_date(d1, d2, helper1, helper2):
                         ret += '<img class="transpose_icon" src="/static/images/site/transpose.png" alt="transpose">'
                         k += 2
                     elif helper1[k] != '*':
-                        ret += '<img class="replace_icon" src="/static/images/site/replace.png" alt="replace">'
+                        if k+1 < len(helper1) and helper1[k+1] != "/" and helper1[k+1] != "*":
+                            ret += '<span style="width: 10px;" class="hidden_element"></span>'
+                        else:
+                            ret += '<img class="replace_icon" src="/static/images/site/replace.png" alt="replace">'
                         k += 1
                     else:
                         ret += '<span class="hidden_element">*</span>'
