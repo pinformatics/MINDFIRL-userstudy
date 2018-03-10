@@ -51,17 +51,41 @@ def get_main_section_data(uid, section):
 
 @app.route('/')
 def index():
-    # print request.args.get('mode')
-    # print request.args.get('budget')
+    
     session['user_cookie'] = hashlib.sha224("salt12138" + str(time.time()) + '.' + str(randint(1,10000))).hexdigest()
     user_data_key = session['user_cookie'] + '_user_data'
-    user_id = r.incr('user_id_generator')
+    user_id = 0
+    if request.args.get("id") is None:
+        user_id = r.incr('user_id_generator')
+        r.set("session_"+str(user_id)+"_state", 0)
+    else:
+       user_id = str(request.args.get("id"))
+       # r.set("session_"+user_id+"_state")
+    index = r.get("session_"+str(user_id)+"_state")
     session['user_id'] = user_id
     data = 'type: user_id,id: ' + str(user_id) + ';\n'
     data += 'type: session_start,timestamp: ' + str(time.time()) + ';\n'
     r.set(user_data_key, data)
+    r.set("session_"+str(user_id), session)
 
-    return redirect(url_for('show_introduction'))
+    return redirect(url_for(config.SEQUENCE[int(index)]))
+
+      
+    # if request.args.get("id") is None:
+    #     user_data_key = session['user_cookie'] + '_user_data'
+    #     user_id = r.incr('user_id_generator')
+    #     session['user_id'] = user_id
+    #     data = 'type: user_id,id: ' + str(user_id) + ';\n'
+    #     data += 'type: session_start,timestamp: ' + str(time.time()) + ';\n'
+    #     r.set(user_data_key, data)
+    #     print session
+    #     r.set("session_"+str(user_id), session)
+    # else:
+    #     user_id = str(request.args.get("id"))
+    #     session = r.get("session_"+user_id)
+    #     print session
+    #     index = int(session['state'])
+    # return redirect(url_for(config.SEQUENCE[index]))
 
 
 @app.route('/introduction')
@@ -181,7 +205,8 @@ def next():
     sequence = config.SEQUENCE
     state = session['state'] + 1
     session['state'] += 1
-
+    user_id = session["user_id"]
+    r.set("session_"+str(user_id)+"_state", str(session['state']))
     #timing info on next click 
     # timing_info = sequence[session['state']-1] + ": " + time.strftime("%a, %d %b %Y %H:%M:%S")
     # msg = Message(subject='user click: ' + session['user_cookie'], body=timing_info, recipients=['ppirl.mindfil@gmail.com'])
