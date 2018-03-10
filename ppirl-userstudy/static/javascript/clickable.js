@@ -205,6 +205,16 @@ function make_cell_clickable() {
     });
 }
 
+function remove_clickable_cells() {
+    // remove clickable_cell class on the whole page.
+    $('.clickable_cell').each(function() {
+        this.classList.remove("clickable_cell");
+    });
+    $('.clickable_big_cell').each(function() {
+        this.classList.remove("clickable_big_cell");
+    });
+}
+
 function refresh_delta() {
     $('.clickable_cell').hover(function() {
         var id1 = this.children[0].getAttribute("id");
@@ -240,7 +250,12 @@ function refresh_delta() {
 }
 
 $(function() {
-    make_cell_clickable();
+    if(typeof $USTUDY_MODE === 'undefined' || $USTUDY_MODE != 1) {
+        make_cell_clickable();
+    }
+    else {
+        remove_clickable_cells();
+    }
     refresh_delta();
 });
 

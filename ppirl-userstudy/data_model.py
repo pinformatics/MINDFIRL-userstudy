@@ -603,6 +603,8 @@ def open_cell(user_key, full_data, working_data, pair_num, attr_num, mode, r, ka
 def get_kaprlimit(full_data, working_data, data_mode):
     if data_mode == 'moderate':
         mode = [s[0].upper() for s in dd.DATA_MODE_MODERATE]
+    elif data_mode == 'minimum':
+        mode = [s[0].upper() for s in dd.DATA_MODE_MINIMUM]
     else:
         logging.error('unsupported data mode: ' + data_mode)
 
