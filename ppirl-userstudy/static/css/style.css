@@ -143,6 +143,11 @@
     vertical-align: top;
 }
 
+.space_icon {
+    width: 4.5px;
+    height: 25px;
+}
+
 .diff_icon {
     width: 35px;
     height: 25px;
