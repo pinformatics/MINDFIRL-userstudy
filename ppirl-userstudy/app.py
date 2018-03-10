@@ -82,34 +82,13 @@ def index():
     r.set(user_data_key, data)
     r.set("session_"+str(user_id), session)
 
+    r.set(session['user_cookie']+'_ustudy_mode', ustudy_mode)
+    r.set(session['user_cookie']+'_ustudy_budget', ustudy_budget)
+
+
     return redirect(url_for(config.SEQUENCE[int(index)]))
 
       
-    # if request.args.get("id") is None:
-    #     user_data_key = session['user_cookie'] + '_user_data'
-    #     user_id = r.incr('user_id_generator')
-    #     session['user_id'] = user_id
-    #     data = 'type: user_id,id: ' + str(user_id) + ';\n'
-    #     data += 'type: session_start,timestamp: ' + str(time.time()) + ';\n'
-    #     r.set(user_data_key, data)
-    #     print session
-    #     r.set("session_"+str(user_id), session)
-    # else:
-    #     user_id = str(request.args.get("id"))
-    #     session = r.get("session_"+user_id)
-    #     print session
-    #     index = int(session['state'])
-    # return redirect(url_for(config.SEQUENCE[index]))
-=======
-
-    r.set(session['user_cookie']+'_ustudy_mode', ustudy_mode)
-    r.set(session['user_cookie']+'_ustudy_budget', ustudy_budget)
-    #print(r.get(session['user_cookie']+'_ustudy_mode'))
-    #print(r.get(session['user_cookie']+'_ustudy_budget'))
-
-    return redirect(url_for('show_introduction'))
->>>>>>> 97a7c190d276c60905fa6c308bedad0f463fd766
-
 
 @app.route('/introduction')
 @state_machine('show_introduction')
