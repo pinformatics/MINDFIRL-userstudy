@@ -22,6 +22,8 @@ from util import state_machine
 from global_data import *
 
 
+print('app started 0')
+
 app = Flask(__name__)
 app.debug = False
 app.secret_key = 'a9%z$/`9h8FMnh893;*g783'
