@@ -28,6 +28,11 @@ app.config.from_pyfile('email_config.py')
 mail = Mail(app)
 
 
+if config.ENV == 'production':
+    r = redis.from_url(os.environ.get("REDIS_URL"))
+elif config.ENV == 'development':
+    r = redis.Redis(host='localhost', port=6379, db=0)
+
 if not r.exists('user_id_generator'):
     r.set('user_id_generator', 0)
 
