@@ -22,14 +22,12 @@ from util import state_machine
 from global_data import *
 
 
-print('app started 0')
-
 app = Flask(__name__)
 app.debug = False
 app.secret_key = 'a9%z$/`9h8FMnh893;*g783'
 
-app.register_blueprint(tutorial)
-app.register_blueprint(main_section)
+#app.register_blueprint(tutorial)
+#app.register_blueprint(main_section)
 
 app.config.from_pyfile('email_config.py')
 mail = Mail(app)
@@ -38,7 +36,6 @@ mail = Mail(app)
 if not r.exists('user_id_generator'):
     r.set('user_id_generator', 0)
 
-print('app started')
 
 def get_main_section_data(uid, section):
     data_num = uid%10
