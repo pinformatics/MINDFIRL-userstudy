@@ -36,6 +36,7 @@ mail = Mail(app)
 if not r.exists('user_id_generator'):
     r.set('user_id_generator', 0)
 
+print('app started')
 
 def get_main_section_data(uid, section):
     data_num = uid%10
