@@ -2,7 +2,7 @@
 # encoding=utf-8
 
 
-# ENV = 'development'
+#ENV = 'development'
 ENV = 'production'
 
 
