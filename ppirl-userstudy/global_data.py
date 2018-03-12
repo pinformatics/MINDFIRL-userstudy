@@ -6,6 +6,10 @@ import data_model as dm
 import user_data as ud
 
 
+if config.ENV == 'production':
+    r = redis.from_url(os.environ.get("REDIS_URL"))
+elif config.ENV == 'development':
+    r = redis.Redis(host='localhost', port=6379, db=0)
 
 # global data, this should be common across all users, not affected by multiple process
 # this is the full database for tutorial
