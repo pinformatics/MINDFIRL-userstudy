@@ -28,12 +28,11 @@ $(document).ready(function(){
         }
 
         // save the user click data
-        $type = "type: answer";
-        $this_click = "id: " + $selected_id;
+        $type = "type:answer";
+        $this_click = "value:" + $selected_id;
         var dt = new Date();
-        $click_time = "time: " + dt.getHours() + "h" + dt.getMinutes() + "m" + dt.getSeconds() + "s";
-        $click_timestamp = "timestamp: " + dt.getTime();
-        $data = [$type, $this_click, $click_time, $click_timestamp].join()
-        $user_data += $data + ";\n";
+        $click_timestamp = "timestamp:" + dt.getTime();
+        $data = [$type, $this_click, $click_timestamp].join();
+        $user_data += $data + ";";
     })
 })

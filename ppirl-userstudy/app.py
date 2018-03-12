@@ -83,14 +83,21 @@ def index():
         session['state'] = index
     
     session['user_id'] = user_id
-    data = 'type: user_id,id: ' + str(user_id) + ';\n'
-    data += 'type: session_start,timestamp: ' + str(time.time()) + ';\n'
-    r.set(user_data_key, data)
+
+    # saving user data
+    data = {
+        'uid': user_id,
+        'type': 'session_start',
+        'value': int(time.time()),
+        'timestamp': int(time.time()),
+        'source': 'server'
+    }
+    r.set(user_data_key, ud.format_user_data(data))
+
     r.set("session_"+str(user_id), session)
 
     r.set(session['user_cookie']+'_ustudy_mode', ustudy_mode)
     r.set(session['user_cookie']+'_ustudy_budget', ustudy_budget)
-
 
     return redirect(url_for(config.SEQUENCE[int(index)]))
 
@@ -134,8 +141,13 @@ def show_introduction2():
 @app.route('/save_data', methods=['GET', 'POST'])
 def save_data():
     user_data = request.form['user_data']
+    data_list = user_data.split(';')
+    formatted_data = ''
+    for line in data_list:
+        if line:
+            formatted_data += ('uid:'+str(session['user_id'])+','+line+';')
     user_data_key = session['user_cookie'] + '_user_data'
-    r.append(user_data_key, user_data+'\n')
+    r.append(user_data_key, formatted_data)
     return 'data_saved.'
 
 
@@ -258,10 +270,10 @@ def pull_data():
     ret = ''
     for d in data:
         if 'type' in d and d['type'] == 'performance1':
-            ret += ('section 1: ' + d['content'] + ';\n')
+            ret += ('section 1: ' + d['value'] + ';\n')
     for d in data:
         if 'type' in d and d['type'] == 'performance2':
-            ret += ('section 2: ' + d['content'] + ';\n')
+            ret += ('section 2: ' + d['value'] + ';\n')
     for d in data:
         if 'type' in d and d['type'] == 'final_KAPR_section1':
             ret += ('Final privacy budget used in section 1: ' + str(round(100*float(d['value']), 2)) + '% out of ' + d['total'] + '%;\n')
@@ -277,21 +289,38 @@ def pull_data_all():
     ret = ''
     for key in r.scan_iter("*_user_data"):
         user_data = r.get(key)
-        ret = ret + user_data + '<br/><br/>'
+        ret = ret + user_data + '<br/><br/><br/>'
     return ret
 
 
 @app.route('/thankyou')
 @state_machine('show_thankyou')
 def show_thankyou():
-    # grading section 1
+    
     user_data_key = session['user_cookie'] + '_user_data'
-    r.append(user_data_key, 'type: session_end,timestamp: '+str(time.time())+';\n')
+    
+    session_end = {
+        'uid': session['user_id'],
+        'type': 'session_end',
+        'value': int(time.time()),
+        'timestamp': int(time.time()),
+        'source': 'server'
+    }
+    r.append(user_data_key, ud.format_user_data(session_end))
+
+    # grading section 1
     user_data = r.get(user_data_key)
     data = ud.parse_user_data(user_data)
     result = ud.grade_final_answer(data, get_main_section_data(session['user_id'], 1))
-    performance1 = 'type:performance1,content:' + str(result[0]) + ' out of ' + str(result[1]) + ';\n'
-    r.append(user_data_key, performance1)
+    # saving user data
+    performance1 = {
+        'uid': session['user_id'],
+        'type': 'performance1',
+        'value': str(result[0]) + ' out of ' + str(result[1]),
+        'timestamp': int(time.time()),
+        'source': 'server'
+    }
+    r.append(user_data_key, ud.format_user_data(performance1))
 
     # grading section 2
     user_data_key = session['user_cookie'] + '_user_data'
@@ -301,8 +330,14 @@ def show_thankyou():
     # TODO! TODO! TODO! TODO! TODO! TODO! TODO! TODO! TODO! TODO! 
     # SECTION 2 pair num must be different from section 1! section 2 num be a factor of 6
     result = ud.grade_final_answer(data, get_main_section_data(session['user_id'], 2))
-    performance2 = 'type:performance2,content:' + str(result[0]) + ' out of ' + str(result[1]) + ';\n'
-    r.append(user_data_key, performance2)
+    performance2 = {
+        'uid': session['user_id'],
+        'type': 'performance2',
+        'value': str(result[0]) + ' out of ' + str(result[1]),
+        'timestamp': int(time.time()),
+        'source': 'server'
+    }
+    r.append(user_data_key, ud.format_user_data(performance2))
 
     # get final KAPR
     KAPR_key = session['user_cookie'] + '_KAPR'
@@ -310,17 +345,25 @@ def show_thankyou():
     kapr_limit = r.get(session['user_cookie']+'section1_kapr_limit')
     if final_KAPR is not None:
         kapr_info = 'type:final_KAPR_section1, value:' + str(final_KAPR) + ',total:' + kapr_limit + ';\n'
-        r.append(user_data_key, kapr_info)
+        kapr_info = {
+            'uid': session['user_id'],
+            'type': 'final_KAPR_section1',
+            'value': str(final_KAPR),
+            'timestamp': int(time.time()),
+            'source': 'server',
+            'total': kapr_limit
+        }
+        r.append(user_data_key, ud.format_user_data(kapr_info))
 
     data = ud.parse_user_data(r.get(user_data_key))
     # dl.save_data_to_json('data/saved/'+str(session['user_cookie'])+'.json', user_data)
     extend_data = ''
     for d in data:
         if 'type' in d and d['type'] == 'performance1':
-            extend_data += ('section 1: ' + d['content'] + ';\n')
+            extend_data += ('section 1: ' + d['value'] + ';\n')
     for d in data:
         if 'type' in d and d['type'] == 'performance2':
-            extend_data += ('section 2: ' + d['content'] + ';\n')
+            extend_data += ('section 2: ' + d['value'] + ';\n')
     for d in data:
         if 'type' in d and d['type'] == 'final_KAPR_section1':
             extend_data += ('Final privacy budget used in section 1: ' + str(round(100*float(d['value']), 2)) + '% out of ' + d['total'] + '%;\n')
