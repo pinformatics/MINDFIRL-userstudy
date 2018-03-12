@@ -38,27 +38,25 @@ function reset_choice_panel() {
         }
 
         // save the user click data
-        $type = "type: answer";
-        $this_click = "id: " + $selected_id;
+        $type = "type:answer";
+        $this_click = "value:" + $selected_id;
         var dt = new Date();
-        $click_time = "time: " + dt.getHours() + "h" + dt.getMinutes() + "m" + dt.getSeconds() + "s";
-        $click_timestamp = "timestamp: " + dt.getTime();
-        $url = "url: " + $THIS_URL;
-        $data = [$type, $this_click, $click_time, $click_timestamp, $url].join()
-        $user_data += $data + ";\n";
+        $click_timestamp = "timestamp:" + dt.getTime();
+        $url = "url:" + $THIS_URL;
+        $data = [$type, $this_click, $click_timestamp, $url].join()
+        $user_data += $data + ";";
     });
 }
 
 function get_summitted_answers() {
     var c = $(".ion-android-radio-button-on").each(function() {
-        $type = "type: final_answer";
-        $this_click = "id: " + this.id;
+        $type = "type:final_answer";
+        $this_click = "value:" + this.id;
         var dt = new Date();
-        $click_time = "time: " + dt.getHours() + "h" + dt.getMinutes() + "m" + dt.getSeconds() + "s";
-        $click_timestamp = "timestamp: " + dt.getTime();
-        $url = "url: " + $THIS_URL;
-        $data = [$type, $this_click, $click_time, $click_timestamp, $url].join()
-        $user_data += $data + ";\n";
+        $click_timestamp = "timestamp:" + dt.getTime();
+        $url = "url:" + $THIS_URL;
+        $data = [$type, $this_click, $click_timestamp, $url].join()
+        $user_data += $data + ";";
     });
 }
 
@@ -72,13 +70,13 @@ $(function() {
         $('#button_next').attr("disabled", "disabled");
         
         // save this click data
-        $type = "type: jumping";
+        $type = "type:jumping";
+        $value = "value:" + $THIS_URL;
         var dt = new Date();
-        $click_time = "time: " + dt.getHours() + "h" + dt.getMinutes() + "m" + dt.getSeconds() + "s";
-        $click_timestamp = "timestamp: " + dt.getTime();
-        $url = "url: " + $THIS_URL;
-        $data = [$type, $click_time, $click_timestamp, $url].join()
-        $user_data += $data + ";\n";
+        $click_timestamp = "timestamp:" + dt.getTime();
+        $url = "url:" + $THIS_URL;
+        $data = [$type, $value, $click_timestamp, $url].join()
+        $user_data += $data + ";";
 
         get_summitted_answers();
         post($SCRIPT_ROOT+'/save_data', $user_data, "post");
@@ -114,13 +112,13 @@ $(function() {
         }
         else {
             // save this click data
-            $type = "type: moving";
+            $type = "type:next_page";
+            $value = "value:" + $THIS_URL;
             var dt = new Date();
-            $click_time = "time: " + dt.getHours() + "h" + dt.getMinutes() + "m" + dt.getSeconds() + "s";
-            $click_timestamp = "timestamp: " + dt.getTime();
-            $url = "url: " + $THIS_URL;
-            $data = [$type, $click_time, $click_timestamp, $url].join()
-            $user_data += $data + ";\n";
+            $click_timestamp = "timestamp:" + dt.getTime();
+            $url = "url:" + $THIS_URL;
+            $data = [$type, $value, $click_timestamp, $url].join()
+            $user_data += $data + ";";
 
             $('#button_next_rl').attr("disabled", "disabled");
             get_summitted_answers();

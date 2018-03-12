@@ -8,8 +8,8 @@
 function pround(number, precision) {
     var factor = Math.pow(10, precision);
     var ret = Math.round(number * factor) / factor;
-    if(ret < 0.001) {
-        return 0.001;
+    if(ret < 0.01) {
+        return 0.01;
     }
     return ret;
 }
@@ -92,6 +92,15 @@ function get_cell_ajax(current_cell) {
                 var new_delta_value = data.new_delta[i][1];
                 $DELTA[id] = new_delta_value;
             }
+
+            // save the user click data
+            $type = "type:kapr";
+            $this_click = "value:" + data.KAPR;
+            var dt = new Date();
+            $click_timestamp = "timestamp:" + dt.getTime();
+            $url = "url:" + $THIS_URL;
+            $data = [$type, $this_click, $click_timestamp, $url].join();
+            $user_data += $data + ";";
         }
     });
 }
@@ -151,6 +160,15 @@ function get_big_cell_ajax(current_cell1, current_cell2) {
                 var new_delta_value = data.new_delta[i][1];
                 $DELTA[id] = new_delta_value;
             }
+
+            // save the user click data
+            $type = "type:kapr";
+            $this_click = "value:" + data.KAPR;
+            var dt = new Date();
+            $click_timestamp = "timestamp:" + dt.getTime();
+            $url = "url:" + $THIS_URL;
+            $data = [$type, $this_click, $click_timestamp, $url].join();
+            $user_data += $data + ";";
         }
         return true;
     });
@@ -172,14 +190,13 @@ function make_cell_clickable() {
         }
 
         // save the user click data
-        $type = "type: open_cell";
-        $this_click = "id: " + current_cell.children[0].id;
+        $type = "type:open_cell";
+        $this_click = "value:" + current_cell.children[0].id;
         var dt = new Date();
-        $click_time = "time: " + dt.getHours() + "h" + dt.getMinutes() + "m" + dt.getSeconds() + "s";
-        $click_timestamp = "timestamp: " + dt.getTime();
-        $url = "url: " + $THIS_URL;
-        $data = [$type, $this_click, $click_time, $click_timestamp, $url].join();
-        $user_data += $data + ";\n";
+        $click_timestamp = "timestamp:" + dt.getTime();
+        $url = "url:" + $THIS_URL;
+        $data = [$type, $this_click, $click_timestamp, $url].join();
+        $user_data += $data + ";";
         return false;
     });
 
@@ -192,14 +209,13 @@ function make_cell_clickable() {
         }
 
         // save the user click data
-        $type = "type: open_cell";
-        $this_click = "id: " + first_name_cell.children[0].id;
+        $type = "type:open_cell";
+        $this_click = "value:" + first_name_cell.children[0].id;
         var dt = new Date();
-        $click_time = "time: " + dt.getHours() + "h" + dt.getMinutes() + "m" + dt.getSeconds() + "s";
         $click_timestamp = "timestamp: " + dt.getTime();
-        $url = "url: " + $THIS_URL;
+        $url = "url:" + $THIS_URL;
         $data = [$type, $this_click, $click_time, $click_timestamp, $url].join();
-        $user_data += $data + ";\n";
+        $user_data += $data + ";";
         
         return false;
     });
@@ -226,7 +242,7 @@ function refresh_delta() {
         }
         var bar_style = 'width:' + d + '%';
         $("#privacy-risk-delta").attr("style", bar_style);
-        $("#privacy-risk-delta-value").html(" + " + pround(d,3) + "%");
+        $("#privacy-risk-delta-value").html(" + " + pround(d,2) + "%");
     }, function() {
         $("#privacy-risk-delta").attr("style", 'width: 0%');
         $("#privacy-risk-delta-value").html(" ")
@@ -242,7 +258,7 @@ function refresh_delta() {
         }
         var bar_style = 'width:' + d + '%';
         $("#privacy-risk-delta").attr("style", bar_style);
-        $("#privacy-risk-delta-value").html(" + " + pround(d,3) + "%");
+        $("#privacy-risk-delta-value").html(" + " + pround(d,2) + "%");
     }, function() {
         $("#privacy-risk-delta").attr("style", 'width: 0%');
         $("#privacy-risk-delta-value").html(" ")

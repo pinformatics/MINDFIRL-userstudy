@@ -6,6 +6,23 @@ import copy
 import data_model as dm
 
 
+def format_user_data(data):
+    formatted_data = ''
+    pkeys = ['uid', 'type', 'value', 'timestamp']
+    for k in pkeys:
+        if formatted_data:
+            formatted_data += (',' + k + ':' + str(data[k]))
+        else:
+            formatted_data += (k + ':' + str(data[k]))
+
+    for k in sorted(data):
+        if k not in pkeys:
+            formatted_data += (',' + k + ':' + str(data[k]))
+
+    formatted_data += ';'
+    return formatted_data
+
+
 def parse_user_data(user_data):
     if not user_data:
         return []
@@ -35,7 +52,7 @@ def grade_final_answer(data, data_pair_list):
         if 'url' not in d or d['url'] not in ['/record_linkage', '/section2']:
             continue
 
-        answer_id = d['id']
+        answer_id = d['value']
         answer_id = answer_id.lstrip('p')
         pair_num = int(answer_id.split('a')[0])
         answer = int(answer_id.split('a')[1])
