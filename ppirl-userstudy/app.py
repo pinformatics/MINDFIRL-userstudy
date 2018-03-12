@@ -15,8 +15,8 @@ import data_display as dd
 import data_model as dm
 import user_data as ud
 import config
-#from main_section import main_section
-#from tutorial import tutorial
+from main_section import main_section
+from tutorial import tutorial
 from util import state_machine
 from global_data import *
 
@@ -25,8 +25,8 @@ app = Flask(__name__)
 app.debug = False
 app.secret_key = 'a9%z$/`9h8FMnh893;*g783'
 
-#app.register_blueprint(tutorial)
-#app.register_blueprint(main_section)
+app.register_blueprint(tutorial)
+app.register_blueprint(main_section)
 
 app.config.from_pyfile('email_config.py')
 mail = Mail(app)
