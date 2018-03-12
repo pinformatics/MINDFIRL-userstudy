@@ -51,6 +51,7 @@ def get_main_section_data(uid, section):
 @app.route('/')
 @app.route('/index')
 def index():
+    '''
     ustudy_mode = request.args.get('mode')
     ustudy_budget = request.args.get('budget')
     if ustudy_mode is None:
@@ -86,6 +87,16 @@ def index():
 
 
     return redirect(url_for(config.SEQUENCE[int(index)]))
+    '''
+    session['user_cookie'] = hashlib.sha224("salt12138" + str(time.time()) + '.' + str(randint(1,10000))).hexdigest()
+    user_data_key = session['user_cookie'] + '_user_data'
+    user_id = r.incr('user_id_generator')
+    session['user_id'] = user_id
+    data = 'type: user_id,id: ' + str(user_id) + ';\n'
+    data += 'type: session_start,timestamp: ' + str(time.time()) + ';\n'
+    r.set(user_data_key, data)
+
+    return redirect(url_for('show_introduction'))
 
       
 
