@@ -15,7 +15,6 @@ import data_display as dd
 import data_model as dm
 import user_data as ud
 import config
-import tutorial
 from main_section import main_section
 from tutorial import tutorial
 from util import state_machine
@@ -52,6 +51,7 @@ def get_main_section_data(uid, section):
 @app.route('/')
 @app.route('/index')
 def index():
+    '''
     ustudy_mode = request.args.get('mode')
     ustudy_budget = request.args.get('budget')
     if ustudy_mode is None:
@@ -94,6 +94,8 @@ def index():
 
 
     return redirect(url_for(config.SEQUENCE[int(index)]))
+    '''
+    return 'test'
 
 
 @app.route('/introduction')
@@ -353,5 +355,4 @@ def save_data_choice():
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html')
-
 
