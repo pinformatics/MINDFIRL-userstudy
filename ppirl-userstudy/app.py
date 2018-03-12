@@ -37,7 +37,7 @@ if not r.exists('user_id_generator'):
 
 
 def get_main_section_data(uid, section):
-    data_num = uid%10
+    data_num = int(uid)%10
     if data_num == 0:
         data_num = 10
     data_num -= 1
