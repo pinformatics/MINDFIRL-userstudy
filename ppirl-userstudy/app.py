@@ -15,7 +15,6 @@ import data_display as dd
 import data_model as dm
 import user_data as ud
 import config
-import tutorial
 from main_section import main_section
 from tutorial import tutorial
 from util import state_machine
