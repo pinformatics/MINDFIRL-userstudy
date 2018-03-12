@@ -51,7 +51,7 @@ def get_main_section_data(uid, section):
 @app.route('/')
 @app.route('/index')
 def index():
-    
+'''
     ustudy_mode = request.args.get('mode')
     ustudy_budget = request.args.get('budget')
     if ustudy_mode is None:
@@ -94,12 +94,12 @@ def index():
 
 
     return redirect(url_for(config.SEQUENCE[int(index)]))
-    
-    # return 'test'
+
+    '''
+    return 'test'
 
 @app.route('/feedback_main_section')
 def feedback_main_section():
-    print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
     ids = request.args.get('ids').split(',')
     responses = request.args.get('responses').split(',')
     screen_ids = request.args.get('screen_ids').split(',')

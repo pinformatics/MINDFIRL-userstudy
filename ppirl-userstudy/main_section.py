@@ -117,7 +117,6 @@ def show_record_linkage_task():
 @main_section.route('/record_linkage/next')
 def show_record_linkage_next():
     ustudy_mode = int(r.get(session['user_cookie']+'_ustudy_mode'))
-    ustudy_budget = float(r.get(session['user_cookie']+'_ustudy_budget'))
     data_mode = 'masked'
     if ustudy_mode == 1:
         data_mode = 'full'
