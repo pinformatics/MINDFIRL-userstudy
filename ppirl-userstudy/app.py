@@ -51,6 +51,7 @@ def get_main_section_data(uid, section):
 @app.route('/')
 @app.route('/index')
 def index():
+'''
     ustudy_mode = request.args.get('mode')
     ustudy_budget = request.args.get('budget')
     if ustudy_mode is None:
@@ -101,6 +102,31 @@ def index():
 
     return redirect(url_for(config.SEQUENCE[int(index)]))
 
+    '''
+    return 'test'
+
+@app.route('/feedback_main_section')
+def feedback_main_section():
+    ids = request.args.get('ids').split(',')
+    responses = request.args.get('responses').split(',')
+    screen_ids = request.args.get('screen_ids').split(',')
+    working_data = get_main_section_data(session['user_id'], 1)
+    wrong_attempts = []
+    feedback = ""
+    for i in range(6):
+        dp = working_data.get_data_pair(int(ids[i]))
+        grade = dp.grade(int(responses[i]))
+        # grades.append(grade)
+        if not grade:
+            wrong_attempts.append(screen_ids[i])
+
+    if len(wrong_attempts) == 0:
+        feedback = "You got all of the questions in this page right!"
+    else:
+        feedback += "Question(s) you got wrong: " + ", ".join(wrong_attempts) + "\n"
+        feedback += "You might want to consider opening more relevant information if it would help you get more questions right."
+
+    return jsonify(result=feedback)
 
 @app.route('/introduction')
 @state_machine('show_introduction')
