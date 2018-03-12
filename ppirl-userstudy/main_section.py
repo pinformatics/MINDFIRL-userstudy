@@ -18,7 +18,7 @@ main_section = Blueprint('main_section', __name__, template_folder='templates')
 
 
 def get_main_section_data(uid, section):
-    data_num = uid%10
+    data_num = int(uid)%10
     if data_num == 0:
         data_num = 10
     data_num -= 1

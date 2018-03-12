@@ -68,14 +68,21 @@ def index():
 
     session['user_cookie'] = hashlib.sha224("salt12138" + str(time.time()) + '.' + str(randint(1,10000))).hexdigest()
     user_data_key = session['user_cookie'] + '_user_data'
+
     user_id = 0
     if request.args.get("id") is None:
         user_id = r.incr('user_id_generator')
-        r.set("session_"+str(user_id)+"_state", 0)
     else:
        user_id = str(request.args.get("id"))
-       # r.set("session_"+user_id+"_state")
+
     index = r.get("session_"+str(user_id)+"_state")
+    if index is None:
+        index = 0
+        r.set("session_"+str(user_id)+"_state", 0)
+        session['state'] = 0
+    else:
+        session['state'] = index
+    
     session['user_id'] = user_id
     data = 'type: user_id,id: ' + str(user_id) + ';\n'
     data += 'type: session_start,timestamp: ' + str(time.time()) + ';\n'
@@ -88,7 +95,6 @@ def index():
 
     return redirect(url_for(config.SEQUENCE[int(index)]))
 
-      
 
 @app.route('/introduction')
 @state_machine('show_introduction')
