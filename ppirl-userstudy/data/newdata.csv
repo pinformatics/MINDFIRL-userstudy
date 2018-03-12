@@ -6,12 +6,12 @@ uid,type,value,timestamp,extra
 1,kapr,0.5025720164609049,1520888527863,url:/record_linkage
 1,open_cell,288-1-5,1520888528225,url:/record_linkage
 1,kapr,0.5669867398262457,1520888528253,url:/record_linkage
-1,answer,p288a1,1520888529209
-1,answer,p36a1,1520888529815
-1,answer,p244a1,1520888530511
-1,answer,p129a1,1520888531103
-1,answer,p261a1,1520888531935
-1,answer,p204a1,1520888532975
+1,answer,p288a1,1520888529209,
+1,answer,p36a1,1520888529815,
+1,answer,p244a1,1520888530511,
+1,answer,p129a1,1520888531103,
+1,answer,p261a1,1520888531935,
+1,answer,p204a1,1520888532975,
 1,next_page,/record_linkage,1520888534039,url:/record_linkage
 1,final_answer, p288a1,1520888534041,url:/record_linkage
 1,final_answer, p36a1,1520888534041,url:/record_linkage
@@ -89,12 +89,12 @@ uid,type,value,timestamp,extra
 1,performance2,0 out of 331,1520888569,source:server
 1,final_KAPR_section1,0.00566986739826246,1520888569,source:server|total:42.82452841293134
 3,session_start,1520888589,1520888589,source:server
-3,answer,p189a1,1520888600012
-3,answer,p78a1,1520888600642
-3,answer,p342a1,1520888601193
-3,answer,p167a1,1520888601865
-3,answer,p40a1,1520888602545
-3,answer,p130a1,1520888603162
+3,answer,p189a1,1520888600012,
+3,answer,p78a1,1520888600642,
+3,answer,p342a1,1520888601193,
+3,answer,p167a1,1520888601865,
+3,answer,p40a1,1520888602545,
+3,answer,p130a1,1520888603162,
 3,next_page,/record_linkage,1520888604209,url:/record_linkage
 3,final_answer, p189a1,1520888604211,url:/record_linkage
 3,final_answer, p78a1,1520888604211,url:/record_linkage
@@ -198,12 +198,12 @@ uid,type,value,timestamp,extra
 4,kapr,16.58249158249158,1520889561059,url:/record_linkage
 4,open_cell,43-1-5,1520889561367,url:/record_linkage
 4,kapr,16.666666666666664,1520889561395,url:/record_linkage
-4,answer,p153a1,1520889562697
-4,answer,p286a1,1520889563439
-4,answer,p79a1,1520889564375
-4,answer,p41a1,1520889565190
-4,answer,p66a1,1520889567063
-4,answer,p43a1,1520889567807
+4,answer,p153a1,1520889562697,
+4,answer,p286a1,1520889563439,
+4,answer,p79a1,1520889564375,
+4,answer,p41a1,1520889565190,
+4,answer,p66a1,1520889567063,
+4,answer,p43a1,1520889567807,
 4,next_page,/record_linkage,1520889569023,url:/record_linkage
 4,final_answer, p153a1,1520889569023,url:/record_linkage
 4,final_answer, p286a1,1520889569023,url:/record_linkage
