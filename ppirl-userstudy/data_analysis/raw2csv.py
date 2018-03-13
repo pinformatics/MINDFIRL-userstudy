@@ -1,7 +1,9 @@
+import sys
 
-def main(filename):
+
+def main(filename, filename2):
     filein = open(filename, 'r')
-    fileout = open(filename+'.csv', 'w+')
+    fileout = open(filename2+'.csv', 'w+')
 
     fileout.write('uid,type,value,timestamp,extra\n')
 
@@ -37,5 +39,6 @@ def main(filename):
 
 
 if __name__ == '__main__':
-    filename = 'raw_data'
-    main(filename)
+    filename = sys.argv[1]
+    fileoutname = sys.argv[2]
+    main(filename, fileoutname)
