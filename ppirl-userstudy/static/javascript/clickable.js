@@ -240,7 +240,7 @@ function refresh_delta() {
         if( typeof $KAPR_LIMIT !== 'undefined' && $KAPR_LIMIT > 0 && $KAPR + d > $KAPR_LIMIT) {
             $(this).css('cursor', 'not-allowed');
         }
-        var bar_style = 'width:' + d + '%';
+        var bar_style = 'width:' + pround(d,2) + '%';
         $("#privacy-risk-delta").attr("style", bar_style);
         $("#privacy-risk-delta-value").html(" + " + pround(d,2) + "%");
     }, function() {
@@ -256,7 +256,7 @@ function refresh_delta() {
         if( typeof $KAPR_LIMIT !== 'undefined' && $KAPR_LIMIT > 0 && $KAPR + d > $KAPR_LIMIT) {
             $(this).css('cursor', 'not-allowed');
         }
-        var bar_style = 'width:' + d + '%';
+        var bar_style = 'width:' + pround(d,2) + '%';
         $("#privacy-risk-delta").attr("style", bar_style);
         $("#privacy-risk-delta-value").html(" + " + pround(d,2) + "%");
     }, function() {
