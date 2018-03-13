@@ -88,7 +88,7 @@ def show_record_linkage_task():
 
     # get the delta information
     delta = list()
-    for i in range(dp_size):
+    for i in range(config.DATA_PAIR_PER_PAGE*current_page, config.DATA_PAIR_PER_PAGE*(current_page+1)):
         data_pair = working_data.get_data_pair_by_index(i)
         delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*working_data.size())
 
