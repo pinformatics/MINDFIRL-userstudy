@@ -15,4 +15,5 @@ Data collection:
 2. put it in the /data_analysis folder
 3. run:
 >> python raw2csv.py raw_data raw_data
+
 where the first parameter is the data file name, and second parameter is the output file name (it can be the same because the program will append .csv to the output file name, suppose the data filename is not 'raw_data.csv')
