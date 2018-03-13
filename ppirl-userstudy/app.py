@@ -72,10 +72,10 @@ def index():
         user_id = str(request.args.get("id"))
         if r.get('user_id_' + user_id) is None:
             return render_template('user_not_found.html')
-        ustudy_mode = r.get(session['user_id']+'_ustudy_mode')
-        ustudy_budget = r.get(session['user_id']+'_ustudy_budget')
+        ustudy_mode = r.get(str(session['user_id'])+'_ustudy_mode')
+        ustudy_budget = r.get(str(session['user_id'])+'_ustudy_budget')
 
-    user_data_key = session['user_id'] + '_user_data'
+    user_data_key = str(session['user_id']) + '_user_data'
 
     index = r.get("session_"+str(user_id)+"_state")
     if index is None:
@@ -99,8 +99,8 @@ def index():
 
     r.set("session_"+str(user_id), session)
 
-    r.set(session['user_id']+'_ustudy_mode', ustudy_mode)
-    r.set(session['user_id']+'_ustudy_budget', ustudy_budget)
+    r.set(str(session['user_id'])+'_ustudy_mode', ustudy_mode)
+    r.set(str(session['user_id'])+'_ustudy_budget', ustudy_budget)
 
     return redirect(url_for(config.SEQUENCE[int(index)]))
 
@@ -125,7 +125,7 @@ def feedback_main_section():
         feedback = "You got all of the questions in this page right!"
     else:
         feedback += "Question(s) you got wrong: " + ", ".join(wrong_attempts) + "\n"
-        feedback += "You might want to consider opening more relevant information if it would help you get more questions right."
+        # feedback += "You might want to consider opening more relevant information if it would help you get more questions right."
 
     return jsonify(result=feedback)
 
@@ -149,7 +149,7 @@ def save_data():
     for line in data_list:
         if line:
             formatted_data += ('uid:'+str(session['user_id'])+','+line+';')
-    user_data_key = session['user_id'] + '_user_data'
+    user_data_key = str(session['user_id']) + '_user_data'
     r.append(user_data_key, formatted_data)
     return 'data_saved.'
 
@@ -175,9 +175,9 @@ def open_cell():
     elif session['state'] == 31:
         working_data = get_main_section_data(session['user_id'], 1)
         full_data = DATASET
-        kapr_limit = float(r.get(session['user_id']+'section1_kapr_limit'))
+        kapr_limit = float(r.get(str(session['user_id'])+'section1_kapr_limit'))
     else:
-        working_data = get_main_section_data(session['user_id'], 2)
+        working_data = get_main_section_data(str(session['user_id']), 2)
         full_data = DATASET2
 
     id1 = request.args.get('id1')
@@ -185,7 +185,7 @@ def open_cell():
     mode = request.args.get('mode')
     pair_num = str(id1.split('-')[0])
     attr_num = str(id1.split('-')[2])
-    user_key = session['user_id']
+    user_key = str(session['user_id'])
     ret = dm.open_cell(user_key, full_data, working_data, pair_num, attr_num, mode, r, kapr_limit)
     return jsonify(ret)
 
