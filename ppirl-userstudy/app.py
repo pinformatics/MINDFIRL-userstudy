@@ -19,7 +19,7 @@ from main_section import main_section
 from tutorial import tutorial
 from util import state_machine
 from global_data import *
-    
+
 
 app = Flask(__name__)
 app.debug = False

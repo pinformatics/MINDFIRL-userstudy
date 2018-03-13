@@ -161,6 +161,11 @@ class DataPair(object):
         for mode in data_mode:
             self._data_display[mode] = dd.format_data([self._data1_raw, self._data2_raw], mode)
 
+    def has_partial_mode(self, i):
+        if i < 0 or i > 6:
+            logging.error('Wrong attribute index: ' + str(i))
+            return False
+        return not (self._data1_attributes_partial[i] is None and self._data2_attributes_partial[i] is None)
 
     def get_attribute_display(self, i, attribute_mode):
         if i < 0 or i >= 6:
@@ -609,7 +614,17 @@ def get_kaprlimit(full_data, working_data, data_mode):
         logging.error('unsupported data mode: ' + data_mode)
 
     KAPR = 0.0
-    for i in working_data:
-        KAPR += get_KAPR_for_dp(full_data, i, mode, 2*working_data.size())
+    for dp in working_data:
+        display_status = list()
+        if data_mode == 'minimum':
+            for i in range(6):
+                if dd.DATA_MODE_MINIMUM[i] == 'partial':
+                    if dp.has_partial_mode(i):
+                        display_status.append('P')
+                    else:
+                        display_status.append('M')
+                else:
+                    display_status.append(dd.DATA_MODE_MINIMUM[i][0].upper())
+        KAPR += get_KAPR_for_dp(full_data, dp, display_status, 2*working_data.size())
 
     return 100.0*KAPR
