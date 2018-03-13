@@ -51,28 +51,31 @@ def get_main_section_data(uid, section):
 @app.route('/')
 @app.route('/index')
 def index():
-    ustudy_mode = request.args.get('mode')
-    ustudy_budget = request.args.get('budget')
-    if ustudy_mode is None:
-        ustudy_mode = '1'
-    if ustudy_budget is None:
-        ustudy_budget = '0'
-    if ustudy_mode != '4':
-        ustudy_budget = '0'
-    if int(ustudy_mode) not in [1,2,3,4]:
-        return page_not_found('page_not_found')
-    if ustudy_budget not in ['moderate', 'minimum']:
-        if float(ustudy_budget) < 0 or float(ustudy_budget) > 100:
-            return page_not_found('page_not_found')
-
-    session['user_cookie'] = hashlib.sha224("salt12138" + str(time.time()) + '.' + str(randint(1,10000))).hexdigest()
-    user_data_key = session['user_cookie'] + '_user_data'
-
     user_id = 0
     if request.args.get("id") is None:
-        user_id = r.incr('user_id_generator')
+        user_id = str(r.incr('user_id_generator'))
+        r.set('user_id_'+user_id, user_id)
+        ustudy_mode = request.args.get('mode')
+        ustudy_budget = request.args.get('budget')
+        if ustudy_mode is None:
+            ustudy_mode = '1'
+        if ustudy_budget is None:
+            ustudy_budget = '0'
+        if ustudy_mode != '4':
+            ustudy_budget = '0'
+        if int(ustudy_mode) not in [1,2,3,4]:
+            return page_not_found('page_not_found')
+        if ustudy_budget not in ['moderate', 'minimum']:
+            if float(ustudy_budget) < 0 or float(ustudy_budget) > 100:
+                return page_not_found('page_not_found')
     else:
-       user_id = str(request.args.get("id"))
+        user_id = str(request.args.get("id"))
+        if r.get('user_id_' + user_id) is None:
+            return render_template('user_not_found.html')
+        ustudy_mode = r.get(session['user_id']+'_ustudy_mode')
+        ustudy_budget = r.get(session['user_id']+'_ustudy_budget')
+
+    user_data_key = session['user_id'] + '_user_data'
 
     index = r.get("session_"+str(user_id)+"_state")
     if index is None:
@@ -82,7 +85,7 @@ def index():
     else:
         session['state'] = index
     
-    session['user_id'] = user_id
+    session['user_id'] = str(user_id)
 
     # saving user data
     data = {
@@ -96,8 +99,8 @@ def index():
 
     r.set("session_"+str(user_id), session)
 
-    r.set(session['user_cookie']+'_ustudy_mode', ustudy_mode)
-    r.set(session['user_cookie']+'_ustudy_budget', ustudy_budget)
+    r.set(session['user_id']+'_ustudy_mode', ustudy_mode)
+    r.set(session['user_id']+'_ustudy_budget', ustudy_budget)
 
     return redirect(url_for(config.SEQUENCE[int(index)]))
 
@@ -146,7 +149,7 @@ def save_data():
     for line in data_list:
         if line:
             formatted_data += ('uid:'+str(session['user_id'])+','+line+';')
-    user_data_key = session['user_cookie'] + '_user_data'
+    user_data_key = session['user_id'] + '_user_data'
     r.append(user_data_key, formatted_data)
     return 'data_saved.'
 
@@ -163,16 +166,16 @@ def open_cell():
         working_data = DATA_DM_DEMO
         full_data = DATASET_TUTORIAL
         # kapr_limit = 100
-        # float(r.get(session['user_cookie']+'tutorial_dmdemo_kapr_limit'))
+        # float(r.get(session['user_id']+'tutorial_dmdemo_kapr_limit'))
     elif session['state'] == 29:
         working_data = DATA_CLICKABLE_PRACTICE
         full_data = DATASET_TUTORIAL
         kapr_limit = 20
-        # float(r.get(session['user_cookie']+'tutorial_practice_kapr_limit'))
+        # float(r.get(session['user_id']+'tutorial_practice_kapr_limit'))
     elif session['state'] == 31:
         working_data = get_main_section_data(session['user_id'], 1)
         full_data = DATASET
-        kapr_limit = float(r.get(session['user_cookie']+'section1_kapr_limit'))
+        kapr_limit = float(r.get(session['user_id']+'section1_kapr_limit'))
     else:
         working_data = get_main_section_data(session['user_id'], 2)
         full_data = DATASET2
@@ -182,7 +185,7 @@ def open_cell():
     mode = request.args.get('mode')
     pair_num = str(id1.split('-')[0])
     attr_num = str(id1.split('-')[2])
-    user_key = session['user_cookie']
+    user_key = session['user_id']
     ret = dm.open_cell(user_key, full_data, working_data, pair_num, attr_num, mode, r, kapr_limit)
     return jsonify(ret)
 
@@ -198,16 +201,16 @@ def open_big_cell():
     elif session['state'] == 24:
         working_data = DATA_DM_DEMO
         full_data = DATASET_TUTORIAL
-        # kapr_limit = float(r.get(session['user_cookie']+'tutorial_dmdemo_kapr_limit'))
+        # kapr_limit = float(r.get(session['user_id']+'tutorial_dmdemo_kapr_limit'))
     elif session['state'] == 29:
         working_data = DATA_CLICKABLE_PRACTICE
         full_data = DATASET_TUTORIAL
         kapr_limit = 20
-        # float(r.get(session['user_cookie']+'tutorial_practice_kapr_limit'))
+        # float(r.get(session['user_id']+'tutorial_practice_kapr_limit'))
     elif session['state'] == 31:
         working_data = get_main_section_data(session['user_id'], 1)
         full_data = DATASET
-        kapr_limit = float(r.get(session['user_cookie']+'section1_kapr_limit'))
+        kapr_limit = float(r.get(session['user_id']+'section1_kapr_limit'))
     else:
         working_data = get_main_section_data(session['user_id'], 2)
         full_data = DATASET2
@@ -217,7 +220,7 @@ def open_big_cell():
     id3 = request.args.get('id3')
     id4 = request.args.get('id4')
     mode = request.args.get('mode')
-    user_key = session['user_cookie']
+    user_key = session['user_id']
 
     pair_num1 = str(id1.split('-')[0])
     attr_num1 = str(id1.split('-')[2])
@@ -252,7 +255,7 @@ def next():
     r.set("session_"+str(user_id)+"_state", str(session['state']))
     #timing info on next click 
     # timing_info = sequence[session['state']-1] + ": " + time.strftime("%a, %d %b %Y %H:%M:%S")
-    # msg = Message(subject='user click: ' + session['user_cookie'], body=timing_info, recipients=['ppirl.mindfil@gmail.com'])
+    # msg = Message(subject='user click: ' + session['user_id'], body=timing_info, recipients=['ppirl.mindfil@gmail.com'])
     # mail.send(msg)
  
     return redirect(url_for(sequence[state]))
@@ -260,7 +263,7 @@ def next():
 
 @app.route('/pull_data')
 def pull_data():
-    user_data_key = session['user_cookie'] + '_user_data'
+    user_data_key = session['user_id'] + '_user_data'
     user_data = r.get(user_data_key)
     if not user_data:
         return render_template('show_data.html', data='No data is collected for this user.', uid=str(session['user_id']))
@@ -297,7 +300,7 @@ def pull_data_all():
 @state_machine('show_thankyou')
 def show_thankyou():
     
-    user_data_key = session['user_cookie'] + '_user_data'
+    user_data_key = session['user_id'] + '_user_data'
     
     session_end = {
         'uid': session['user_id'],
@@ -323,7 +326,7 @@ def show_thankyou():
     r.append(user_data_key, ud.format_user_data(performance1))
 
     # grading section 2
-    user_data_key = session['user_cookie'] + '_user_data'
+    user_data_key = session['user_id'] + '_user_data'
     #r.append(user_data_key, 'type: session_end,timestamp: '+str(time.time())+';\n')
     user_data = r.get(user_data_key)
     data = ud.parse_user_data(user_data)
@@ -340,9 +343,9 @@ def show_thankyou():
     r.append(user_data_key, ud.format_user_data(performance2))
 
     # get final KAPR
-    KAPR_key = session['user_cookie'] + '_KAPR'
+    KAPR_key = session['user_id'] + '_KAPR'
     final_KAPR = r.get(KAPR_key)
-    kapr_limit = r.get(session['user_cookie']+'section1_kapr_limit')
+    kapr_limit = r.get(session['user_id']+'section1_kapr_limit')
     if final_KAPR is not None:
         kapr_info = 'type:final_KAPR_section1, value:' + str(final_KAPR) + ',total:' + kapr_limit + ';\n'
         kapr_info = {
@@ -356,7 +359,7 @@ def show_thankyou():
         r.append(user_data_key, ud.format_user_data(kapr_info))
 
     data = ud.parse_user_data(r.get(user_data_key))
-    # dl.save_data_to_json('data/saved/'+str(session['user_cookie'])+'.json', user_data)
+    # dl.save_data_to_json('data/saved/'+str(session['user_id'])+'.json', user_data)
     extend_data = ''
     for d in data:
         if 'type' in d and d['type'] == 'performance1':
@@ -369,7 +372,7 @@ def show_thankyou():
             extend_data += ('Final privacy budget used in section 1: ' + str(round(100*float(d['value']), 2)) + '% out of ' + d['total'] + '%;\n')
     extend_data = extend_data + r.get(user_data_key)
 
-    if r.get("data_choice_" + session['user_cookie']) != "collect":
+    if r.get("data_choice_" + session['user_id']) != "collect":
         # print "discareded"
         r.delete(user_data_key)
         # print r.get(user_data_key)
@@ -378,11 +381,11 @@ def show_thankyou():
         r.set(user_data_key, user_data)
 
     # send the data to email.
-    msg = Message(subject='user data: ' + session['user_cookie'], body=extend_data, recipients=['mindfil.ppirl@gmail.com'])
+    msg = Message(subject='user data: ' + session['user_id'], body=extend_data, recipients=['mindfil.ppirl@gmail.com'])
     mail.send(msg)
 
     # clear user data in redis
-    #for key in r.scan_iter("prefix:"+session['user_cookie']):
+    #for key in r.scan_iter("prefix:"+session['user_id']):
     #    r.delete(key)
 
     return render_template('thankyou.html', uid=str(session['user_id']))
@@ -411,8 +414,8 @@ def flush_redis():
 @app.route('/save_data_choice', methods=['POST'])
 def save_data_choice():
     data_choice = request.form.get('data_choice')
-    r.set("data_choice_" + session['user_cookie'], data_choice)
-    print r.get("data_choice_" + session['user_cookie'])
+    r.set("data_choice_" + session['user_id'], data_choice)
+    print r.get("data_choice_" + session['user_id'])
     return redirect(url_for('next'))
 
 

@@ -41,11 +41,8 @@ def show_record_linkage_task():
     """
     section 1
     """
-    
-
-
-    ustudy_mode = int(r.get(session['user_cookie']+'_ustudy_mode'))
-    ustudy_budget = r.get(session['user_cookie']+'_ustudy_budget')
+    ustudy_mode = int(r.get(session['user_id']+'_ustudy_mode'))
+    ustudy_budget = r.get(session['user_id']+'_ustudy_budget')
     data_mode = 'masked'
     if ustudy_mode == 1:
         data_mode = 'full'
@@ -55,12 +52,14 @@ def show_record_linkage_task():
     attribute_size = 6
     dp_list_size = working_data.get_size()
 
+    # if the user is in this section the first time, or coming back
+    first_flag = True
     page_size_key = str(session['user_id']) + '_page_size'
     current_page_key = str(session['user_id']) + '_current_page'
-    # print r.get(str(session['user_id'])+'_current_page')
     if (not r.get(current_page_key) is None) and (not r.get(current_page_key) == '0'):
         page_size = int(r.get(page_size_key))
         current_page = int(r.get(current_page_key))
+        first_flag = False
     else:
         current_page = 0
         page_size = int(math.ceil(1.0*dp_list_size/config.DATA_PAIR_PER_PAGE))
@@ -75,7 +74,11 @@ def show_record_linkage_task():
 
     # KAPR - K-Anonymity privacy risk
     KAPR_key = str(session['user_id']) + '_KAPR'
-    r.set(KAPR_key, 0)
+    if first_flag:
+        KAPR = 0
+        r.set(KAPR_key, KAPR)
+    else:
+        KAPR = round(100*float(r.get(KAPR_key)), 1)
 
     # set the user-display-status as masked for all cell
     for id1 in ids_list:
@@ -116,17 +119,19 @@ def show_record_linkage_task():
         ids=ids, 
         title='Section 1', 
         thisurl='/record_linkage', 
-        page_number="1/6", 
+        page_number=str(current_page+1)+"/6", 
         delta=delta, 
+        kapr = KAPR,
         kapr_limit = kapr_limit, 
         uid=str(session['user_id']),
+        pair_num_base=6*current_page+1,
         ustudy_mode=ustudy_mode
     )
 
 
 @main_section.route('/record_linkage/next')
 def show_record_linkage_next():
-    ustudy_mode = int(r.get(session['user_cookie']+'_ustudy_mode'))
+    ustudy_mode = int(r.get(session['user_id']+'_ustudy_mode'))
     data_mode = 'masked'
     if ustudy_mode == 1:
         data_mode = 'full'
@@ -134,7 +139,7 @@ def show_record_linkage_next():
     working_data = get_main_section_data(session['user_id'], 1)
 
     current_page = int(r.get(str(session['user_id'])+'_current_page'))+1
-    # r.incr(session['user_cookie']+'_current_page')
+    # r.incr(session['user_id']+'_current_page')
     r.incr(str(session['user_id'])+'_current_page')
     page_size = int(r.get(str(session['user_id']) + '_page_size'))
     is_last_page = 0
@@ -186,7 +191,7 @@ def show_record_linkage_next():
 @state_machine('show_section2_guide')
 def show_section2_guide():
     # grading section 1
-    user_data_key = session['user_cookie'] + '_user_data'
+    user_data_key = session['user_id'] + '_user_data'
     user_data = r.get(user_data_key)
     data = ud.parse_user_data(user_data)
     result = ud.grade_final_answer(data, get_main_section_data(session['user_id'], 1))
@@ -209,9 +214,9 @@ def show_section2():
     attribute_size = 6
     dp_list_size = working_data.get_size()
     page_size = int(math.ceil(1.0*dp_list_size/config.DATA_PAIR_PER_PAGE))
-    page_size_key = session['user_cookie'] + '_section2_page_size'
+    page_size_key = session['user_id'] + '_section2_page_size'
     r.set(page_size_key, str(page_size))
-    current_page_key = session['user_cookie'] + '_section2_current_page'
+    current_page_key = session['user_id'] + '_section2_current_page'
     r.set(current_page_key, '0')
 
     pairs_formatted = working_data.get_data_display('masked')[0:2*dp_size]
@@ -222,20 +227,20 @@ def show_section2():
 
     # percentage of character disclosure
     """
-    mindfil_total_characters_key = session['user_cookie'] + '_mindfil_total_characters'
+    mindfil_total_characters_key = session['user_id'] + '_mindfil_total_characters'
     r.set(mindfil_total_characters_key, total_characters)
-    mindfil_disclosed_characters_key = session['user_cookie'] + '_mindfil_disclosed_characters'
+    mindfil_disclosed_characters_key = session['user_id'] + '_mindfil_disclosed_characters'
     r.set(mindfil_disclosed_characters_key, 0)
     """
 
     # KAPR - K-Anonymity privacy risk
-    KAPR_key = session['user_cookie'] + '_KAPR'
+    KAPR_key = session['user_id'] + '_KAPR'
     r.set(KAPR_key, 0)
 
     # set the user-display-status as masked for all cell
     for id1 in ids_list:
         for i in range(attribute_size):
-            key = session['user_cookie'] + '-' + id1[i]
+            key = session['user_id'] + '-' + id1[i]
             r.set(key, 'M')
 
     # get the delta information
@@ -252,9 +257,9 @@ def show_section2_next():
     working_data = get_main_section_data(session['user_id'], 2)
 
     dp_list_size = working_data.get_size()
-    current_page = int(r.get(session['user_cookie']+'_section2_current_page'))+1
-    r.incr(session['user_cookie']+'_section2_current_page')
-    page_size = int(r.get(session['user_cookie'] + '_section2_page_size'))
+    current_page = int(r.get(session['user_id']+'_section2_current_page'))+1
+    r.incr(session['user_id']+'_section2_current_page')
+    page_size = int(r.get(session['user_id'] + '_section2_page_size'))
     is_last_page = 0
     if current_page == page_size - 1:
         is_last_page = 1
@@ -268,7 +273,7 @@ def show_section2_next():
     # set the user-display-status as masked for all cell
     for id1 in ids_list:
         for i in range(6):
-            key = session['user_cookie'] + '-' + id1[i]
+            key = session['user_id'] + '-' + id1[i]
             r.set(key, 'M')
 
     delta = list()

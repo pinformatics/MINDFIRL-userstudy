@@ -144,14 +144,14 @@ def show_ppirl_tutorial1():
     ids = zip(ids_list[0::2], ids_list[1::2])
 
     # KAPR - K-Anonymity privacy risk
-    KAPR_key = session['user_cookie'] + '_KAPR'
+    KAPR_key = session['user_id'] + '_KAPR'
     r.set(KAPR_key, 0)
 
     # set the user-display-status as masked for all cell
     attribute_size = 6
     for id1 in ids_list:
         for i in range(attribute_size):
-            key = session['user_cookie'] + '-' + id1[i]
+            key = session['user_id'] + '-' + id1[i]
             r.set(key, 'M')
 
     # get the delta information
@@ -179,14 +179,14 @@ def show_tutorial_clickable_demo():
     ids = zip(ids_list[0::2], ids_list[1::2])
 
     # KAPR - K-Anonymity privacy risk
-    KAPR_key = session['user_cookie'] + '_KAPR'
+    KAPR_key = session['user_id'] + '_KAPR'
     r.set(KAPR_key, 0)
 
     # set the user-display-status as masked for all cell
     attribute_size = 6
     for id1 in ids_list:
         for i in range(attribute_size):
-            key = session['user_cookie'] + '-' + id1[i]
+            key = session['user_id'] + '-' + id1[i]
             r.set(key, 'M')
     
     delta = list()
@@ -258,14 +258,14 @@ def show_tutorial_clickable_decision_making_demo():
     ids = zip(ids_list[0::2], ids_list[1::2])
 
     # KAPR - K-Anonymity privacy risk
-    KAPR_key = session['user_cookie'] + '_KAPR'
+    KAPR_key = session['user_id'] + '_KAPR'
     r.set(KAPR_key, 0)
 
     # set the user-display-status as masked for all cell
     attribute_size = 6
     for id1 in ids_list:
         for i in range(attribute_size):
-            key = session['user_cookie'] + '-' + id1[i]
+            key = session['user_id'] + '-' + id1[i]
             r.set(key, 'M')
 
     # DATASET_T = dl.load_data_from_csv('data/tutorial1.csv')
@@ -277,7 +277,7 @@ def show_tutorial_clickable_decision_making_demo():
         delta += dm.KAPR_delta(DATASET_TUTORIAL, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_DM_DEMO.size())
 
     # kapr_limit = dm.get_kaprlimit(DATASET_TUTORIAL, DATA_DM_DEMO, 'moderate')
-    # r.set(session['user_cookie']+'tutorial_dmdemo_kapr_limit', kapr_limit)
+    # r.set(session['user_id']+'tutorial_dmdemo_kapr_limit', kapr_limit)
 
     return render_template('tutorial/clickable/decision_making_demo.html', 
         data=data, 
@@ -330,14 +330,14 @@ def show_tutorial_clickable_practice():
     ids = zip(ids_list[0::2], ids_list[1::2])
 
     # KAPR - K-Anonymity privacy risk
-    KAPR_key = session['user_cookie'] + '_KAPR'
+    KAPR_key = session['user_id'] + '_KAPR'
     r.set(KAPR_key, 0)
 
     # set the user-display-status as masked for all cell
     attribute_size = 6
     for id1 in ids_list:
         for i in range(attribute_size):
-            key = session['user_cookie'] + '-' + id1[i]
+            key = session['user_id'] + '-' + id1[i]
             r.set(key, 'M')
 
     # DATASET_T = dl.load_data_from_csv('data/tutorial1.csv')
@@ -349,7 +349,7 @@ def show_tutorial_clickable_practice():
         delta += dm.KAPR_delta(DATASET_TUTORIAL, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_CLICKABLE_PRACTICE.size())
 
     # kapr_limit = dm.get_kaprlimit(DATASET_TUTORIAL, DATA_CLICKABLE_PRACTICE, 'moderate')
-    # r.set(session['user_cookie']+'tutorial_practice_kapr_limit', kapr_limit)
+    # r.set(session['user_id']+'tutorial_practice_kapr_limit', kapr_limit)
 
     return render_template('tutorial/clickable/practice.html', 
         data=data, icons=icons, ids=ids, title='Practice 3 ', 
