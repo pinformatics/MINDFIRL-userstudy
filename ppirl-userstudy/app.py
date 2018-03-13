@@ -19,11 +19,6 @@ from main_section import main_section
 from tutorial import tutorial
 from util import state_machine
 from global_data import *
-
-if 'DYNO' in os.environ:
-    ENV = 'production'
-else:
-    ENV = 'development'
     
 
 app = Flask(__name__)

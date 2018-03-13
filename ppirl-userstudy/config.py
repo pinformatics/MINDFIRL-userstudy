@@ -1,7 +1,12 @@
 #! /usr/bin/python
-
 # encoding=utf-8 
 
+import os
+
+if 'DYNO' in os.environ:
+    ENV = 'production'
+else:
+    ENV = 'development'
 
 
 SEQUENCE = [
