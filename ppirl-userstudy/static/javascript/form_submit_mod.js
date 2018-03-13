@@ -90,18 +90,6 @@ function get_responses(){
 };
 
 
-      
-     //    $(function() {
-     //      $('#button_next_rl').bind('click', function() {
-           
-     //        $.getJSON('/feedback_main_section', get_responses(), function(data) {
-     //            alert(data.result);
-     //        });
-
-     //        return false;
-     //    });
-     // });
-
 /* 
     This function defines the behavior of the next button 
     1. post the user click data to server.
@@ -167,7 +155,21 @@ $(function() {
             post($SCRIPT_ROOT+'/save_data', $user_data, "post");
             $user_data = "";
             $.getJSON('/feedback_main_section', get_responses(), function(data) {
-                alert(data.result);
+                var feedback_message = data.result;
+
+                var expenditure = $("#privacy-risk-value").text().replace("%","").trim();
+                expenditure = parseFloat(expenditure);
+                var page = $("#page-number").text().trim();
+                var re = /\d+/g; 
+                page = parseInt(page.match(re)[0]);
+                if(expenditure < 40*page/6){
+                    feedback_message += "You might want to consider opening more relevant information if it would help you get more questions right.";
+                } else{
+                    feedback_message += "Consider opening the right cells with relevant information";
+                }
+                
+                alert(feedback_message);
+
                 $.ajax({
                     url: $SCRIPT_ROOT + $THIS_URL + '/next',
                     data: {},
