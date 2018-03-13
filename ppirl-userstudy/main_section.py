@@ -41,36 +41,46 @@ def show_record_linkage_task():
     """
     section 1
     """
+    
+
+
     ustudy_mode = int(r.get(session['user_cookie']+'_ustudy_mode'))
     ustudy_budget = r.get(session['user_cookie']+'_ustudy_budget')
     data_mode = 'masked'
     if ustudy_mode == 1:
         data_mode = 'full'
 
-    working_data = get_main_section_data(session['user_id'], 1)
+    working_data = get_main_section_data(str(session['user_id']), 1)
     dp_size = config.DATA_PAIR_PER_PAGE
     attribute_size = 6
     dp_list_size = working_data.get_size()
-    page_size = int(math.ceil(1.0*dp_list_size/config.DATA_PAIR_PER_PAGE))
-    page_size_key = session['user_cookie'] + '_page_size'
-    r.set(page_size_key, str(page_size))
-    current_page_key = session['user_cookie'] + '_current_page'
-    r.set(current_page_key, '0')
 
-    pairs_formatted = working_data.get_data_display(data_mode)[0:2*dp_size]
+    page_size_key = str(session['user_id']) + '_page_size'
+    current_page_key = str(session['user_id']) + '_current_page'
+    # print r.get(str(session['user_id'])+'_current_page')
+    if (not r.get(current_page_key) is None) and (not r.get(current_page_key) == '0'):
+        page_size = int(r.get(page_size_key))
+        current_page = int(r.get(current_page_key))
+    else:
+        current_page = 0
+        page_size = int(math.ceil(1.0*dp_list_size/config.DATA_PAIR_PER_PAGE))
+        r.set(page_size_key, str(page_size))
+        r.set(current_page_key, current_page)
+
+    pairs_formatted = working_data.get_data_display(data_mode)[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
-    icons = working_data.get_icons()[0:dp_size]
-    ids_list = working_data.get_ids()[0:2*dp_size]
+    icons = working_data.get_icons()[config.DATA_PAIR_PER_PAGE*current_page:config.DATA_PAIR_PER_PAGE*(current_page+1)]
+    ids_list = working_data.get_ids()[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
     ids = zip(ids_list[0::2], ids_list[1::2])
 
     # KAPR - K-Anonymity privacy risk
-    KAPR_key = session['user_cookie'] + '_KAPR'
+    KAPR_key = str(session['user_id']) + '_KAPR'
     r.set(KAPR_key, 0)
 
     # set the user-display-status as masked for all cell
     for id1 in ids_list:
         for i in range(attribute_size):
-            key = session['user_cookie'] + '-' + id1[i]
+            key = str(session['user_id']) + '-' + id1[i]
             r.set(key, 'M')
 
     # get the delta information
@@ -98,7 +108,7 @@ def show_record_linkage_task():
         kapr_limit = dm.get_kaprlimit(DATASET, working_data, ustudy_budget)
     else:
         kapr_limit = float(ustudy_budget)
-    r.set(session['user_cookie']+'section1_kapr_limit', kapr_limit)
+    r.set(str(session['user_id'])+'section1_kapr_limit', kapr_limit)
 
     return render_template('record_linkage_ppirl.html', 
         data=data, 
@@ -123,9 +133,10 @@ def show_record_linkage_next():
 
     working_data = get_main_section_data(session['user_id'], 1)
 
-    current_page = int(r.get(session['user_cookie']+'_current_page'))+1
-    r.incr(session['user_cookie']+'_current_page')
-    page_size = int(r.get(session['user_cookie'] + '_page_size'))
+    current_page = int(r.get(str(session['user_id'])+'_current_page'))+1
+    # r.incr(session['user_cookie']+'_current_page')
+    r.incr(str(session['user_id'])+'_current_page')
+    page_size = int(r.get(str(session['user_id']) + '_page_size'))
     is_last_page = 0
     if current_page == page_size - 1:
         is_last_page = 1
@@ -139,7 +150,7 @@ def show_record_linkage_next():
     # set the user-display-status as masked for all cell
     for id1 in ids_list:
         for i in range(6):
-            key = session['user_cookie'] + '-' + id1[i]
+            key = str(session['user_id']) + '-' + id1[i]
             r.set(key, 'M')
 
     # get the delta information
