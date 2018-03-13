@@ -3,6 +3,11 @@ Deployed
 
 ppirl-userstudy/config.py
 
+mode 1= not clickable all info
+mode 2= clickable, no meter
+mode 3= clickable, with meter, no limit
+mode 4= clickable, with meter, and limit (budget can be set)
+
 [host]/index?mode=1
 [host]/index?mode=4&budget=35
 [host]/index?mode=4&budget=minimum
