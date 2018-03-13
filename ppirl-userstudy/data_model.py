@@ -161,6 +161,10 @@ class DataPair(object):
         for mode in data_mode:
             self._data_display[mode] = dd.format_data([self._data1_raw, self._data2_raw], mode)
 
+
+    def attribute_match(self, i):
+        return self._data1_attributes[i] == self._data2_attributes[i]
+
     def has_partial_mode(self, i):
         if i < 0 or i > 6:
             logging.error('Wrong attribute index: ' + str(i))
@@ -606,13 +610,6 @@ def open_cell(user_key, full_data, working_data, pair_num, attr_num, mode, r, ka
 
 
 def get_kaprlimit(full_data, working_data, data_mode):
-    if data_mode == 'moderate':
-        mode = [s[0].upper() for s in dd.DATA_MODE_MODERATE]
-    elif data_mode == 'minimum':
-        mode = [s[0].upper() for s in dd.DATA_MODE_MINIMUM]
-    else:
-        logging.error('unsupported data mode: ' + data_mode)
-
     KAPR = 0.0
     for dp in working_data:
         display_status = list()
@@ -625,6 +622,27 @@ def get_kaprlimit(full_data, working_data, data_mode):
                         display_status.append('M')
                 else:
                     display_status.append(dd.DATA_MODE_MINIMUM[i][0].upper())
+        elif data_mode == 'moderate':
+            for i in range(6):
+                if i == 0:
+                    if dd.DATA_MODE_MINIMUM[i] == 'partial':
+                        if dp.has_partial_mode(i):
+                            display_status.append('P')
+                        else:
+                            display_status.append('M')
+                    else:
+                        display_status.append(dd.DATA_MODE_MINIMUM[i][0].upper())
+                elif i == 4:
+                    display_status.append('F')
+                elif i == 5:
+                    display_status.append('M')
+                else:
+                    if dp.attribute_match(i):
+                        display_status.append('M')
+                    else:
+                        display_status.append('F')
+        else:
+            logging.error('unsupported data mode in get_kaprlimit().')
         KAPR += get_KAPR_for_dp(full_data, dp, display_status, 2*working_data.size())
 
     return 100.0*KAPR

@@ -412,10 +412,14 @@ def get_id():
     return 'Null'
 
 
-@app.route('/flushdb_522006058')
+@app.route('/flushdb')
 def flush_redis():
-    r.flushdb()
-    return 'redis flushed.'
+    admin_key = request.args.get("key")
+    if r.get('admin_key' + admin_key) is not None:
+        r.flushdb()
+        return 'redis flushed.'
+    else:
+        return 'Failed: premission denied.'
 
 
 @app.route('/save_data_choice', methods=['POST'])
