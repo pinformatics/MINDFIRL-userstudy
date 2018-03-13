@@ -348,10 +348,34 @@ def show_tutorial_clickable_practice():
         data_pair = DATA_CLICKABLE_PRACTICE.get_data_pair_by_index(i)
         delta += dm.KAPR_delta(DATASET_TUTORIAL, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_CLICKABLE_PRACTICE.size())
 
+    if session[session['user_id'] + '_mode'] == '4':
+        kapr_limit = 20
+    else:
+        kapr_limit = 0
+
     # kapr_limit = dm.get_kaprlimit(DATASET_TUTORIAL, DATA_CLICKABLE_PRACTICE, 'moderate')
     # r.set(session['user_id']+'tutorial_practice_kapr_limit', kapr_limit)
 
     return render_template('tutorial/clickable/practice.html', 
-        data=data, icons=icons, ids=ids, title='Practice 3 ', 
-        thisurl='/tutorial/clickable/practice', page_number=" ", delta=delta, kapr_limit = 20)
+        data=data, 
+        icons=icons, 
+        ids=ids, 
+        title='Practice 3 ', 
+        thisurl='/tutorial/clickable/practice', 
+        page_number="1", 
+        delta=delta, 
+        kapr_limit = kapr_limit, 
+        uid=str(session['user_id']),
+        pair_num_base=6*0+1,
+        ustudy_mode=r.get(str(session['user_id'])+'_ustudy_mode')
+        )
+
+    # data=data, 
+    #     icons=icons, 
+    #     ids=ids, 
+    #     title='Section 1', 
+    #     thisurl='/record_linkage', 
+    #     page_number=str(current_page+1)+"/6", 
+    #     delta=delta, 
+    #     kapr = KAPR,
 

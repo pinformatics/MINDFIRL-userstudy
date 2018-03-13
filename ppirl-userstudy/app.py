@@ -47,6 +47,11 @@ def get_main_section_data(uid, section):
     else:
         return DATA_SECTION2[data_num]
 
+def get_sequence_for_mode():
+    return config.SEQUENCE['Mode_'+r.get(str(session['user_id'])+'_ustudy_mode')]
+
+def get_url_for_index(index):
+    return get_sequence_for_mode()[int(index)]
 
 @app.route('/')
 @app.route('/index')
@@ -75,6 +80,8 @@ def index():
         ustudy_mode = r.get(str(session['user_id'])+'_ustudy_mode')
         ustudy_budget = r.get(str(session['user_id'])+'_ustudy_budget')
 
+    session['user_id'] = str(user_id)
+    session[session['user_id'] + '_mode'] = str(ustudy_mode)
     user_data_key = str(session['user_id']) + '_user_data'
 
     index = r.get("session_"+str(user_id)+"_state")
@@ -85,7 +92,7 @@ def index():
     else:
         session['state'] = index
     
-    session['user_id'] = str(user_id)
+    
 
     # saving user data
     data = {
@@ -102,7 +109,7 @@ def index():
     r.set(str(session['user_id'])+'_ustudy_mode', ustudy_mode)
     r.set(str(session['user_id'])+'_ustudy_budget', ustudy_budget)
 
-    return redirect(url_for(config.SEQUENCE[int(index)]))
+    return redirect(url_for(get_url_for_index(index)))
 
     
 
@@ -159,20 +166,20 @@ def open_cell():
     ret = dict()
     kapr_limit = 0
     
-    if session['state'] == 13:
+    if get_url_for_index(session['state']) == 'tutorial.show_tutorial_clickable_demo':
         working_data = DATA_CLICKABLE_DEMO
         full_data = DATASET_TUTORIAL
-    elif session['state'] == 24:
+    elif get_url_for_index(session['state']) == 'tutorial.show_tutorial_clickable_decision_making_demo':
         working_data = DATA_DM_DEMO
         full_data = DATASET_TUTORIAL
         # kapr_limit = 100
         # float(r.get(session['user_id']+'tutorial_dmdemo_kapr_limit'))
-    elif session['state'] == 29:
+    elif get_url_for_index(session['state']) == 'tutorial.show_tutorial_clickable_practice':
         working_data = DATA_CLICKABLE_PRACTICE
         full_data = DATASET_TUTORIAL
         kapr_limit = 20
         # float(r.get(session['user_id']+'tutorial_practice_kapr_limit'))
-    elif session['state'] == 31:
+    elif get_url_for_index(session['state']) == 'main_section.show_record_linkage_task':
         working_data = get_main_section_data(session['user_id'], 1)
         full_data = DATASET
         kapr_limit = float(r.get(str(session['user_id'])+'section1_kapr_limit'))
@@ -258,7 +265,7 @@ def next():
     # msg = Message(subject='user click: ' + session['user_id'], body=timing_info, recipients=['ppirl.mindfil@gmail.com'])
     # mail.send(msg)
  
-    return redirect(url_for(sequence[state]))
+    return redirect(url_for(get_url_for_index(session['state'])))
 
 
 @app.route('/pull_data')
