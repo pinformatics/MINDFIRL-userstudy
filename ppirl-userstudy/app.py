@@ -203,19 +203,19 @@ def open_big_cell():
     ret = dict()
 
     kapr_limit = 0
-    if session['state'] == 13:
+    if get_url_for_index(session['state']) == 'tutorial.show_tutorial_clickable_demo':
         working_data = DATA_CLICKABLE_DEMO
         full_data = DATASET_TUTORIAL
-    elif session['state'] == 24:
+    elif get_url_for_index(session['state']) == 'tutorial.show_tutorial_clickable_decision_making_demo':
         working_data = DATA_DM_DEMO
         full_data = DATASET_TUTORIAL
         # kapr_limit = float(r.get(session['user_id']+'tutorial_dmdemo_kapr_limit'))
-    elif session['state'] == 29:
+    elif get_url_for_index(session['state']) == 'tutorial.show_tutorial_clickable_practice':
         working_data = DATA_CLICKABLE_PRACTICE
         full_data = DATASET_TUTORIAL
         kapr_limit = 20
         # float(r.get(session['user_id']+'tutorial_practice_kapr_limit'))
-    elif session['state'] == 31:
+    elif get_url_for_index(session['state']) == 'main_section.show_record_linkage_task':
         working_data = get_main_section_data(session['user_id'], 1)
         full_data = DATASET
         kapr_limit = float(r.get(session['user_id']+'section1_kapr_limit'))

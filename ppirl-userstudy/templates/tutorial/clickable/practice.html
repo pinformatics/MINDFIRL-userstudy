@@ -47,7 +47,7 @@
             
             <div id="content">
                 <div class="tool-bar">
-                {% if ustudy_mode > 2 %}
+                {% if ustudy_mode in ['3','4']: %}
                 <div class="privacy-budget-div">
                  
                     <script>
@@ -55,6 +55,8 @@
                             $("[title]").tooltip({'placement': "bottom"});
                         });
                     </script>
+
+
                     <div>Privacy risk: <span id="privacy-risk-value">{{ kapr }}%</span><span id="privacy-risk-delta-value"></span></div>
                     <div class="progress border" style="height: 20px; width: 800px">
                         {% if kapr_limit > 0  %}
