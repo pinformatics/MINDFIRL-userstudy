@@ -93,7 +93,17 @@ function get_cell_ajax(current_cell) {
                 $DELTA[id] = new_delta_value;
             }
 
-            // save the user click data
+            // save the kapr info
+            $type = "type:open_cell_result";
+            $this_click = "value:"+data.id;
+            var dt = new Date();
+            $click_timestamp = "timestamp:" + dt.getTime();
+            $url = "url:" + $THIS_URL;
+            $new_mode = "new_mode" + data.mode;
+            $data = [$type, $this_click, $click_timestamp, $url, $new_mode].join();
+            $user_data += $data + ";";
+
+            // save the kapr info
             $type = "type:kapr";
             $this_click = "value:" + data.KAPR;
             var dt = new Date();
@@ -160,6 +170,16 @@ function get_big_cell_ajax(current_cell1, current_cell2) {
                 var new_delta_value = data.new_delta[i][1];
                 $DELTA[id] = new_delta_value;
             }
+
+            // save the kapr info
+            $type = "type:open_cell_result";
+            $this_click = "value:"+data.id;
+            var dt = new Date();
+            $click_timestamp = "timestamp:" + dt.getTime();
+            $url = "url:" + $THIS_URL;
+            $new_mode = "new_mode" + data.mode;
+            $data = [$type, $this_click, $click_timestamp, $url, $new_mode].join();
+            $user_data += $data + ";";
 
             // save the user click data
             $type = "type:kapr";

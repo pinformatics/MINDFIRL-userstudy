@@ -138,10 +138,15 @@ def show_record_linkage_next():
 
     working_data = get_main_section_data(session['user_id'], 1)
 
-    current_page = int(r.get(str(session['user_id'])+'_current_page'))+1
-    # r.incr(session['user_id']+'_current_page')
-    r.incr(str(session['user_id'])+'_current_page')
     page_size = int(r.get(str(session['user_id']) + '_page_size'))
+    current_page = int(r.get(str(session['user_id'])+'_current_page'))+1
+    if current_page >= page_size:
+        ret = {
+            'result': 'no more pages'
+        }
+        return jsonify(ret)
+    r.incr(str(session['user_id'])+'_current_page')
+    
     is_last_page = 0
     if current_page == page_size - 1:
         is_last_page = 1
@@ -178,6 +183,7 @@ def show_record_linkage_next():
     )
 
     ret = {
+        'result': 'success',
         'ustudy_mode': ustudy_mode,
         'delta': delta_dict,
         'is_last_page': is_last_page,
