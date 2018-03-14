@@ -176,6 +176,11 @@ $(function() {
                     error: function() {},
                     dataType: 'json',
                     success: function(data) {
+                        if(data['result'] != 'success') {
+                            alert('You have finished this section.');
+                            $(window).off("beforeunload");
+                            window.location.href = $NEXT_URL;
+                        }
                         // update delta
                         $DELTA = data['delta'];
                         // update table content

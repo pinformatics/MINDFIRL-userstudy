@@ -57,6 +57,7 @@ def get_url_for_index(index):
 @app.route('/index')
 def index():
     user_id = 0
+    # new user
     if request.args.get("id") is None:
         user_id = str(r.incr('user_id_generator'))
         r.set('user_id_'+user_id, user_id)
@@ -76,9 +77,26 @@ def index():
     else:
         user_id = str(request.args.get("id"))
         if r.get('user_id_' + user_id) is None:
-            return render_template('user_not_found.html')
-        ustudy_mode = r.get(user_id+'_ustudy_mode')
-        ustudy_budget = r.get(user_id+'_ustudy_budget')
+            # new user come with id
+            #return render_template('user_not_found.html')
+            r.set('user_id_'+user_id, user_id)
+            ustudy_mode = request.args.get('mode')
+            ustudy_budget = request.args.get('budget')
+            if ustudy_mode is None:
+                ustudy_mode = '1'
+            if ustudy_budget is None:
+                ustudy_budget = '0'
+            if ustudy_mode != '4':
+                ustudy_budget = '0'
+            if int(ustudy_mode) not in [1,2,3,4]:
+                return page_not_found('page_not_found')
+            if ustudy_budget not in ['moderate', 'minimum']:
+                if float(ustudy_budget) < 0 or float(ustudy_budget) > 100:
+                    return page_not_found('page_not_found')
+        else:
+            # come back user
+            ustudy_mode = r.get(user_id+'_ustudy_mode')
+            ustudy_budget = r.get(user_id+'_ustudy_budget')
 
     session['user_id'] = str(user_id)
     session[session['user_id'] + '_mode'] = str(ustudy_mode)
