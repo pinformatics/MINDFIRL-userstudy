@@ -599,6 +599,7 @@ def open_cell(user_key, full_data, working_data, pair_num, attr_num, mode, r, ka
     r.set(key1, new_display_status[attr_id])
     r.set(key2, new_display_status[attr_id])
     r.incrbyfloat(KAPR_key, KAPRINC)
+    ret['id'] = pair_num + '-1-' + attr_num
     ret['KAPR'] = overall_KAPR
     ret['result'] = 'success'
 

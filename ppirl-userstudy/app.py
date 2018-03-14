@@ -263,6 +263,7 @@ def open_big_cell():
         'value2': ret1['value2'],
         'value3': ret2['value1'],
         'value4': ret2['value2'],
+        'id': ret1['id'],
         'mode': ret2['mode'],
         'KAPR': ret2['KAPR'],
         'result': ret2['result'],
