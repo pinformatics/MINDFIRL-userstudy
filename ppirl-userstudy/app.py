@@ -77,8 +77,8 @@ def index():
         user_id = str(request.args.get("id"))
         if r.get('user_id_' + user_id) is None:
             return render_template('user_not_found.html')
-        ustudy_mode = r.get(str(session['user_id'])+'_ustudy_mode')
-        ustudy_budget = r.get(str(session['user_id'])+'_ustudy_budget')
+        ustudy_mode = r.get(user_id+'_ustudy_mode')
+        ustudy_budget = r.get(user_id+'_ustudy_budget')
 
     session['user_id'] = str(user_id)
     session[session['user_id'] + '_mode'] = str(ustudy_mode)
@@ -177,7 +177,8 @@ def open_cell():
     elif get_url_for_index(session['state']) == 'tutorial.show_tutorial_clickable_practice':
         working_data = DATA_CLICKABLE_PRACTICE
         full_data = DATASET_TUTORIAL
-        kapr_limit = 20
+        if session["user_id"] + "_mode" == "4":
+            kapr_limit = 20
         # float(r.get(session['user_id']+'tutorial_practice_kapr_limit'))
     elif get_url_for_index(session['state']) == 'main_section.show_record_linkage_task':
         working_data = get_main_section_data(session['user_id'], 1)

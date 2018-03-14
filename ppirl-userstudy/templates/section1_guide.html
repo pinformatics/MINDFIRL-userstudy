@@ -23,7 +23,11 @@
             </div> -->
             <div id="content">
                 <div class="module_intros">
-                    <img src="/static/images/module_intros/main_study.jpg"/>
+                    {% if session[session['user_id'] + '_mode'] == '1': %}
+                        <img src="/static/images/module_intros/main_study_mode1.jpg"/>
+                    {% else: %}
+                        <img src="/static/images/module_intros/main_study.jpg"/>
+                    {% endif %}
                 </div>
                 <div class="submit_div">
                     <form>
