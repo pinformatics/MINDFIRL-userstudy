@@ -409,8 +409,8 @@ def show_thankyou():
         r.set(user_data_key, user_data)
 
     # send the data to email.
-    msg = Message(subject='user data: ' + session['user_id'], body=extend_data, recipients=['mindfil.ppirl@gmail.com'])
-    mail.send(msg)
+    #msg = Message(subject='user data: ' + session['user_id'], body=extend_data, recipients=['mindfil.ppirl@gmail.com'])
+    #mail.send(msg)
 
     # clear user data in redis
     #for key in r.scan_iter("prefix:"+session['user_id']):

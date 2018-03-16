@@ -41,7 +41,7 @@ function reset_choice_panel() {
         $type = "type:answer";
         $this_click = "value:" + $selected_id;
         var dt = new Date();
-        $click_timestamp = "timestamp:" + dt.getTime();
+        $click_timestamp = "timestamp:" + Math.round(dt.getTime()/1000);
         $url = "url:" + $THIS_URL;
         $data = [$type, $this_click, $click_timestamp, $url].join()
         $user_data += $data + ";";
@@ -53,7 +53,7 @@ function get_summitted_answers() {
         $type = "type:final_answer";
         $this_click = "value:" + this.id;
         var dt = new Date();
-        $click_timestamp = "timestamp:" + dt.getTime();
+        $click_timestamp = "timestamp:" + Math.round(dt.getTime()/1000);
         $url = "url:" + $THIS_URL;
         $data = [$type, $this_click, $click_timestamp, $url].join()
         $user_data += $data + ";";
@@ -73,7 +73,7 @@ $(function() {
         $type = "type:jumping";
         $value = "value:" + $THIS_URL;
         var dt = new Date();
-        $click_timestamp = "timestamp:" + dt.getTime();
+        $click_timestamp = "timestamp:" + Math.round(dt.getTime()/1000);
         $url = "url:" + $THIS_URL;
         $data = [$type, $value, $click_timestamp, $url].join()
         $user_data += $data + ";";
@@ -115,7 +115,7 @@ $(function() {
             $type = "type:next_page";
             $value = "value:" + $THIS_URL;
             var dt = new Date();
-            $click_timestamp = "timestamp:" + dt.getTime();
+            $click_timestamp = "timestamp:" + Math.round(dt.getTime()/1000);
             $url = "url:" + $THIS_URL;
             $data = [$type, $value, $click_timestamp, $url].join()
             $user_data += $data + ";";

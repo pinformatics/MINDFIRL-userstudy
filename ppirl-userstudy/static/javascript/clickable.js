@@ -93,23 +93,15 @@ function get_cell_ajax(current_cell) {
                 $DELTA[id] = new_delta_value;
             }
 
-            // save the kapr info
-            $type = "type:open_cell_result";
-            $this_click = "value:"+data.id;
-            var dt = new Date();
-            $click_timestamp = "timestamp:" + dt.getTime();
-            $url = "url:" + $THIS_URL;
-            $new_mode = "new_mode" + data.mode;
-            $data = [$type, $this_click, $click_timestamp, $url, $new_mode].join();
-            $user_data += $data + ";";
-
-            // save the kapr info
+            // save the user click data
             $type = "type:kapr";
             $this_click = "value:" + data.KAPR;
             var dt = new Date();
-            $click_timestamp = "timestamp:" + dt.getTime();
+            $click_timestamp = "timestamp:" + Math.round(dt.getTime()/1000);
+            $this_id = "id:"+data.id;
             $url = "url:" + $THIS_URL;
-            $data = [$type, $this_click, $click_timestamp, $url].join();
+            $new_mode = "new_mode:" + data.mode;
+            $data = [$type, $this_click, $click_timestamp, $this_id, $new_mode, $url].join();
             $user_data += $data + ";";
         }
     });
@@ -171,23 +163,15 @@ function get_big_cell_ajax(current_cell1, current_cell2) {
                 $DELTA[id] = new_delta_value;
             }
 
-            // save the kapr info
-            $type = "type:open_cell_result";
-            $this_click = "value:"+data.id;
-            var dt = new Date();
-            $click_timestamp = "timestamp:" + dt.getTime();
-            $url = "url:" + $THIS_URL;
-            $new_mode = "new_mode" + data.mode;
-            $data = [$type, $this_click, $click_timestamp, $url, $new_mode].join();
-            $user_data += $data + ";";
-
             // save the user click data
             $type = "type:kapr";
             $this_click = "value:" + data.KAPR;
             var dt = new Date();
-            $click_timestamp = "timestamp:" + dt.getTime();
+            $click_timestamp = "timestamp:" + Math.round(dt.getTime()/1000);
+            $this_id = "id:"+data.id;
             $url = "url:" + $THIS_URL;
-            $data = [$type, $this_click, $click_timestamp, $url].join();
+            $new_mode = "new_mode:" + data.mode;
+            $data = [$type, $this_click, $click_timestamp, $this_id, $new_mode, $url].join();
             $user_data += $data + ";";
         }
         return true;
@@ -213,7 +197,7 @@ function make_cell_clickable() {
         $type = "type:open_cell";
         $this_click = "value:" + current_cell.children[0].id;
         var dt = new Date();
-        $click_timestamp = "timestamp:" + dt.getTime();
+        $click_timestamp = "timestamp:" + Math.round(dt.getTime()/1000);
         $url = "url:" + $THIS_URL;
         $data = [$type, $this_click, $click_timestamp, $url].join();
         $user_data += $data + ";";
@@ -232,7 +216,7 @@ function make_cell_clickable() {
         $type = "type:open_cell";
         $this_click = "value:" + first_name_cell.children[0].id;
         var dt = new Date();
-        $click_timestamp = "timestamp: " + dt.getTime();
+        $click_timestamp = "timestamp: " + Math.round(dt.getTime()/1000);
         $url = "url:" + $THIS_URL;
         $data = [$type, $this_click, $click_time, $click_timestamp, $url].join();
         $user_data += $data + ";";
