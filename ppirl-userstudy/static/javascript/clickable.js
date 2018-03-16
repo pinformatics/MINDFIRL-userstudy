@@ -259,6 +259,7 @@ function refresh_delta() {
         // if there is a budget limit, then check if this cell goes over the limit
         if( typeof $KAPR_LIMIT !== 'undefined' && $KAPR_LIMIT > 0 && $KAPR + d > $KAPR_LIMIT) {
             $(this).css('cursor', 'not-allowed');
+            // this.classList.remove("clickable_cell");
         }
         var bar_style = 'width:' + pround(d,2) + '%';
         $("#privacy-risk-delta").attr("style", bar_style);
@@ -275,6 +276,7 @@ function refresh_delta() {
         // if there is a budget limit, then check if this cell goes over the limit
         if( typeof $KAPR_LIMIT !== 'undefined' && $KAPR_LIMIT > 0 && $KAPR + d > $KAPR_LIMIT) {
             $(this).css('cursor', 'not-allowed');
+            // $(this).classList.remove("clickable_big_cell");
         }
         var bar_style = 'width:' + pround(d,2) + '%';
         $("#privacy-risk-delta").attr("style", bar_style);

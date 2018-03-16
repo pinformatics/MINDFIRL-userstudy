@@ -347,7 +347,7 @@ def show_tutorial_clickable_practice():
     for i in range(DATA_CLICKABLE_PRACTICE.size()):
         data_pair = DATA_CLICKABLE_PRACTICE.get_data_pair_by_index(i)
         delta += dm.KAPR_delta(DATASET_TUTORIAL, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*DATA_CLICKABLE_PRACTICE.size())
-
+    
     if session[session['user_id'] + '_mode'] == '4':
         kapr_limit = 20
     else:
