@@ -195,7 +195,7 @@ def open_cell():
     elif get_url_for_index(session['state']) == 'tutorial.show_tutorial_clickable_practice':
         working_data = DATA_CLICKABLE_PRACTICE
         full_data = DATASET_TUTORIAL
-        if session["user_id"] + "_mode" == "4":
+        if r.get(session['user_id']+'_ustudy_mode') == "4":
             kapr_limit = 20
         # float(r.get(session['user_id']+'tutorial_practice_kapr_limit'))
     elif get_url_for_index(session['state']) == 'main_section.show_record_linkage_task':
