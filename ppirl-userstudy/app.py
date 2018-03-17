@@ -435,6 +435,9 @@ def get_id():
 
 @app.route('/flushdb')
 def flush_redis():
+    r.flushdb()
+    return 'redis flushed.'
+
     admin_key = request.args.get("key")
     if r.get('admin_key' + admin_key) is not None:
         r.flushdb()
