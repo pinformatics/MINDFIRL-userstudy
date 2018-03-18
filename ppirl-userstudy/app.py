@@ -195,7 +195,7 @@ def open_cell():
     elif get_url_for_index(session['state']) == 'tutorial.show_tutorial_clickable_practice':
         working_data = DATA_CLICKABLE_PRACTICE
         full_data = DATASET_TUTORIAL
-        if session["user_id"] + "_mode" == "4":
+        if r.get(session['user_id']+'_ustudy_mode') == "4":
             kapr_limit = 20
         # float(r.get(session['user_id']+'tutorial_practice_kapr_limit'))
     elif get_url_for_index(session['state']) == 'main_section.show_record_linkage_task':
@@ -435,6 +435,9 @@ def get_id():
 
 @app.route('/flushdb')
 def flush_redis():
+    r.flushdb()
+    return 'redis flushed.'
+
     admin_key = request.args.get("key")
     if r.get('admin_key' + admin_key) is not None:
         r.flushdb()
@@ -454,4 +457,17 @@ def save_data_choice():
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html')
+
+
+@app.route('/get_ustudy_setting')
+def get_ustudy_setting():
+    user_id = session['user_id']
+    ustudy_mode = r.get(user_id+'_ustudy_mode')
+    ustudy_budget = r.get(user_id+'_ustudy_budget')
+    result = 'mode:'+ustudy_mode+' & budget:'+ustudy_budget
+    ret = {
+        'result': result,
+    }
+    return jsonify(ret)
+
 
