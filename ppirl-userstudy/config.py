@@ -53,6 +53,7 @@ SEQUENCE_MODE4 = [
 SEQUENCE_MODE1 =  [
     'show_introduction',    #0
     'show_introduction2',    #1
+    'pre_survey',
     'tutorial.show_tutorial_rl_pdf',    #2
     'tutorial.show_tutorial_rl_id_1',    #3
     'tutorial.show_tutorial_rl_id_2',    #4
@@ -74,6 +75,7 @@ SEQUENCE_MODE1 =  [
 SEQUENCE_MODE2 =  [
     'show_introduction',    #0
     'show_introduction2',    #1
+    'pre_survey',
     'tutorial.show_tutorial_rl_pdf',    #2
     'tutorial.show_tutorial_rl_id_1',    #3
     'tutorial.show_tutorial_rl_id_2',    #4
@@ -109,6 +111,7 @@ SEQUENCE_MODE2 =  [
 SEQUENCE_MODE3 = [
    'show_introduction',    #0
    'show_introduction2',    #1
+   'pre_survey',
    'tutorial.show_tutorial_rl_pdf',    #2
    'tutorial.show_tutorial_rl_id_1',    #3
    'tutorial.show_tutorial_rl_id_2',    #4
@@ -150,20 +153,20 @@ SEQUENCE = {
     "Mode_4": SEQUENCE_MODE4
 }
 
-pre_survey_switch = False;
+pre_survey_switch = True;
 post_survey_switch = False;
 section_2_switch = False;
 
 for mode in SEQUENCE.keys():
-  values = SEQUENCE[[mode]]
-  if !pre_survey_switch:
+  values = SEQUENCE[mode]
+  if not pre_survey_switch:
     values.remove("pre_survey")
-  if !pre_survey_switch:
+  if not pre_survey_switch:
     values.remove("post_survey")
-  if !section_2_switch:
+  if not section_2_switch:
     values.remove("main_section.show_section2_guide")
     values.remove("main_section.show_section2")
-  SEQUENCE[[mode]] = values
+  SEQUENCE[mode] = values
 
 
 

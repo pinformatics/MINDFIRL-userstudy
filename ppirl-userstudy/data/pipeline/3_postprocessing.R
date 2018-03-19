@@ -51,6 +51,8 @@ starred_data <-
            type = `Record ID`,
            page = type)
 
+
+set.seed(1)
 # table for types corresponding to each group
 df_type_group <- 
   tibble(
@@ -62,68 +64,69 @@ df_type_group <-
                    5L, 5L, 5L, 6L, 6L, 6L, 6L, 6L)
          ) 
 
+# table for groups on each page
+df_page_group <- 
+  tibble(
+    page = c(1L, 1L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 3L, 3L, 3L,
+             3L, 3L, 3L, 4L, 4L, 4L, 4L, 4L, 4L, 5L, 5L, 5L, 5L, 5L, 5L,
+             6L, 6L, 6L, 6L, 6L, 6L),
+    group = c(1L, 21L, 22L, 3L, 4L, 5L, 1L, 2, 3L, 4L, 5L, 6L, 1L, 2, 3L,
+              4L, 5L, 6L, 1L, 2, 3L, 4L, 5L, 6L, 1L, 2, 3L, 4L, 5L, 6L,
+              1L, 21L, 22L, 3L, 4L, 6L)
+  )
+
+df_page_group <- df_page_group %>% as_tibble() %>% mutate_all(as.integer)
+
+# if 2 pick, pick either 21 or 22 such that there are only 2 21s and 2 22s in the table
+df_page_group[df_page_group$group == 2, "group"] <- sample(c(21,21,22,22),4)
+
+# a table for each sample i, to keep removing the types we select in a page,
+# so that they are not available for selection in the next page
+# Basically ensures that all 36 types are selected. 
+df_type_group_i <- df_type_group
+
+# a table to store the selected types in each page  
+df_target_page <- tibble()
+
+for(page_i in 1:6){
+  df_types_in_page_i <- 
+    df_page_group %>% 
+    filter(page == page_i) %>% 
+    left_join(df_type_group_i, "group") %>% 
+    group_by(page, group) %>% 
+    sample_n(1) %>% 
+    ungroup()
+  
+  df_target_page <- 
+    df_target_page %>% 
+    bind_rows(df_types_in_page_i)
+  
+  df_type_group_i <- 
+    df_type_group_i %>% 
+    anti_join(df_types_in_page_i, by = "type")
+}
+
+# create the lookup table by scrambling again (just to ensure the questions are scrambled even by group)
+# the lookup has type and question_number 
+lookup_scrambled <-
+  df_target_page %>% 
+  select(-group) %>% 
+  group_by(page) %>% 
+  sample_n(6) %>% 
+  ungroup() %>% 
+  mutate(qnum = row_number()) %T>%
+  write_csv("scrambled_order.csv") %>% 
+  select(-page)
+
 attention_test <- 
   df_type_group %>% 
   filter(group == 1) %>% 
   pull(type)
 
-set.seed(1)
+
 for(i in 1:10) {
   
-# table for groups on each page
-  df_page_group <- 
-    tibble(
-      page = c(1L, 1L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 3L, 3L, 3L,
-               3L, 3L, 3L, 4L, 4L, 4L, 4L, 4L, 4L, 5L, 5L, 5L, 5L, 5L, 5L,
-               6L, 6L, 6L, 6L, 6L, 6L),
-      group = c(1L, 21L, 22L, 3L, 4L, 5L, 1L, 2, 3L, 4L, 5L, 6L, 1L, 2, 3L,
-                4L, 5L, 6L, 1L, 2, 3L, 4L, 5L, 6L, 1L, 2, 3L, 4L, 5L, 6L,
-                1L, 21L, 22L, 3L, 4L, 6L)
-    )
-  
-# if 2 pick, pick either 21 or 22 such that there are only 2 21s and 2 22s in the table
-  df_page_group[df_page_group$group == 2, "group"] <- sample(c(21,21,22,22),4)
-  
-  df_page_group <- df_page_group %>% as_tibble() %>% mutate_all(as.integer)
-  
-# a table for each sample i, to keep removing the types we select in a page,
-# so that they are not available for selection in the next page
-# Basically ensures that all 36 types are selected. 
-  df_type_group_i <- df_type_group
-  
-# a table to store the selected types in each page  
-  df_target_page <- tibble()
-  
-  for(page_i in 1:6){
-    df_types_in_page_i <- 
-      df_page_group %>% 
-      filter(page == page_i) %>% 
-      left_join(df_type_group_i, "group") %>% 
-      group_by(page, group) %>% 
-      sample_n(1) %>% 
-      ungroup()
-    
-    df_target_page <- 
-      df_target_page %>% 
-      bind_rows(df_types_in_page_i)
-    
-    df_type_group_i <- 
-      df_type_group_i %>% 
-      anti_join(df_types_in_page_i, by = "type")
-  }
-  
-# create the lookup table by scrambling again (just to ensure the questions are scrambled even by group)
-# the lookup has type and question_number 
-  lookup_scrambled <-
-    df_target_page %>% 
-    select(-group) %>% 
-    group_by(page) %>% 
-    sample_n(6) %>% 
-    ungroup() %>% 
-    mutate(qnum = row_number()) %>% 
-    select(-page)
-  
-  
+
   # group by type and get one random pair for each type
   # sampling to ensure different samples get different questions
   ids_table <-

@@ -165,6 +165,10 @@ def show_introduction():
 def show_introduction2():
     return render_template('introduction2.html', uid=str(session['user_id']))
 
+@app.route('/pre_survey')
+@state_machine('pre_survey')
+def pre_survey():
+    return render_template('pre_survey.html', uid=str(session['user_id']))
 
 @app.route('/save_data', methods=['GET', 'POST'])
 def save_data():
