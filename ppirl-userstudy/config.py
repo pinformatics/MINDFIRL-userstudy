@@ -161,7 +161,7 @@ for mode in SEQUENCE.keys():
   values = SEQUENCE[mode]
   if not pre_survey_switch:
     values.remove("pre_survey")
-  if not pre_survey_switch:
+  if not post_survey_switch:
     values.remove("post_survey")
   if not section_2_switch:
     values.remove("main_section.show_section2_guide")

@@ -165,10 +165,17 @@ def show_introduction():
 def show_introduction2():
     return render_template('introduction2.html', uid=str(session['user_id']))
 
-@app.route('/pre_survey')
+@app.route('/pre_survey', methods=['GET', 'POST'])
 @state_machine('pre_survey')
 def pre_survey():
-    return render_template('pre_survey.html', uid=str(session['user_id']))
+    if request.method == 'POST':
+        f = request.form
+        for key in f:
+            store_key = session['user_data'] + "_pre_survey_" + key
+            r.set(store_key, f[key]) 
+        return redirect('/next')
+    if request.method == 'GET':
+        return render_template('pre_survey.html', uid=str(session['user_id']))
 
 @app.route('/save_data', methods=['GET', 'POST'])
 def save_data():
@@ -289,11 +296,6 @@ def next():
     session['state'] += 1
     user_id = session["user_id"]
     r.set("session_"+str(user_id)+"_state", str(session['state']))
-    #timing info on next click 
-    # timing_info = sequence[session['state']-1] + ": " + time.strftime("%a, %d %b %Y %H:%M:%S")
-    # msg = Message(subject='user click: ' + session['user_id'], body=timing_info, recipients=['ppirl.mindfil@gmail.com'])
-    # mail.send(msg)
- 
     return redirect(url_for(get_url_for_index(session['state'])))
 
 
