@@ -48,6 +48,14 @@ function reset_choice_panel() {
     });
 }
 
+function reset_kapr() {
+    $KAPR = 0;
+    $("#privacy-risk-bar").attr("style", 'width:0%');
+    $("#privacy-risk-value").html("0%")
+    $("#privacy-risk-delta").attr("style", 'width: 0%');
+    $("#privacy-risk-delta-value").html(" ")
+}
+
 function get_summitted_answers() {
     var c = $(".ion-android-radio-button-on").each(function() {
         $type = "type:final_answer";
@@ -144,6 +152,9 @@ $(function() {
                     make_cell_clickable();
                     refresh_delta();
                     reset_choice_panel();
+                    if($THIS_URL == '/section2') {
+                        reset_kapr();
+                    }
                     if(data['is_last_page'] == 0) {
                         $('#button_next_rl').attr("disabled", false);
                     }

@@ -341,6 +341,9 @@ class DataPairList(object):
             self._id_hash[pair_num] = location
         self.idx = 0
 
+        self._size = len(self._data)
+        self._kapr_size = self._size
+
 
     def __iter__(self):
         return self
@@ -376,6 +379,8 @@ class DataPairList(object):
         location = len(self._data)
         self._data.append(DataPair(dp[0], dp[1]))
         self._id_hash[pair_num] = location
+
+        self._size += 1
 
 
     def get_data_pair(self, pair_num):
@@ -425,12 +430,17 @@ class DataPairList(object):
     def get_raw_data(self):
         return self._data_raw
 
-
     def get_size(self):
-        return len(self._data)
+        return self._size
 
     def size(self):
-        return len(self._data)
+        return self._size
+
+    def get_kapr_size(self):
+        return self._kapr_size
+
+    def set_kapr_size(self, size=6):
+        self._kapr_size = size
 
 
 
@@ -579,8 +589,8 @@ def open_cell(user_key, full_data, working_data, pair_num, attr_num, mode, r, ka
     new_display_status = copy.deepcopy(old_display_status1)
     new_display_status[attr_id] = 'F' if attr_display_next[0] == 'full' else 'P'
 
-    old_KAPR = get_KAPR_for_dp(full_data, pair, old_display_status1, 2*working_data.size())
-    KAPR = get_KAPR_for_dp(full_data, pair, new_display_status, 2*working_data.size())
+    old_KAPR = get_KAPR_for_dp(full_data, pair, old_display_status1, 2*working_data.get_kapr_size())
+    KAPR = get_KAPR_for_dp(full_data, pair, new_display_status, 2*working_data.get_kapr_size())
     KAPRINC = KAPR - old_KAPR
     KAPR_key = user_key + '_KAPR'
     overall_KAPR = 100*(float(r.get(KAPR_key)) + KAPRINC)
@@ -604,7 +614,7 @@ def open_cell(user_key, full_data, working_data, pair_num, attr_num, mode, r, ka
     ret['result'] = 'success'
 
     # refresh the delta of KAPR
-    new_delta_list = KAPR_delta(full_data, pair, new_display_status, 2*working_data.size())
+    new_delta_list = KAPR_delta(full_data, pair, new_display_status, 2*working_data.get_kapr_size())
     ret['new_delta'] = new_delta_list
 
     return ret

@@ -228,8 +228,8 @@ def show_section2():
 
     # if the user is in this section the first time, or coming back
     first_flag = True
-    page_size_key = str(session['user_id']) + '_s2_page_size'
-    current_page_key = str(session['user_id']) + '_s2_current_page'
+    page_size_key = str(session['user_id']) + '_section2_page_size'
+    current_page_key = str(session['user_id']) + '_section2_current_page'
     if (not r.get(current_page_key) is None) and (not r.get(current_page_key) == '0'):
         page_size = int(r.get(page_size_key))
         current_page = int(r.get(current_page_key))
@@ -261,10 +261,11 @@ def show_section2():
             r.set(key, 'M')
 
     # get the delta information
+    working_data.set_kapr_size(6)
     delta = list()
     for i in range(config.DATA_PAIR_PER_PAGE*current_page, config.DATA_PAIR_PER_PAGE*(current_page+1)):
         data_pair = working_data.get_data_pair_by_index(i)
-        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*working_data.size())
+        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*working_data.get_kapr_size())
 
     # load KAPR LIMIT from url parameter
     if ustudy_budget == 'moderate' or ustudy_budget == 'minimum':
@@ -278,8 +279,8 @@ def show_section2():
         icons=icons, 
         ids=ids, 
         title='Section 2', 
-        thisurl='/record_linkage', 
-        page_number=str(current_page+1)+"/6", 
+        thisurl='/section2', 
+        page_number=str(current_page+1), 
         delta=delta, 
         kapr = KAPR,
         kapr_limit = kapr_limit, 
@@ -291,23 +292,32 @@ def show_section2():
 
 @main_section.route('/section2/next')
 def show_section2_next():
+    ustudy_mode = int(r.get(session['user_id']+'_ustudy_mode'))
+    data_mode = 'masked'
+    if ustudy_mode == 1:
+        data_mode = 'full'
+
     working_data = get_main_section_data(session['user_id'], 2)
 
-    dp_list_size = working_data.get_size()
-    current_page = int(r.get(session['user_id']+'_section2_current_page'))+1
-    r.incr(session['user_id']+'_section2_current_page')
-    page_size = int(r.get(session['user_id'] + '_section2_page_size'))
+    page_size = int(r.get(str(session['user_id']) + '_section2_page_size'))
+    current_page = int(r.get(str(session['user_id'])+'_section2_current_page'))+1
+    if current_page >= page_size:
+        ret = {
+            'result': 'no more pages'
+        }
+        return jsonify(ret)
+    r.incr(str(session['user_id'])+'_section2_current_page')
+    
     is_last_page = 0
     if current_page == page_size - 1:
         is_last_page = 1
 
-    pairs_formatted = working_data.get_data_display('masked')[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
+    pairs_formatted = working_data.get_data_display(data_mode)[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = working_data.get_icons()[config.DATA_PAIR_PER_PAGE*current_page:config.DATA_PAIR_PER_PAGE*(current_page+1)]
     ids_list = working_data.get_ids()[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
     ids = zip(ids_list[0::2], ids_list[1::2])
 
-    # KAPR - K-Anonymity privacy risk
     KAPR_key = str(session['user_id']) + '_KAPR'
     KAPR = 0
     r.set(KAPR_key, KAPR)
@@ -315,20 +325,31 @@ def show_section2_next():
     # set the user-display-status as masked for all cell
     for id1 in ids_list:
         for i in range(6):
-            key = session['user_id'] + '-' + id1[i]
+            key = str(session['user_id']) + '-' + id1[i]
             r.set(key, 'M')
 
+    # get the delta information
+    #delta = dm.get_delta_for_dataset(DATASET, working_data.get_raw_data()[12:])
     delta = list()
     for i in range(config.DATA_PAIR_PER_PAGE*current_page, config.DATA_PAIR_PER_PAGE*(current_page+1)):
         data_pair = working_data.get_data_pair_by_index(i)
-        delta += dm.KAPR_delta(DATASET2, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*dp_list_size)
+        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*working_data.get_kapr_size())
     # make delta to be a dict
     delta_dict = dict()
     for d in delta:
         delta_dict[d[0]] = d[1]
 
-    page_content = render_template('record_linkage_next.html', data=data, icons=icons, ids=ids, pair_num_base=6*current_page+1)
+    page_content = render_template('record_linkage_next.html', 
+        data=data, 
+        icons=icons, 
+        ids=ids, 
+        pair_num_base=6*current_page+1, 
+        ustudy_mode=ustudy_mode
+    )
+
     ret = {
+        'result': 'success',
+        'ustudy_mode': ustudy_mode,
         'delta': delta_dict,
         'is_last_page': is_last_page,
         'page_number': 'page: ' + str(current_page+1),
