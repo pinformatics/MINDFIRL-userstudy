@@ -12,6 +12,7 @@ else:
 SEQUENCE_MODE4 = [
     'show_introduction',    #0
     'show_introduction2',    #1
+    'pre_survey',
     'tutorial.show_tutorial_rl_pdf',    #2
     'tutorial.show_tutorial_rl_id_1',    #3
     'tutorial.show_tutorial_rl_id_2',    #4
@@ -43,8 +44,9 @@ SEQUENCE_MODE4 = [
     'tutorial.show_tutorial_clickable_practice', #29 DATA_CLICKABLE_PRACTICE
     'main_section.show_section1_guide',    #30
     'main_section.show_record_linkage_task',    #31
-    #'main_section.show_section2_guide',    #32
-    #'main_section.show_section2',    #33
+    'main_section.show_section2_guide',    #32
+    'main_section.show_section2',    #33
+    'post_survey',
     'show_thankyou'    #34
 ]
 
@@ -63,8 +65,9 @@ SEQUENCE_MODE1 =  [
     'tutorial.show_tutorial_privacy_practice',
     'main_section.show_section1_guide',    #30
     'main_section.show_record_linkage_task',    #31
-    #'main_section.show_section2_guide',    #32
-    #'main_section.show_section2',    #33
+    'main_section.show_section2_guide',    #32
+    'main_section.show_section2',    #33
+    'post_survey',
     'show_thankyou' 
 ]
 
@@ -97,8 +100,9 @@ SEQUENCE_MODE2 =  [
     'tutorial.show_tutorial_clickable_practice', #29 DATA_CLICKABLE_PRACTICE
     'main_section.show_section1_guide',    #30
     'main_section.show_record_linkage_task',    #31
-    #'main_section.show_section2_guide',    #32
-    #'main_section.show_section2',    #33
+    'main_section.show_section2_guide',    #32
+    'main_section.show_section2',    #33
+    'post_survey',
     'show_thankyou'    #34
 ]
 
@@ -133,6 +137,9 @@ SEQUENCE_MODE3 = [
    'tutorial.show_tutorial_clickable_practice', #29 DATA_CLICKABLE_PRACTICE
    'main_section.show_section1_guide',    #30
    'main_section.show_record_linkage_task',
+   'main_section.show_section2_guide',    #32
+   'main_section.show_section2',    #33
+   'post_survey',
    'show_thankyou' 
 ]
 
@@ -142,6 +149,22 @@ SEQUENCE = {
     "Mode_3": SEQUENCE_MODE3,
     "Mode_4": SEQUENCE_MODE4
 }
+
+pre_survey_switch = False;
+post_survey_switch = False;
+section_2_switch = False;
+
+for mode in SEQUENCE.keys():
+  values = SEQUENCE[[mode]]
+  if !pre_survey_switch:
+    values.remove("pre_survey")
+  if !pre_survey_switch:
+    values.remove("post_survey")
+  if !section_2_switch:
+    values.remove("main_section.show_section2_guide")
+    values.remove("main_section.show_section2")
+  SEQUENCE[[mode]] = values
+
 
 
 
