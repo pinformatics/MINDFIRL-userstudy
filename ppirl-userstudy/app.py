@@ -207,8 +207,11 @@ def open_cell():
         full_data = DATASET
         kapr_limit = float(r.get(str(session['user_id'])+'section1_kapr_limit'))
     else:
+        current_page = int(r.get(session['user_id']+'_section2_current_page'))
         working_data = get_main_section_data(str(session['user_id']), 2)
+        working_data = working_data[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
         full_data = DATASET2
+        kapr_limit = float(r.get(str(session['user_id'])+'section2_kapr_limit'))
 
     id1 = request.args.get('id1')
     id2 = request.args.get('id2')
@@ -245,6 +248,7 @@ def open_big_cell():
     else:
         working_data = get_main_section_data(session['user_id'], 2)
         full_data = DATASET2
+        kapr_limit = float(r.get(str(session['user_id'])+'section2_kapr_limit'))
 
     id1 = request.args.get('id1')
     id2 = request.args.get('id2')

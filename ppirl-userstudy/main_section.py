@@ -214,48 +214,79 @@ def show_section2():
     section 2 contains 300 questions. The students don't need to finish them all, it just for those who 
     finish section 1 very fast.
     """
-    working_data = get_main_section_data(session['user_id'], 2)
+    ustudy_mode = int(r.get(session['user_id']+'_ustudy_mode'))
+    ustudy_budget = r.get(session['user_id']+'_ustudy_budget')
 
+    data_mode = 'masked'
+    if ustudy_mode == 1:
+        data_mode = 'full'
+
+    working_data = get_main_section_data(str(session['user_id']), 2)
     dp_size = config.DATA_PAIR_PER_PAGE
     attribute_size = 6
     dp_list_size = working_data.get_size()
-    page_size = int(math.ceil(1.0*dp_list_size/config.DATA_PAIR_PER_PAGE))
-    page_size_key = session['user_id'] + '_section2_page_size'
-    r.set(page_size_key, str(page_size))
-    current_page_key = session['user_id'] + '_section2_current_page'
-    r.set(current_page_key, '0')
 
-    pairs_formatted = working_data.get_data_display('masked')[0:2*dp_size]
+    # if the user is in this section the first time, or coming back
+    first_flag = True
+    page_size_key = str(session['user_id']) + '_s2_page_size'
+    current_page_key = str(session['user_id']) + '_s2_current_page'
+    if (not r.get(current_page_key) is None) and (not r.get(current_page_key) == '0'):
+        page_size = int(r.get(page_size_key))
+        current_page = int(r.get(current_page_key))
+        first_flag = False
+    else:
+        current_page = 0
+        page_size = int(math.ceil(1.0*dp_list_size/config.DATA_PAIR_PER_PAGE))
+        r.set(page_size_key, str(page_size))
+        r.set(current_page_key, current_page)
+
+    pairs_formatted = working_data.get_data_display(data_mode)[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
-    icons = working_data.get_icons()[0:dp_size]
-    ids_list = working_data.get_ids()[0:2*dp_size]
+    icons = working_data.get_icons()[config.DATA_PAIR_PER_PAGE*current_page:config.DATA_PAIR_PER_PAGE*(current_page+1)]
+    ids_list = working_data.get_ids()[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
     ids = zip(ids_list[0::2], ids_list[1::2])
 
-    # percentage of character disclosure
-    """
-    mindfil_total_characters_key = session['user_id'] + '_mindfil_total_characters'
-    r.set(mindfil_total_characters_key, total_characters)
-    mindfil_disclosed_characters_key = session['user_id'] + '_mindfil_disclosed_characters'
-    r.set(mindfil_disclosed_characters_key, 0)
-    """
-
     # KAPR - K-Anonymity privacy risk
-    KAPR_key = session['user_id'] + '_KAPR'
-    r.set(KAPR_key, 0)
+    KAPR_key = str(session['user_id']) + '_KAPR'
+    if first_flag:
+        KAPR = 0
+        r.set(KAPR_key, KAPR)
+    else:
+        KAPR = round(100*float(r.get(KAPR_key)), 1)
 
     # set the user-display-status as masked for all cell
     for id1 in ids_list:
         for i in range(attribute_size):
-            key = session['user_id'] + '-' + id1[i]
+            key = str(session['user_id']) + '-' + id1[i]
             r.set(key, 'M')
 
     # get the delta information
     delta = list()
-    for i in range(dp_size):
+    for i in range(config.DATA_PAIR_PER_PAGE*current_page, config.DATA_PAIR_PER_PAGE*(current_page+1)):
         data_pair = working_data.get_data_pair_by_index(i)
-        delta += dm.KAPR_delta(DATASET2, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*dp_list_size)
+        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*working_data.size())
 
-    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 2', thisurl='/section2', page_number="1", delta=delta, kapr_limit=0, uid=str(session['user_id']))
+    # load KAPR LIMIT from url parameter
+    if ustudy_budget == 'moderate' or ustudy_budget == 'minimum':
+        kapr_limit = dm.get_kaprlimit(DATASET, working_data, ustudy_budget)
+    else:
+        kapr_limit = float(ustudy_budget)
+    r.set(str(session['user_id'])+'section2_kapr_limit', kapr_limit)
+
+    return render_template('record_linkage_ppirl.html', 
+        data=data, 
+        icons=icons, 
+        ids=ids, 
+        title='Section 2', 
+        thisurl='/record_linkage', 
+        page_number=str(current_page+1)+"/6", 
+        delta=delta, 
+        kapr = KAPR,
+        kapr_limit = kapr_limit, 
+        uid=str(session['user_id']),
+        pair_num_base=6*current_page+1,
+        ustudy_mode=ustudy_mode
+    )
 
 
 @main_section.route('/section2/next')
@@ -275,6 +306,11 @@ def show_section2_next():
     icons = working_data.get_icons()[config.DATA_PAIR_PER_PAGE*current_page:config.DATA_PAIR_PER_PAGE*(current_page+1)]
     ids_list = working_data.get_ids()[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
     ids = zip(ids_list[0::2], ids_list[1::2])
+
+    # KAPR - K-Anonymity privacy risk
+    KAPR_key = str(session['user_id']) + '_KAPR'
+    KAPR = 0
+    r.set(KAPR_key, KAPR)
 
     # set the user-display-status as masked for all cell
     for id1 in ids_list:
