@@ -153,7 +153,7 @@ SEQUENCE = {
     "Mode_4": SEQUENCE_MODE4
 }
 
-pre_survey_switch = True;
+pre_survey_switch = False;
 post_survey_switch = False;
 section_2_switch = False;
 
