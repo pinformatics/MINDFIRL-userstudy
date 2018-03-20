@@ -13,13 +13,18 @@ def main(filename, filename2):
         if line and line != '\n':
             item_list = line.split(';')
             for item in item_list:
-                if item and item != '\n':
+                if item and item.strip() != '\n':
                     item_dict = dict()
                     kv_list = item.split(',')
+                    if len(kv_list) < 2:
+                        continue
                     for kv in kv_list:
                         k = kv.split(':')[0]
                         v = kv.split(':')[1]
                         item_dict[k] = v
+                    if 'uid' not in item_dict or 'type' not in item_dict \
+                        or 'value' not in item_dict or 'timestamp' not in item_dict:
+                        continue
                     output = item_dict['uid'] + ',' + item_dict['type'] + \
                      ',' + item_dict['value'] + ',' + item_dict['timestamp'] + ','
                     first_flag = True
