@@ -240,6 +240,8 @@ def show_section2():
     if (not r.get(current_page_key) is None) and (not r.get(current_page_key) == '0'):
         page_size = int(r.get(page_size_key))
         current_page = int(r.get(current_page_key))
+        if current_page >= page_size or (current_page+1)*6 > working_data.size():
+            return redirect(url_for('next'))
         first_flag = False
     else:
         current_page = 0
@@ -308,7 +310,7 @@ def show_section2_next():
 
     page_size = int(r.get(str(session['user_id']) + '_section2_page_size'))
     current_page = int(r.get(str(session['user_id'])+'_section2_current_page'))+1
-    if current_page >= page_size:
+    if current_page >= page_size or (current_page+1)*6 > working_data.size():
         ret = {
             'result': 'no more pages'
         }
