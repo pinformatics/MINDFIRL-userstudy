@@ -1,38 +1,24 @@
 pacman::p_load(tidyverse, rebus)
 
-raw_user_data <- read_csv("raw_data.csv")
+raw_user_data <- read_csv("mindfil4-3-20.csv")
 actual_questions_data <- read_csv("main_section_full.csv")
 
 raw_user_data %>% pull(type) %>% unique()
 
 questions_info <- 
   actual_questions_data %>% 
-  select(question = `Group ID`, 
-         actual_answer = Same,
-         question_type = `Record ID`) %>% 
+  select(q_id = `Group ID`, 
+         q_answer = Same,
+         q_type = `Record ID`) %>% 
+  group_by(q_id) %>% 
+  slice(1) %>% 
+  ungroup() %>% 
   mutate_all(as.integer)
 
-# user_kapr <- 
-  # raw_user_data %>% 
-  # filter(type %in% c("open_cell", "kapr")) %>% 
-  # group_by(uid) %>% 
-  # arrange(timestamp) %>% 
-  # spread(type, value) %>% 
-  # mutate(timedelta = lead(timestamp) - (timestamp),
-  #        group_kapr = if_else((timedelta < 50), 1, 0) %>% if_else(is.na(.), 0, .) %>% cumsum()) %>% 
-  # group_by(uid, group_kapr) %>% 
-  # separate(open_cell, into = c("question", "cell"), sep = "-", convert = T) %>% 
-  # mutate(open_cell = str_c(question, cell)) %>% 
-  # summarise(kapr = last(kapr[!(kapr %>% is.na())]),
-  #           cell = first(open_cell) %>% str_extract(one_or_more(DIGIT)),
-  #           timestamp = first(timestamp),
-  #           timedelta = first(timedelta)) %>% 
-  # ungroup() %>% 
-  # mutate(kapr = lead(kapr) - kapr)  
-
-
+# each cell click info
 raw_user_data %>% 
-  filter(type == "kapr") %>% 
+  filter(type == "kapr",
+         str_detect(extra, "record_linkage")) %>% 
   mutate(url = str_extract(extra, "url" %R% one_or_more(or(PUNCT, WRD))) %>% str_replace("url:", ""),
          open_cell = str_extract(extra, "id:" %R% one_or_more(or(DGT, literal("-")))) %>% str_replace("id:", ""),
          id = str_extract(open_cell, one_or_more(DGT)),
@@ -45,52 +31,84 @@ raw_user_data %>%
            column_id == 4 ~ "sex",
            TRUE ~ "race"
          )) %>% 
-  arrange(uid, timestamp)
+  arrange(uid, timestamp) %>% 
+  select(u_id = uid, kapr = value, q_id = id, column)
 
-raw_user_data %>% 
-  filter(type == "kapr") %>% 
+
+# kapr for each user
+user_kapr <- 
+  raw_user_data %>% 
+  filter(type == "kapr", 
+         str_detect(extra, "record_linkage")) %>% 
   mutate(mode_url = extra %>% str_replace("id:" %R% one_or_more(or(DGT,PUNCT)), ""),
          value = value %>% as.numeric()) %>% 
-  group_by(uid, mode_url) %>% 
+  group_by(uid) %>% 
   filter(value == max(value)) %>% 
   ungroup() %>% 
-  arrange(uid)
+  arrange(uid) %>% 
+  select(u_id = uid, kapr = value)
 
+attention_test <- c(1,7,13,19,25,31)
+
+
+# question level user
 user_questions_data <- 
   raw_user_data %>% 
-  filter(type == "final_answer") %>% 
-  separate(value, into = c("question", "choice"), sep = "a", convert = T) %>% 
-  mutate(question = question %>% str_replace("p", "") %>% as.integer(),
+  rename(u_id = uid) %>% 
+  filter(type == "final_answer",
+         str_detect(extra, "record_linkage")) %>%
+  separate(value, into = c("q_id", "choice"), sep = "a", convert = T) %>% 
+  mutate(q_id = q_id %>% str_replace("p", "") %>% as.integer(),
          confidence = if_else(choice > 3, choice - 3, abs(choice - 4)),
          user_answer = if_else(choice > 3, 1, 0),
-         mode = str_extract(extra, literal("new_mode") %R% one_or_more(or(PUNCT, ALPHA)))) %>% 
-  left_join(questions_info, by = "question") %>% 
-  mutate(grade = ifelse(user_answer == actual_answer, 1, 0),
-         sample = as.integer(uid)%%10) %>% 
-  select(-type, -timestamp, -extra) %>% 
-  mutate_all(as.integer)
-
-
-raw_user_data %>% 
-  filter(str_detect(extra, "mode") & str_detect(extra, "record_linkage")) %>%
-  mutate(mode = str_extract(extra, literal("new_mode") %R% one_or_more(or(PUNCT, ALPHA))), 
-         value = value %>% as.numeric()) %>% 
-  group_by(uid, extra) %>% 
-  filter(value == max(value))
+         attention = q_id %in% attention_test) %>% 
+  group_by(u_id, q_id) %>% 
+  filter(timestamp == max(timestamp)) %>% 
+  ungroup() %>% 
+  left_join(questions_info, by = "q_id") %>% 
+  mutate(grade = ifelse(user_answer == q_answer, 1, 0),
+         sample = as.integer(u_id)%%10) %>% 
+  select(-type,-timestamp, -extra) %>% 
+  mutate_if(is.character,as.integer)
 
 
 
-attention_test = c(1,7,13,19,25,31)
+# raw_user_data %>% 
+#   filter(str_detect(extra, "mode") & str_detect(extra, "record_linkage")) %>%
+#   mutate(mode = str_extract(extra, literal("new_mode") %R% one_or_more(or(PUNCT, ALPHA))), 
+#          value = value %>% as.numeric()) %>% 
+#   group_by(uid, extra) %>% 
+#   filter(value == max(value))
 
-user_questions_data %>% 
-  group_by(uid, sample) %>% 
+
+# attention_test = c(1,7,13,19,25,31)
+
+key_info <- 
+  user_questions_data %>% 
+  group_by(u_id, sample) %>% 
   summarise(grade36 = sum(grade),
-            grade30 = sum(grade[!(question_type %in% attention_test)]),
-            percent_attention = mean(grade[question_type %in% attention_test]),
-            percent_attention = ifelse(is.nan(percent_attention), 1, 0),
+            grade30 = sum(grade[!(q_type %in% attention_test)]),
+            percent_attention = mean(grade[q_type %in% attention_test]),
+            percent_attention = ifelse(is.nan(percent_attention), 1, percent_attention),
             percent36 = mean(grade)*100,
-            percent30 = grade30*100/30,
+            percent30 = mean(grade[!(q_type %in% attention_test)]) *100,
             mean_confidence = mean(confidence),
             mean_confidence_right = mean(confidence[grade == 1]),
-            mean_confidence_wrong = mean(confidence[grade == 0]))
+            mean_confidence_wrong = mean(confidence[grade == 0])) %>% 
+  left_join(user_kapr, "u_id")
 
+
+key_info %>% 
+  filter(u_id != 2) %>% 
+  mutate(mode = str_sub(u_id,1,1)) %>% 
+  group_by(mode) %>% 
+  summarise_all(mean) %>% 
+  View
+
+
+
+key_info %>% 
+  filter(u_id != 2) %>% 
+  mutate(mode = str_sub(u_id,1,1)) %>% 
+  group_by(mode) %>% 
+  summarise(n = n())
