@@ -109,8 +109,6 @@ def index():
         session['state'] = 0
     else:
         session['state'] = index
-    
-    
 
     # saving user data
     data = {
@@ -118,7 +116,9 @@ def index():
         'type': 'session_start',
         'value': int(time.time()),
         'timestamp': int(time.time()),
-        'source': 'server'
+        'source': 'server',
+        'ustudy_mode': ustudy_mode,
+        'ustudy_budget': ustudy_budget
     }
     r.set(user_data_key, ud.format_user_data(data))
 
@@ -348,20 +348,6 @@ def show_thankyou():
         'source': 'server'
     }
     r.append(user_data_key, ud.format_user_data(session_end))
-
-    # grading section 1
-    user_data = r.get(user_data_key)
-    data = ud.parse_user_data(user_data)
-    result = ud.grade_final_answer(data, get_main_section_data(session['user_id'], 1))
-    # saving user data
-    performance1 = {
-        'uid': session['user_id'],
-        'type': 'performance1',
-        'value': str(result[0]) + ' out of ' + str(result[1]),
-        'timestamp': int(time.time()),
-        'source': 'server'
-    }
-    r.append(user_data_key, ud.format_user_data(performance1))
 
     # grading section 2
     user_data_key = session['user_id'] + '_user_data'
