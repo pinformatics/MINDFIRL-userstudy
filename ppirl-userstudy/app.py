@@ -109,8 +109,6 @@ def index():
         session['state'] = 0
     else:
         session['state'] = index
-    
-    
 
     # saving user data
     data = {
@@ -118,7 +116,9 @@ def index():
         'type': 'session_start',
         'value': int(time.time()),
         'timestamp': int(time.time()),
-        'source': 'server'
+        'source': 'server',
+        'ustudy_mode': ustudy_mode,
+        'ustudy_budget': ustudy_budget
     }
     r.set(user_data_key, ud.format_user_data(data))
 
