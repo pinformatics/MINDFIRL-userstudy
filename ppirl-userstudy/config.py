@@ -45,6 +45,7 @@ SEQUENCE_MODE4 = [
     'main_section.show_section1_guide',    #30
     'main_section.show_record_linkage_task',    #31
     'main_section.show_section2_guide',    #32
+    'main_section.show_section2_budget',
     'main_section.show_section2',    #33
     'post_survey',
     'show_thankyou'    #34
@@ -166,6 +167,8 @@ for mode in SEQUENCE.keys():
   if not section_2_switch:
     values.remove("main_section.show_section2_guide")
     values.remove("main_section.show_section2")
+    if 'main_section.show_section2_budget' in values:
+      values.remove('main_section.show_section2_budget')
   SEQUENCE[mode] = values
 
 
