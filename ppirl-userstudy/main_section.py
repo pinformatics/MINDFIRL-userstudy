@@ -213,6 +213,11 @@ def show_section2_guide():
 
     return render_template('section2_guide.html', uid=str(session['user_id']))
 
+@main_section.route('/section2_budget')
+@state_machine('show_section2_budget')
+def show_section2_budget():
+    return render_template('section2_budget.html', uid=str(session['user_id']))
+
 
 @main_section.route('/section2')
 @state_machine('show_section2')
