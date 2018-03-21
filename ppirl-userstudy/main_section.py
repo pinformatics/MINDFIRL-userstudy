@@ -196,13 +196,20 @@ def show_record_linkage_next():
 @main_section.route('/section2_guide')
 @state_machine('show_section2_guide')
 def show_section2_guide():
-    # grading section 1
     user_data_key = session['user_id'] + '_user_data'
+    # grading section 1
     user_data = r.get(user_data_key)
     data = ud.parse_user_data(user_data)
     result = ud.grade_final_answer(data, get_main_section_data(session['user_id'], 1))
-    performance1 = 'type:performance1,content:' + str(result[0]) + ' out of ' + str(result[1]) + ';\n'
-    r.append(user_data_key, performance1)
+    # saving user data
+    performance1 = {
+        'uid': session['user_id'],
+        'type': 'performance1',
+        'value': str(result[0]) + ' out of ' + str(result[1]),
+        'timestamp': int(time.time()),
+        'source': 'server'
+    }
+    r.append(user_data_key, ud.format_user_data(performance1))
 
     return render_template('section2_guide.html', uid=str(session['user_id']))
 
