@@ -136,7 +136,7 @@ function all_questions_answered() {
     5. enable the button
 */
 $(function() {
-    $('#button_next_rl').bind('click', function() {
+    $('#submit_grade').bind('click', function() {
         if( !all_questions_answered() ) {
             alert("Please answer all questions to continue.");
         }
@@ -150,10 +150,12 @@ $(function() {
             $data = [$type, $value, $click_timestamp, $url].join()
             $user_data += $data + ";";
 
-            $('#button_next_rl').attr("disabled", "disabled");
+            // $('#button_next_rl').attr("disabled", "disabled");
             get_summitted_answers();
             post($SCRIPT_ROOT+'/save_data', $user_data, "post");
             $user_data = "";
+
+
             $.getJSON('/feedback_main_section', get_responses(), function(data) {
                 var feedback_message = data.result;
                 var wrong_ids = data.wrong_ids;
@@ -177,46 +179,68 @@ $(function() {
                 var re = /\d+/g; 
                 page = parseInt(page.match(re)[0]);
                 if(expenditure < 40*page/6){
-                    feedback_message += "You might want to consider opening more relevant information if it would help you get more questions right.";
+                    // feedback_message += "You might want to consider opening more relevant information if it would help you get more questions right.";
                 } else{
-                    feedback_message += "Consider opening the right cells with relevant information";
+                    // feedback_message += "Consider opening the right cells with relevant information";
                 }
                 
-                alert(feedback_message);
+                $("#feedback").text(feedback_message);
+                $('#submit_grade').attr("disabled", "disabled");
+                $('#submit_grade').css("display", "none");
 
-                $.ajax({
-                    url: $SCRIPT_ROOT + $THIS_URL + '/next',
-                    data: {},
-                    error: function() {},
-                    dataType: 'json',
-                    success: function(data) {
-                        if(data['result'] != 'success') {
-                            alert('You have finished this section.');
-                            $(window).off("beforeunload");
-                            window.location.href = $NEXT_URL;
-                        }
-                        // update delta
-                        $DELTA = data['delta'];
-                        // update table content
-                        $("#table_content").html(data['page_content']);
-                        // update page number
-                        $("#page-number").html(data['page_number']);
-                        make_cell_clickable();
-                        refresh_delta();
-                        reset_choice_panel();
-                        if(data['is_last_page'] == 0) {
-                            $('#button_next_rl').attr("disabled", false);
-                        }
-                        else {
-                            $('#button_next_rl').css("display", "none");
-                            $('#button_next').css("display", "inline");
-                        }
-                    },
-                    type: 'GET'
-                });
+                //if not last page
+                // if(data['is_last_page'] == 0) {
+                //     $('#button_next_rl').attr("disabled", false);
+                // } else {
+                //     $('#button_next_rl').css("display", "none");
+                //     $('#button_next').css("display", "inline");
+                // }
+
             });
                         
         }
         return false;
     });
 });
+
+$(function() {
+    $('#button_next_rl').bind('click', function() {
+        $.ajax({
+            url: $SCRIPT_ROOT + $THIS_URL + '/next',
+            data: {},
+            error: function() {},
+            dataType: 'json',
+            success: function(data) {
+                if(data['result'] != 'success') {
+                    alert('You have finished this section.');
+                    $(window).off("beforeunload");
+                    window.location.href = $NEXT_URL;
+                }
+                // update delta
+                $DELTA = data['delta'];
+                // update table content
+                $("#table_content").html(data['page_content']);
+                // update page number
+                $("#page-number").html(data['page_number']);
+                make_cell_clickable();
+                refresh_delta();
+                reset_choice_panel();
+                $('#submit_grade').attr("disabled", false);
+                $('#submit_grade').css("display", "inline");
+
+                //if not last page
+                if(data['is_last_page'] == 0) {
+                    $('#button_next_rl').attr("disabled", false);
+                } //else if last page
+                else {
+                    $('#button_next_rl').css("display", "none");
+                    $('#button_next').css("display", "inline");
+                }
+            },
+            type: 'GET'
+        });
+
+    });
+});
+
+                
