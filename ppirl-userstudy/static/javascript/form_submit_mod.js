@@ -185,16 +185,25 @@ $(function() {
                 }
                 
                 $("#feedback").text(feedback_message);
+                if(right_ids.length == 6){
+                    $("#feedback").css("color","#006606");
+                } else {
+                    $("#feedback").css("color","#660000");    
+                }
+                
                 $('#submit_grade').attr("disabled", "disabled");
                 $('#submit_grade').css("display", "none");
+                disable_choice_panel();
 
-                //if not last page
-                // if(data['is_last_page'] == 0) {
-                //     $('#button_next_rl').attr("disabled", false);
-                // } else {
-                //     $('#button_next_rl').css("display", "none");
-                //     $('#button_next').css("display", "inline");
-                // }
+                // if not last page
+                if(page != 6) {
+                    $('#button_next_rl').attr("disabled", false);
+                    $('#button_next_rl').css("display", "inline");
+                } else {
+                    $('#button_next_rl').attr("disabled", "disabled");
+                    $('#button_next_rl').css("display", "none");
+                    $('#button_next').css("display", "inline");
+                }
 
             });
                         
@@ -205,6 +214,8 @@ $(function() {
 
 $(function() {
     $('#button_next_rl').bind('click', function() {
+        $('#button_next_rl').attr("disabled", "disabled");
+        $('#button_next_rl').css("display", "none");
         $.ajax({
             url: $SCRIPT_ROOT + $THIS_URL + '/next',
             data: {},
@@ -225,17 +236,19 @@ $(function() {
                 make_cell_clickable();
                 refresh_delta();
                 reset_choice_panel();
+                $('#feedback').text("");
                 $('#submit_grade').attr("disabled", false);
                 $('#submit_grade').css("display", "inline");
 
-                //if not last page
-                if(data['is_last_page'] == 0) {
-                    $('#button_next_rl').attr("disabled", false);
-                } //else if last page
-                else {
-                    $('#button_next_rl').css("display", "none");
-                    $('#button_next').css("display", "inline");
-                }
+                // //if not last page
+                // if(data['is_last_page'] == 0) {
+                //     $('#button_next_rl').attr("disabled", false);
+                //      $('#button_next_rl').css("display", "inline");
+                // } //else if last page
+                // else {
+                //     $('#button_next_rl').css("display", "none");
+                //     $('#button_next').css("display", "inline");
+                // }
             },
             type: 'GET'
         });
