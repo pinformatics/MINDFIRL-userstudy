@@ -154,9 +154,9 @@ SEQUENCE = {
     "Mode_4": SEQUENCE_MODE4
 }
 
-pre_survey_switch = False;
-post_survey_switch = False;
-section_2_switch = True;
+pre_survey_switch = True
+post_survey_switch = False
+section_2_switch = True
 
 for mode in SEQUENCE.keys():
   values = SEQUENCE[mode]
