@@ -156,6 +156,20 @@ $(function() {
             $user_data = "";
             $.getJSON('/feedback_main_section', get_responses(), function(data) {
                 var feedback_message = data.result;
+                var wrong_ids = data.wrong_ids;
+                var right_ids = data.right_ids;
+                // console.log(wrong_ids);
+                for (var i = 0; i < wrong_ids.length; i++){ 
+                    var wrong_id = wrong_ids[i];
+                    var row = $("#"+wrong_id+"-1-0").parent().parent();
+                    row.attr("class", "table_row table_row_wrong");
+                }
+
+                for (var i = 0; i < right_ids.length; i++){ 
+                    var right_id = right_ids[i];
+                    var row = $("#"+right_id+"-1-0").parent().parent();
+                    row.attr("class", "table_row table_row_right");
+                }
 
                 var expenditure = $("#privacy-risk-value").text().replace("%","").trim();
                 expenditure = parseFloat(expenditure);

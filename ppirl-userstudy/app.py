@@ -138,6 +138,8 @@ def feedback_main_section():
     screen_ids = request.args.get('screen_ids').split(',')
     working_data = get_main_section_data(session['user_id'], 1)
     wrong_attempts = []
+    wrong_ids = []
+    right_ids = []
     feedback = ""
     for i in range(6):
         dp = working_data.get_data_pair(int(ids[i]))
@@ -145,6 +147,10 @@ def feedback_main_section():
         # grades.append(grade)
         if not grade:
             wrong_attempts.append(screen_ids[i])
+            wrong_ids.append(ids[i])
+        else:
+            right_ids.append(ids[i])
+
 
     if len(wrong_attempts) == 0:
         feedback = "You got all of the questions in this page right!"
@@ -152,7 +158,7 @@ def feedback_main_section():
         feedback += "Question(s) you got wrong: " + ", ".join(wrong_attempts) + "\n"
         # feedback += "You might want to consider opening more relevant information if it would help you get more questions right."
 
-    return jsonify(result=feedback)
+    return jsonify(result=feedback, wrong_ids=wrong_ids, right_ids =right_ids)
 
 @app.route('/introduction')
 @state_machine('show_introduction')
