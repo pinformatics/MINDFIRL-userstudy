@@ -171,7 +171,7 @@ def pre_survey():
     if request.method == 'POST':
         f = request.form
         for key in f:
-            store_key = session['user_data'] + "_pre_survey_" + key
+            store_key = str(session['user_id']) + '_user_data'+ "_pre_survey_" + key
             r.set(store_key, f[key]) 
         return redirect('/next')
     if request.method == 'GET':

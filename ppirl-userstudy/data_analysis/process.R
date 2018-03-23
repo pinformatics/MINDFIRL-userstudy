@@ -1,12 +1,14 @@
-pacman::p_load(tidyverse, rebus)
+pacman::p_load(tidyverse, rebus, glue)
 
-raw_user_data <- read_csv("mindfil4-3-20.csv")
-actual_questions_data <- read_csv("main_section_full.csv")
+df_u_raw <- read_csv("mindfil4-3-20.csv")
+df_q_raw <- read_csv("main_section_full.csv")
+df_q_type_ordering <-
+  read_csv("scrambled_order.csv") %>% 
+  select(-qnum, q_type = type)
+# raw_user_data %>% pull(type) %>% unique()
 
-raw_user_data %>% pull(type) %>% unique()
-
-questions_info <- 
-  actual_questions_data %>% 
+df_q_info <- 
+  df_q_raw %>% 
   select(q_id = `Group ID`, 
          q_answer = Same,
          q_type = `Record ID`) %>% 
@@ -15,14 +17,26 @@ questions_info <-
   ungroup() %>% 
   mutate_all(as.integer)
 
+df_u_mode <- 
+  df_u_raw %>% 
+  filter(type == "session_start") %>% 
+  mutate(mode = extra %>% str_extract(DGT %R% END)) %>% 
+  select(u_id = uid, mode)
+
+
 # each cell click info
-raw_user_data %>% 
+df_kapr_cell <-
+  df_u_raw %>% 
   filter(type == "kapr",
          str_detect(extra, "record_linkage")) %>% 
+  rename(u_id = uid,
+         kapr_cumulative = value) %>% 
   mutate(url = str_extract(extra, "url" %R% one_or_more(or(PUNCT, WRD))) %>% str_replace("url:", ""),
+         kapr_cumulative = kapr_cumulative %>% as.double(),
          open_cell = str_extract(extra, "id:" %R% one_or_more(or(DGT, literal("-")))) %>% str_replace("id:", ""),
-         id = str_extract(open_cell, one_or_more(DGT)),
+         q_id = str_extract(open_cell, one_or_more(DGT)),
          column_id = str_extract(open_cell, DGT %R% END) %>% as.integer(),
+         cell_mode = extra %>% str_extract("new_mode:" %R% one_or_more(ALPHA)) %>% str_replace("new_mode:", ""),
          column = case_when(
            column_id == 0 ~ "reg", 
            column_id == 1 ~ "fname",
@@ -31,13 +45,22 @@ raw_user_data %>%
            column_id == 4 ~ "sex",
            TRUE ~ "race"
          )) %>% 
-  arrange(uid, timestamp) %>% 
-  select(u_id = uid, kapr = value, q_id = id, column)
+  group_by(u_id) %>% 
+  arrange(u_id, timestamp) %>%
+  mutate(kapr_cell = (kapr_cumulative - lag(kapr_cumulative)) %>% if_else(is.na(.), kapr_cumulative, .)) %>% 
+  select(u_id, timestamp, q_id, column, cell_mode, starts_with("kapr")) %>% 
+  ungroup()
 
+df_kapr_question <- 
+  df_kapr_cell %>% 
+  group_by(u_id, q_id) %>% 
+  summarise(kapr_question = sum(kapr_cell), timestamp = min(timestamp)) %>% 
+  ungroup() %>% 
+  mutate_if(is.character,as.integer) 
 
 # kapr for each user
-user_kapr <- 
-  raw_user_data %>% 
+df_kapr_user <- 
+  df_u_raw %>% 
   filter(type == "kapr", 
          str_detect(extra, "record_linkage")) %>% 
   mutate(mode_url = extra %>% str_replace("id:" %R% one_or_more(or(DGT,PUNCT)), ""),
@@ -46,14 +69,16 @@ user_kapr <-
   filter(value == max(value)) %>% 
   ungroup() %>% 
   arrange(uid) %>% 
+  ungroup() %>% 
   select(u_id = uid, kapr = value)
 
 attention_test <- c(1,7,13,19,25,31)
 
 
+
 # question level user
-user_questions_data <- 
-  raw_user_data %>% 
+df_u_question <- 
+  df_u_raw %>% 
   rename(u_id = uid) %>% 
   filter(type == "final_answer",
          str_detect(extra, "record_linkage")) %>%
@@ -63,28 +88,30 @@ user_questions_data <-
          user_answer = if_else(choice > 3, 1, 0),
          attention = q_id %in% attention_test) %>% 
   group_by(u_id, q_id) %>% 
-  filter(timestamp == max(timestamp)) %>% 
+  filter(timestamp == min(timestamp)) %>% 
   ungroup() %>% 
-  left_join(questions_info, by = "q_id") %>% 
+  left_join(df_q_info, by = "q_id") %>% 
   mutate(grade = ifelse(user_answer == q_answer, 1, 0),
          sample = as.integer(u_id)%%10) %>% 
   select(-type,-timestamp, -extra) %>% 
-  mutate_if(is.character,as.integer)
+  mutate_if(is.character,as.integer) %>% 
+  left_join(df_kapr_question, by = c("u_id", "q_id")) %>% 
+  mutate(kapr_question = kapr_question %>% if_else(is.na(.), 0, .),
+         total_kapr_from_questions = sum(kapr_question))
 
+df_kapr_page <- 
+  df_u_question %>% 
+  left_join(df_q_type_ordering, "q_type") %>% 
+  group_by(u_id, page) %>%
+  summarise(kapr_page = sum(kapr_question)) %>% 
+  mutate(page = str_c("page_", page, "_kapr")) %>% 
+  spread(page, kapr_page) %>% 
+  ungroup() %>% 
+  mutate(total_kapr_from_pages = page_1_kapr + page_2_kapr + page_3_kapr + page_4_kapr + page_5_kapr + page_6_kapr)
 
-
-# raw_user_data %>% 
-#   filter(str_detect(extra, "mode") & str_detect(extra, "record_linkage")) %>%
-#   mutate(mode = str_extract(extra, literal("new_mode") %R% one_or_more(or(PUNCT, ALPHA))), 
-#          value = value %>% as.numeric()) %>% 
-#   group_by(uid, extra) %>% 
-#   filter(value == max(value))
-
-
-# attention_test = c(1,7,13,19,25,31)
-
-key_info <- 
-  user_questions_data %>% 
+df_u_key_info <- 
+  df_u_question %>% 
+  filter(u_id != 2) %>% 
   group_by(u_id, sample) %>% 
   summarise(grade36 = sum(grade),
             grade30 = sum(grade[!(q_type %in% attention_test)]),
@@ -94,21 +121,38 @@ key_info <-
             percent30 = mean(grade[!(q_type %in% attention_test)]) *100,
             mean_confidence = mean(confidence),
             mean_confidence_right = mean(confidence[grade == 1]),
-            mean_confidence_wrong = mean(confidence[grade == 0])) %>% 
-  left_join(user_kapr, "u_id")
+            mean_confidence_wrong = mean(confidence[grade == 0]),
+            total_kapr_from_questions = total_kapr_from_questions %>% mean()) %>% 
+  ungroup() %>% 
+  left_join(df_kapr_user, "u_id") %>% 
+  left_join(df_kapr_page, "u_id") %>% 
+  left_join(df_u_mode, "u_id") %>% 
+  select(-total_kapr_from_questions, -total_kapr_from_pages)
 
 
-key_info %>% 
+df_u_key_info %>% 
   filter(u_id != 2) %>% 
   mutate(mode = str_sub(u_id,1,1)) %>% 
   group_by(mode) %>% 
   summarise_all(mean) %>% 
   View
 
-
-
-key_info %>% 
+df_u_key_info %>% 
   filter(u_id != 2) %>% 
   mutate(mode = str_sub(u_id,1,1)) %>% 
   group_by(mode) %>% 
   summarise(n = n())
+
+for(i in objects()){
+  item <- get(i)
+  print(item)
+  if("data.frame" %in% class(item)){
+    write_csv(item, paste0("parsed/", i, ".csv"))
+  }
+}
+
+
+df_u_raw %>% 
+  filter(extra %>% str_detect("section2"),
+         type == "final_answer")
+
