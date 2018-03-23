@@ -218,7 +218,7 @@ function make_cell_clickable() {
         var dt = new Date();
         $click_timestamp = "timestamp: " + Math.round(dt.getTime()/1000);
         $url = "url:" + $THIS_URL;
-        $data = [$type, $this_click, $click_time, $click_timestamp, $url].join();
+        $data = [$type, $this_click, $click_timestamp, $url].join();
         $user_data += $data + ";";
         
         return false;
