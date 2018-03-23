@@ -19,11 +19,11 @@
         <script src="../static/javascript/site.js"></script>
         <script src="../static/javascript/choice_panel.js?v=6"></script>
         <script src="../static/javascript/grading.js"></script>
-        <script src="../static/javascript/clickable.js?v=40"></script>
+        <script src="../static/javascript/clickable.js?v=41"></script>
         {% if thisurl == '/record_linkage' %}
         <script src="../static/javascript/form_submit_mod.js?v=28"></script>
         {% elif thisurl == '/section2' %}
-        <script src="../static/javascript/form_submit.js?v=28"></script>
+        <script src="../static/javascript/form_submit.js?v=32"></script>
         {% endif %}
         <script type=text/javascript>
             $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
@@ -52,7 +52,7 @@
     <body>
         <div id="wrapper">
             <div id="title">
-                <h3>{{ title }}</h3>
+                <h3>{{ title | safe }}</h3>
             </div>
             
             <div id="content">
