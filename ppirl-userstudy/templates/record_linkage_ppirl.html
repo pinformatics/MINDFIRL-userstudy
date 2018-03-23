@@ -297,12 +297,18 @@
 
                 <div id="feedback">
                 </div>
-
+                {% if thisurl == '/record_linkage' %}
                 <div class="submit_div">
                     <button id="submit_grade" class="submit_button">Submit and Grade</button>
                     <button id="button_next_rl" class="submit_button" style="display: none;">Next</button>
                     <button id="button_next" class="submit_button" style="display: none;">Next</button>
                 </div>
+                {% elif thisurl == '/section2' %}
+                <div class="submit_div">
+                    <button id="button_next_rl" class="submit_button" style="">Next</button>
+                    <button id="button_next" class="submit_button" style="display: none;">Next</button>
+                </div>
+                {% endif %}
             </div>
             <!-- End of div content -->
         </div>
