@@ -36,3 +36,8 @@ $(document).ready(function(){
         $user_data += $data + ";";
     })
 })
+
+function disable_choice_panel() {
+    var $options = $("li.input_radio");
+    $options.unbind("click");
+}
