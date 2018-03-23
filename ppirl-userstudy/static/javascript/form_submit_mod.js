@@ -100,17 +100,17 @@ $(function() {
         $('#button_next').attr("disabled", "disabled");
         
         // save this click data
-        $type = "type:jumping";
-        $value = "value:" + $THIS_URL;
-        var dt = new Date();
-        $click_timestamp = "timestamp:" + Math.round(dt.getTime()/1000);
-        $url = "url:" + $THIS_URL;
-        $data = [$type, $value, $click_timestamp, $url].join()
-        $user_data += $data + ";";
+        // $type = "type:jumping";
+        // $value = "value:" + $THIS_URL;
+        // var dt = new Date();
+        // $click_timestamp = "timestamp:" + Math.round(dt.getTime()/1000);
+        // $url = "url:" + $THIS_URL;
+        // $data = [$type, $value, $click_timestamp, $url].join()
+        // $user_data += $data + ";";
 
-        get_summitted_answers();
-        post($SCRIPT_ROOT+'/save_data', $user_data, "post");
-        $user_data = "";
+        // get_summitted_answers();
+        // post($SCRIPT_ROOT+'/save_data', $user_data, "post");
+        // $user_data = "";
 
         $(window).off("beforeunload");
         window.location.href = $NEXT_URL;
@@ -136,26 +136,32 @@ function all_questions_answered() {
     5. enable the button
 */
 $(function() {
-    $('#button_next_rl').bind('click', function() {
+    $('#submit_grade').bind('click', function() {
         if( !all_questions_answered() ) {
             alert("Please answer all questions to continue.");
         }
         else {
-            // save this click data
-            $type = "type:next_page";
-            $value = "value:" + $THIS_URL;
-            var dt = new Date();
-            $click_timestamp = "timestamp:" + Math.round(dt.getTime()/1000);
-            $url = "url:" + $THIS_URL;
-            $data = [$type, $value, $click_timestamp, $url].join()
-            $user_data += $data + ";";
+          
 
-            $('#button_next_rl').attr("disabled", "disabled");
-            get_summitted_answers();
-            post($SCRIPT_ROOT+'/save_data', $user_data, "post");
-            $user_data = "";
+            // $('#button_next_rl').attr("disabled", "disabled");
+        
+
             $.getJSON('/feedback_main_section', get_responses(), function(data) {
                 var feedback_message = data.result;
+                var wrong_ids = data.wrong_ids;
+                var right_ids = data.right_ids;
+                // console.log(wrong_ids);
+                for (var i = 0; i < wrong_ids.length; i++){ 
+                    var wrong_id = wrong_ids[i];
+                    var row = $("#"+wrong_id+"-1-0").parent().parent();
+                    row.attr("class", "table_row table_row_wrong");
+                }
+
+                for (var i = 0; i < right_ids.length; i++){ 
+                    var right_id = right_ids[i];
+                    var row = $("#"+right_id+"-1-0").parent().parent();
+                    row.attr("class", "table_row table_row_right");
+                }
 
                 var expenditure = $("#privacy-risk-value").text().replace("%","").trim();
                 expenditure = parseFloat(expenditure);
@@ -163,46 +169,94 @@ $(function() {
                 var re = /\d+/g; 
                 page = parseInt(page.match(re)[0]);
                 if(expenditure < 40*page/6){
-                    feedback_message += "You might want to consider opening more relevant information if it would help you get more questions right.";
+                    // feedback_message += "You might want to consider opening more relevant information if it would help you get more questions right.";
                 } else{
-                    feedback_message += "Consider opening the right cells with relevant information";
+                    // feedback_message += "Consider opening the right cells with relevant information";
                 }
                 
-                alert(feedback_message);
+                $("#feedback").text(feedback_message);
+                if(right_ids.length == 6){
+                    $("#feedback").css("color","#006606");
+                } else {
+                    $("#feedback").css("color","#660000");    
+                }
+                
+                $('#submit_grade').attr("disabled", "disabled");
+                $('#submit_grade').css("display", "none");
+                disable_choice_panel();
 
-                $.ajax({
-                    url: $SCRIPT_ROOT + $THIS_URL + '/next',
-                    data: {},
-                    error: function() {},
-                    dataType: 'json',
-                    success: function(data) {
-                        if(data['result'] != 'success') {
-                            alert('You have finished this section.');
-                            $(window).off("beforeunload");
-                            window.location.href = $NEXT_URL;
-                        }
-                        // update delta
-                        $DELTA = data['delta'];
-                        // update table content
-                        $("#table_content").html(data['page_content']);
-                        // update page number
-                        $("#page-number").html(data['page_number']);
-                        make_cell_clickable();
-                        refresh_delta();
-                        reset_choice_panel();
-                        if(data['is_last_page'] == 0) {
-                            $('#button_next_rl').attr("disabled", false);
-                        }
-                        else {
-                            $('#button_next_rl').css("display", "none");
-                            $('#button_next').css("display", "inline");
-                        }
-                    },
-                    type: 'GET'
-                });
+                // if not last page
+                if(page != 6) {
+                    // save this click data
+                    $type = "type:next_page";
+                    $('#button_next_rl').attr("disabled", false);
+                    $('#button_next_rl').css("display", "inline");
+                } else { //if last page
+                    $type = "type:jumping";
+                    $('#button_next_rl').attr("disabled", "disabled");
+                    $('#button_next_rl').css("display", "none");
+                    $('#button_next').css("display", "inline");
+                }
+
+                $value = "value:" + $THIS_URL;
+                var dt = new Date();
+                $click_timestamp = "timestamp:" + Math.round(dt.getTime()/1000);
+                $url = "url:" + $THIS_URL;
+                $data = [$type, $value, $click_timestamp, $url].join()
+                $user_data += $data + ";";
+
+                get_summitted_answers();
+                post($SCRIPT_ROOT+'/save_data', $user_data, "post");
+                $user_data = "";
             });
                         
         }
         return false;
     });
 });
+
+$(function() {
+    $('#button_next_rl').bind('click', function() {
+        $('#button_next_rl').attr("disabled", "disabled");
+        $('#button_next_rl').css("display", "none");
+        $.ajax({
+            url: $SCRIPT_ROOT + $THIS_URL + '/next',
+            data: {},
+            error: function() {},
+            dataType: 'json',
+            success: function(data) {
+                if(data['result'] != 'success') {
+                    alert('You have finished this section.');
+                    $(window).off("beforeunload");
+                    window.location.href = $NEXT_URL;
+                }
+                // update delta
+                $DELTA = data['delta'];
+                // update table content
+                $("#table_content").html(data['page_content']);
+                // update page number
+                $("#page-number").html(data['page_number']);
+                make_cell_clickable();
+                refresh_delta();
+                reset_choice_panel();
+                $('#feedback').text("");
+                $('#submit_grade').attr("disabled", false);
+                $('#submit_grade').css("display", "inline");
+
+                // //if not last page
+                // if(data['is_last_page'] == 0) {
+                //     $('#button_next_rl').attr("disabled", false);
+                //      $('#button_next_rl').css("display", "inline");
+                // } //else if last page
+                // else {
+                //     $('#button_next_rl').css("display", "none");
+                //     $('#button_next').css("display", "inline");
+                // }
+            },
+            type: 'GET'
+        });
+
+    });
+});
+
+                

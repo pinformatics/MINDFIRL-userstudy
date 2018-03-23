@@ -118,6 +118,20 @@
     background-color: #EAF2FF;
 }
 
+.table_row_right {
+    background-color: #f2ffcc;
+    border-bottom: 0.5px;
+    border-bottom-style: solid;
+    border-bottom-color: grey;
+}
+
+.table_row_wrong {
+    background-color: #ffd6cc;
+    border-bottom: 0.5px;
+    border-bottom-style: solid;
+    border-bottom-color: grey;
+}
+
 .pair_number {
     line-height: 120px;
     color: #808080;
