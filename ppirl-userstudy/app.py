@@ -460,7 +460,7 @@ def get_ustudy_setting():
     user_id = session['user_id']
     ustudy_mode = r.get(user_id+'_ustudy_mode')
     ustudy_budget = r.get(user_id+'_ustudy_budget')
-    result = 'mode:'+ustudy_mode+' & budget:'+ustudy_budget
+    result = 'mode:'+ustudy_mode
     ret = {
         'result': result,
     }

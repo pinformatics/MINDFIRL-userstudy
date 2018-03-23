@@ -20,7 +20,11 @@
         <script src="../static/javascript/choice_panel.js?v=4"></script>
         <script src="../static/javascript/grading.js"></script>
         <script src="../static/javascript/clickable.js?v=38"></script>
+        {% if thisurl == '/record_linkage' %}
+        <script src="../static/javascript/form_submit_mod.js?v=28"></script>
+        {% elif thisurl == '/section2' %}
         <script src="../static/javascript/form_submit.js?v=28"></script>
+        {% endif %}
         <script type=text/javascript>
             $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
             $THIS_URL = "{{ thisurl }}";
