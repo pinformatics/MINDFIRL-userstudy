@@ -100,17 +100,17 @@ $(function() {
         $('#button_next').attr("disabled", "disabled");
         
         // save this click data
-        $type = "type:jumping";
-        $value = "value:" + $THIS_URL;
-        var dt = new Date();
-        $click_timestamp = "timestamp:" + Math.round(dt.getTime()/1000);
-        $url = "url:" + $THIS_URL;
-        $data = [$type, $value, $click_timestamp, $url].join()
-        $user_data += $data + ";";
+        // $type = "type:jumping";
+        // $value = "value:" + $THIS_URL;
+        // var dt = new Date();
+        // $click_timestamp = "timestamp:" + Math.round(dt.getTime()/1000);
+        // $url = "url:" + $THIS_URL;
+        // $data = [$type, $value, $click_timestamp, $url].join()
+        // $user_data += $data + ";";
 
-        get_summitted_answers();
-        post($SCRIPT_ROOT+'/save_data', $user_data, "post");
-        $user_data = "";
+        // get_summitted_answers();
+        // post($SCRIPT_ROOT+'/save_data', $user_data, "post");
+        // $user_data = "";
 
         $(window).off("beforeunload");
         window.location.href = $NEXT_URL;
@@ -141,20 +141,10 @@ $(function() {
             alert("Please answer all questions to continue.");
         }
         else {
-            // save this click data
-            $type = "type:next_page";
-            $value = "value:" + $THIS_URL;
-            var dt = new Date();
-            $click_timestamp = "timestamp:" + Math.round(dt.getTime()/1000);
-            $url = "url:" + $THIS_URL;
-            $data = [$type, $value, $click_timestamp, $url].join()
-            $user_data += $data + ";";
+          
 
             // $('#button_next_rl').attr("disabled", "disabled");
-            get_summitted_answers();
-            post($SCRIPT_ROOT+'/save_data', $user_data, "post");
-            $user_data = "";
-
+        
 
             $.getJSON('/feedback_main_section', get_responses(), function(data) {
                 var feedback_message = data.result;
@@ -197,14 +187,27 @@ $(function() {
 
                 // if not last page
                 if(page != 6) {
+                    // save this click data
+                    $type = "type:next_page";
                     $('#button_next_rl').attr("disabled", false);
                     $('#button_next_rl').css("display", "inline");
-                } else {
+                } else { //if last page
+                    $type = "type:jumping";
                     $('#button_next_rl').attr("disabled", "disabled");
                     $('#button_next_rl').css("display", "none");
                     $('#button_next').css("display", "inline");
                 }
 
+                $value = "value:" + $THIS_URL;
+                var dt = new Date();
+                $click_timestamp = "timestamp:" + Math.round(dt.getTime()/1000);
+                $url = "url:" + $THIS_URL;
+                $data = [$type, $value, $click_timestamp, $url].join()
+                $user_data += $data + ";";
+
+                get_summitted_answers();
+                post($SCRIPT_ROOT+'/save_data', $user_data, "post");
+                $user_data = "";
             });
                         
         }

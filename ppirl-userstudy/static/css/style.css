@@ -120,16 +120,16 @@
 
 .table_row_right {
     background-color: #f2ffcc;
-    border-style: solid;
-    border-width: 0.5px;
-    border-color: #1A9759;
+    border-bottom: 0.5px;
+    border-bottom-style: solid;
+    border-bottom-color: grey;
 }
 
 .table_row_wrong {
     background-color: #ffd6cc;
-    border-style: solid;
-    border-width: 0.5px;
-    border-color: #6D0202;
+    border-bottom: 0.5px;
+    border-bottom-style: solid;
+    border-bottom-color: grey;
 }
 
 .pair_number {
