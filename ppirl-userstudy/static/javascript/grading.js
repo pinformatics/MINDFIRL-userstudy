@@ -31,17 +31,39 @@ function all_questions_answered_grading() {
     return (i == parseInt($(".table_row").length));
 }
 
+
+function get_submitted_answers_grading() {
+    var c = $(".ion-android-radio-button-on").each(function() {
+        $type = "type:practice_answer";
+        $this_click = "value:" + this.id;
+        var dt = new Date();
+        $click_timestamp = "timestamp:" + Math.round(dt.getTime()/1000);
+        $url = "url:" + $THIS_URL;
+        $data = [$type, $this_click, $click_timestamp, $url].join()
+        $user_data += $data + ";";
+        post($SCRIPT_ROOT+'/save_data', $user_data, "post");
+        $user_data = "";
+    });
+}
+
 $(function() {
     $('#submit_btn').bind('click', function() {
        
         if(all_questions_answered_grading()){
           // save the click data
-          $this_click = "user click: Attemp";
+          get_submitted_answers_grading();
+
+          $value = "value:" + $THIS_URL;
+          $type = "Practice submit and grade";
           var dt = new Date();
-          $click_time = "click time: " + dt.getHours() + "h" + dt.getMinutes() + "m" + dt.getSeconds() + "s";
-          $click_timestamp = "click timestamp: " + dt.getTime();
-          $data = [$this_click, $click_time, $click_timestamp].join()
+          $click_timestamp = "timestamp:" + Math.round(dt.getTime()/1000);
+          $url = "url:" + $THIS_URL;
+          $data = [$type, $value, $click_timestamp, $url].join()
           $user_data += $data + ";";
+
+          // get_summitted_answers();
+          post($SCRIPT_ROOT+'/save_data', $user_data, "post");
+          $user_data = "";
 
           var feedback = $("#feedback");
           $.getJSON($SCRIPT_ROOT + $THIS_URL + '/grading', get_responses(), function(data) {
