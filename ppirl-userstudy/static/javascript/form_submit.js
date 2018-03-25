@@ -105,6 +105,16 @@ function all_questions_answered() {
     return (i == 6);
 }
 
+function create_end_session() {
+    $("#end_session").bind('click', function() {
+        var r = confirm("Are you sure to end your session?");
+        if (r == true) {
+            $(window).off("beforeunload");
+            window.location.href = $NEXT_URL;
+        } 
+    })
+}
+
 /*
     This function defines the behavior of the next button in record linkage page:
     1. disable this button
@@ -154,6 +164,9 @@ $(function() {
                     reset_choice_panel();
                     if($THIS_URL == '/section2') {
                         reset_kapr();
+                        if(parseInt(data['page_number'].split(":")[1]) > 6) {
+                            create_end_session();
+                        }
                     }
                     if(data['is_last_page'] == 0) {
                         $('#button_next_rl').attr("disabled", false);

@@ -19,11 +19,11 @@
         <script src="../static/javascript/site.js"></script>
         <script src="../static/javascript/choice_panel.js?v=6"></script>
         <script src="../static/javascript/grading.js"></script>
-        <script src="../static/javascript/clickable.js?v=40"></script>
+        <script src="../static/javascript/clickable.js?v=41"></script>
         {% if thisurl == '/record_linkage' %}
         <script src="../static/javascript/form_submit_mod.js?v=28"></script>
         {% elif thisurl == '/section2' %}
-        <script src="../static/javascript/form_submit.js?v=28"></script>
+        <script src="../static/javascript/form_submit.js?v=32"></script>
         {% endif %}
         <script type=text/javascript>
             $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
@@ -52,7 +52,7 @@
     <body>
         <div id="wrapper">
             <div id="title">
-                <h3>{{ title }}</h3>
+                <h3>{{ title | safe }}</h3>
             </div>
             
             <div id="content">
@@ -297,12 +297,18 @@
 
                 <div id="feedback">
                 </div>
-
+                {% if thisurl == '/record_linkage' %}
                 <div class="submit_div">
                     <button id="submit_grade" class="submit_button">Submit and Grade</button>
                     <button id="button_next_rl" class="submit_button" style="display: none;">Next</button>
                     <button id="button_next" class="submit_button" style="display: none;">Next</button>
                 </div>
+                {% elif thisurl == '/section2' %}
+                <div class="submit_div">
+                    <button id="button_next_rl" class="submit_button" style="">Next</button>
+                    <button id="button_next" class="submit_button" style="display: none;">Next</button>
+                </div>
+                {% endif %}
             </div>
             <!-- End of div content -->
         </div>

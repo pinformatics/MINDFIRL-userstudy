@@ -292,7 +292,7 @@ def show_section2():
         data=data, 
         icons=icons, 
         ids=ids, 
-        title='Section 2', 
+        title='Section <span id="end_session">2</span>', 
         thisurl='/section2', 
         page_number=str(current_page+1), 
         delta=delta, 
