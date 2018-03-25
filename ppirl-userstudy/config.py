@@ -156,7 +156,7 @@ SEQUENCE = {
 
 
 pre_survey_switch = True
-post_survey_switch = False
+post_survey_switch = True
 section_2_switch = True
 
 for mode in SEQUENCE.keys():
