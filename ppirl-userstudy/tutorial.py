@@ -9,6 +9,7 @@ import data_loader as dl
 import data_display as dd
 import data_model as dm
 import user_data as ud
+import re
 import config
 from util import state_machine
 from global_data import r, DATASET_TUTORIAL, DATA_CLICKABLE_DEMO, DATA_TUTORIAL1, DATA_DM_DEMO, DATA_CLICKABLE_PRACTICE
@@ -107,31 +108,31 @@ def show_tutorial_privacy_practice():
 
 @tutorial.route('/tutorial/<tutorial_section>/<page>/grading')
 def grade_pratice_full_mode(tutorial_section, page):
-    # print 'hi'
-    # data_file = 'practice_' + str(table_mode) + '.csv'
     data_file = 'data/tutorial/' + str(tutorial_section) + "/" + str(page) + '.csv'
     pairs = dl.load_data_from_csv(data_file)
-    # print pairs
-    ret = list()
+    feedback = list()
     responses = request.args.get('response').split(',')
-    j = 0
     all_correct = True
+    wrong_ids = []
+    right_ids = []
+  
     for i in range(0, len(pairs), 2):
-        result = False
-        j += 1
-        q = 'q' + str(j)
+        pair_id = pairs[i][0]
+        q = "q" + pair_id
         answer = pairs[i][17]
         if answer == '1' and (q+'a4' in responses or q+'a5' in responses or q+'a6' in responses):
-            result = True
-        if answer == '0' and (q+'a1' in responses or q+'a2' in responses or q+'a3' in responses):
-            result = True
-        if not result:
-            ret.append('<h5>' + ", ".join(pairs[i][18:]) + '</h5>')
+            right_ids.append(pair_id) 
+        elif answer == '0' and (q+'a1' in responses or q+'a2' in responses or q+'a3' in responses):
+            right_ids.append(pair_id)
+        else:
+            print feedback
+            feedback.append('<h5>' + ", ".join(pairs[i][18:]) + '</h5>')
+            wrong_ids.append(pair_id)
             all_correct = False
     if all_correct:
-        ret.append('<h5>Good job!</h5>')
-    # print ret
-    return jsonify(result=ret)
+        feedback.append('<h5>Good job!</h5>')
+    
+    return jsonify(result=feedback, wrong_ids = wrong_ids, right_ids = right_ids)
 
 
 @tutorial.route('/ppirl_tutorial1')
@@ -364,18 +365,13 @@ def show_tutorial_clickable_practice():
         thisurl='/tutorial/clickable/practice', 
         page_number="1", 
         delta=delta, 
+        kapr =0,
         kapr_limit = kapr_limit, 
         uid=str(session['user_id']),
         pair_num_base=6*0+1,
         ustudy_mode=r.get(str(session['user_id'])+'_ustudy_mode')
         )
 
-    # data=data, 
-    #     icons=icons, 
-    #     ids=ids, 
-    #     title='Section 1', 
-    #     thisurl='/record_linkage', 
-    #     page_number=str(current_page+1)+"/6", 
-    #     delta=delta, 
-    #     kapr = KAPR,
-
+     
+   #      kapr = KAPR,
+   # 
