@@ -108,22 +108,14 @@ def show_tutorial_privacy_practice():
 
 @tutorial.route('/tutorial/<tutorial_section>/<page>/grading')
 def grade_pratice_full_mode(tutorial_section, page):
-   
     data_file = 'data/tutorial/' + str(tutorial_section) + "/" + str(page) + '.csv'
     pairs = dl.load_data_from_csv(data_file)
     feedback = list()
     responses = request.args.get('response').split(',')
-    print '>>>>>>>>>>>>>>>>>>>>>>'
-    print responses
-    j = 0
     all_correct = True
     wrong_ids = []
     right_ids = []
-    index = 1
-    # q = "p" if (tutorial_section == "clickable" and page == "practice") else "q"
-    # print q
-
-
+  
     for i in range(0, len(pairs), 2):
         pair_id = pairs[i][0]
         q = "q" + pair_id
