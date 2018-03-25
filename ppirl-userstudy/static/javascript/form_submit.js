@@ -107,9 +107,11 @@ function all_questions_answered() {
 
 function create_end_session() {
     $("#end_session").bind('click', function() {
-        alert("Are you sure to end your session?");
-        $(window).off("beforeunload");
-        window.location.href = $NEXT_URL;
+        var r = confirm("Are you sure to end your session?");
+        if (r == true) {
+            $(window).off("beforeunload");
+            window.location.href = $NEXT_URL;
+        } 
     })
 }
 
