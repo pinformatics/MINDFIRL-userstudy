@@ -154,13 +154,16 @@ $(function() {
                 for (var i = 0; i < wrong_ids.length; i++){ 
                     var wrong_id = wrong_ids[i];
                     var row = $("#"+wrong_id+"-1-0").parent().parent();
-                    row.attr("class", "table_row table_row_wrong");
+                    // row.attr("class", "table_row table_row_wrong");
+                    // row.addClass("table_row_wrong");
+                    row.prepend('<img src="/static/images/site/wrong.png" class="img_right_wrong" />')
                 }
 
                 for (var i = 0; i < right_ids.length; i++){ 
                     var right_id = right_ids[i];
                     var row = $("#"+right_id+"-1-0").parent().parent();
-                    row.attr("class", "table_row table_row_right");
+                    // row.attr("class", "table_row table_row_right");
+                    // row.addClass("table_row_right");
                 }
 
                 var expenditure = $("#privacy-risk-value").text().replace("%","").trim();

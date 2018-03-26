@@ -423,13 +423,13 @@ def show_thankyou():
             extend_data += ('Final privacy budget used in section 1: ' + str(round(100*float(d['value']), 2)) + '% out of ' + d['total'] + '%;\n')
     extend_data = extend_data + r.get(user_data_key)
 
-    if r.get("data_choice_" + session['user_id']) != "collect":
-        # print "discareded"
-        r.delete(user_data_key)
-        # print r.get(user_data_key)
-        user_data = 'type:user_id,id:'+str(session['user_id'])+';\n'
-        user_data = user_data + 'type:consent,value:NoDataCollection;\n'
-        r.set(user_data_key, user_data)
+    # if r.get("data_choice_" + session['user_id']) != "collect":
+    #     # print "discareded"
+    #     r.delete(user_data_key)
+    #     # print r.get(user_data_key)
+    #     user_data = 'type:user_id,id:'+str(session['user_id'])+';\n'
+    #     user_data = user_data + 'type:consent,value:NoDataCollection;\n'
+    #     r.set(user_data_key, user_data)
 
     # send the data to email.
     #msg = Message(subject='user data: ' + session['user_id'], body=extend_data, recipients=['mindfil.ppirl@gmail.com'])

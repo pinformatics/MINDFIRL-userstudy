@@ -118,18 +118,44 @@
     background-color: #EAF2FF;
 }
 
+.img_right_wrong{
+    position: absolute; 
+    left: 1685px; 
+    margin-top:15px; 
+    height: 75px; 
+    width: 75px;
+}
+
 .table_row_right {
-    background-color: #f2ffcc;
+    border-right: green;
+    border-right-width: 15px;
+    border-right-style: solid;
+
+   /* border-color: green;
+    border-width: 0.5px;
+    border-style: solid;*/
+
+  /*  background-color: #f2ffcc;
     border-bottom: 0.5px;
     border-bottom-style: solid;
-    border-bottom-color: grey;
+    border-bottom-color: grey;*/
 }
 
 .table_row_wrong {
-    background-color: #ffd6cc;
+
+    border-right: red;
+    border-right-width: 15px;
+    border-right-style: solid;
+
+
+/*    border-color: red;
+    border-width: 0.5px;
+    border-style: solid;*/
+
+/*    background-color: #ffd6cc;
     border-bottom: 0.5px;
     border-bottom-style: solid;
-    border-bottom-color: grey;
+    border-bottom-color: grey;*/
 }
 
 .pair_number {

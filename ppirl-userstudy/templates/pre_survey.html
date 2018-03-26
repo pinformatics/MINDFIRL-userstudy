@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Pre Study Survey</title>
-
+    <script src="/static/javascript/jquery-3.2.1.min.js"></script>
      <script type="text/javascript" src="https://d3js.org/d3.v5.min.js"></script>
 </head>
 <body>
@@ -38,7 +38,7 @@
         <line x1="0" y1="5" x2="750" y2="5" style="stroke:grey;stroke-width:1"></line>
     </svg>
 
-    <div id="occupation" style="position: absolute; left:0px; width: 740px;  text-align: right; top: 200px">3. Occupation:
+    <!-- <div id="occupation" style="position: absolute; left:0px; width: 740px;  text-align: right; top: 200px">3. Occupation:
     </div>
         <div id="occupations" style="position: absolute; left: 750px; top: 200px">
         <input type="radio" id="o1" name="occupation" value="Student"> Student &nbsp;&nbsp;
@@ -47,13 +47,13 @@
         <input type="radio" id="o4" name="occupation" value="Other"> Other &nbsp;
         <input type="text" id="o5" name="occupation">
         </div>
-    <br>
+    <br> -->
 
 
     <div id="div_student" name="div_stud">
-        <div id="current_degree" style="position: absolute; left:0px; width: 740px;  text-align: right;  top: 250px">3.1. Current Degree (If student):
+        <div id="current_degree" style="position: absolute; left:0px; width: 740px;  text-align: right;  top: 220px">3.1. Current Degree:
         </div>
-        <div id="degrees" style="position: absolute; left: 750px; top: 250px">
+        <div id="degrees" style="position: absolute; left: 750px; top: 220px">
             <input type="radio" id="d1" name="current_degree" value="High School"> High School &nbsp;&nbsp;
             <input type="radio" id="d2" name="current_degree" value="Bachelors"> Bachelors &nbsp;&nbsp;
             <input type="radio" id="d3" name="current_degree" value="Masters"> Masters &nbsp;&nbsp;
@@ -62,26 +62,26 @@
             <input type="text" id="d6" name="current_degree" >
         </div>
 
-        <div id="department"  style="position: absolute; left: 0px;width: 740px;  text-align: right; top: 300px">3.2. Department (If student):
+        <div id="department"  style="position: absolute; left: 0px;width: 740px;  text-align: right; top: 280px">3.2. Department:
         </div>
 
         <div>
-            <input type="text" id="dpt" name="dpt" style="position: absolute; left: 750px; top: 300px" disabled="true">
+            <input type="text" id="dpt" name="dpt" style="position: absolute; left: 750px; top: 280px">
         </div>
 
 
     </div>
     <br>
 
-    <div id="div_highest_degree" style="position: absolute; left: 0px;width: 740px;  text-align: right;  top: 350px">4. Highest Degree obtained:
+    <div id="div_highest_degree" style="position: absolute; left: 0px;width: 740px;  text-align: right;  top: 330px">4. Highest Degree obtained:
     </div>
-        <div id="degrees_2" style="position: absolute; left: 750px; top: 350px">
+        <div id="degrees_2" style="position: absolute; left: 750px; top: 330px">
         <input type="radio" id="h1" name="highest_degree" value="High School"> High School &nbsp;&nbsp;
         <input type="radio" id="h2" name="highest_degree" value="Bachelors"> Bachelors &nbsp;&nbsp;
         <input type="radio" id="h3" name="highest_degree" value="Masters"> Masters &nbsp;&nbsp;
         <input type="radio" id="h4" name="highest_degree" value="PhD"> PhD &nbsp;&nbsp;
         <input type="radio" id="h5" name="highest_degree" value="Other"> Other &nbsp;
-        <input type="text" id="h6" name="highest_degree" style="visibility: hidden">
+        <input type="text" id="h6" name="highest_degree">
         </div>
     <br>
 
@@ -159,50 +159,68 @@
 
 <script>
     
-    d3.select("#o5").style("visibility","hidden");
-    d3.select("#d6").style("visibility","hidden");
+   $("#h6").css("visibility","hidden");
+    $("#d6").css("visibility","hidden");
 
-    function disable_stud(status) {
-        if(status){
-           
-            d3.select("#current_degree").style("color","#b3b3b3");
-            d3.select("#degrees").style("color","#b3b3b3");
-            d3.select("#department").style("color","#b3b3b3");
-            for(i=1;i<7;i++) {
-                d3.select('#d'+i).attr("disabled","true").property("checked","false");
-            }
-            d3.select("#dpt").attr("disabled",true).attr("value","").property("value","");
-            
+    $("input[name=current_degree]").click(function(){
+        // console.log();
+        if($(this).attr('id') === "d5"){
+            $("#d6").css("visibility", "visible")
         } else {
-            d3.select("#current_degree").style("color","black");
-            d3.select("#degrees").style("color","black");
-            d3.select("#department").style("color","black");
-            for(i=1;i<7;i++) {
-                d3.select('#d'+i).attr("disabled",null);
-            }
-            d3.select("#dpt").attr("disabled",null);
+            $("#d6").css("visibility","hidden");
         }
-    }
-    disable_stud(true);
-//      If student
-    d3.selectAll('input')
-        .filter(function(d) { return this.name === 'occupation' ? this : null; })
-        .on('change', function() {
-            disable_stud(true);
-            if(d3.select("#o4").property("checked")) {
-                d3.select("#o5")
-                    .style("visibility","visible");
-                d3.select("#d6")
-                    .style("visibility","hidden");
-            } else {
+    })
+
+    $("input[name=highest_degree]").click(function(){
+        // console.log();
+        if($(this).attr('id') === "h5"){
+            $("#h6").css("visibility", "visible")
+        } else {
+            $("#h6").css("visibility","hidden");
+        }
+    })
+
+//     function disable_stud(status) {
+//         if(status){
+           
+//             d3.select("#current_degree").style("color","#b3b3b3");
+//             d3.select("#degrees").style("color","#b3b3b3");
+//             d3.select("#department").style("color","#b3b3b3");
+//             for(i=1;i<7;i++) {
+//                 d3.select('#d'+i).attr("disabled","true").property("checked","false");
+//             }
+//             d3.select("#dpt").attr("disabled",true).attr("value","").property("value","");
+            
+//         } else {
+//             d3.select("#current_degree").style("color","black");
+//             d3.select("#degrees").style("color","black");
+//             d3.select("#department").style("color","black");
+//             for(i=1;i<7;i++) {
+//                 d3.select('#d'+i).attr("disabled",null);
+//             }
+//             d3.select("#dpt").attr("disabled",null);
+//         }
+//     }
+//     disable_stud(true);
+// //      If student
+//     d3.selectAll('input')
+//         .filter(function(d) { return this.name === 'occupation' ? this : null; })
+//         .on('change', function() {
+//             disable_stud(true);
+//             if(d3.select("#o4").property("checked")) {
+//                 d3.select("#o5")
+//                     .style("visibility","visible");
+//                 d3.select("#d6")
+//                     .style("visibility","hidden");
+//             } else {
                
-                d3.select("#o5")
-                    .style("visibility","hidden");
-                if(d3.select("#o1").property("checked")) {
-                    disable_stud(false);
-                }
-            }
-        })
+//                 d3.select("#o5")
+//                     .style("visibility","hidden");
+//                 if(d3.select("#o1").property("checked")) {
+//                     disable_stud(false);
+//                 }
+//             }
+//         })
 
 
 

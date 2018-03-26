@@ -73,12 +73,19 @@ $(function() {
 
               for(i = 0; i <= wrong_ids.length; i++){
                 var id = $("#"+"q"+wrong_ids[i]+"a1");
-                id.parent().parent().parent().parent().attr("class","table_row table_row_wrong");
+                var row = id.parent().parent().parent().parent();
+                // row.attr("class","table_row table_row_wrong");
+                // row.addClass("table_row_wrong");
+                console.log(row);
+                row.prepend('<img src="/static/images/site/wrong.png" class="img_right_wrong" />')
               };
 
               for(i = 0; i <= right_ids.length; i++){
                 var id = $("#"+"q"+right_ids[i]+"a1");
-                id.parent().parent().parent().parent().attr("class","table_row table_row_right");
+                var row = id.parent().parent().parent().parent();
+                // row.attr("class","table_row table_row_right");
+                // row.addClass("table_row_right");
+                // row.prepend('<img src="/static/images/site/right.png" class="img_right_wrong" />')
               };
 
                         
