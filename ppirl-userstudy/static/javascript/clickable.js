@@ -237,34 +237,38 @@ function remove_clickable_cells() {
 
 function refresh_delta() {
     $('.clickable_cell').hover(function() {
-        var id1 = this.children[0].getAttribute("id");
-        var d = $DELTA[id1];
+        if(this.classList.contains('clickable_cell')) {
+            var id1 = this.children[0].getAttribute("id");
+            var d = $DELTA[id1];
 
-        // if there is a budget limit, then check if this cell goes over the limit
-        if( typeof $KAPR_LIMIT !== 'undefined' && $KAPR_LIMIT > 0 && $KAPR + d > $KAPR_LIMIT) {
-            $(this).css('cursor', 'not-allowed');
-            // this.classList.remove("clickable_cell");
+            // if there is a budget limit, then check if this cell goes over the limit
+            if( typeof $KAPR_LIMIT !== 'undefined' && $KAPR_LIMIT > 0 && $KAPR + d > $KAPR_LIMIT) {
+                $(this).css('cursor', 'not-allowed');
+                // this.classList.remove("clickable_cell");
+            }
+            var bar_style = 'width:' + pround(d,2) + '%';
+            $("#privacy-risk-delta").attr("style", bar_style);
+            $("#privacy-risk-delta-value").html(" + " + pround(d,2) + "%");
         }
-        var bar_style = 'width:' + pround(d,2) + '%';
-        $("#privacy-risk-delta").attr("style", bar_style);
-        $("#privacy-risk-delta-value").html(" + " + pround(d,2) + "%");
     }, function() {
         $("#privacy-risk-delta").attr("style", 'width: 0%');
         $("#privacy-risk-delta-value").html(" ")
     });
 
     $('.clickable_big_cell').hover(function() {
-        var id1 = this.children[0].children[0].getAttribute("id");
-        var id2 = this.children[2].children[0].getAttribute("id");
-        var d = $DELTA[id1] + $DELTA[id2];
-        // if there is a budget limit, then check if this cell goes over the limit
-        if( typeof $KAPR_LIMIT !== 'undefined' && $KAPR_LIMIT > 0 && $KAPR + d > $KAPR_LIMIT) {
-            $(this).css('cursor', 'not-allowed');
-            // $(this).classList.remove("clickable_big_cell");
+        if(this.classList.contains('clickable_big_cell')) {
+            var id1 = this.children[0].children[0].getAttribute("id");
+            var id2 = this.children[2].children[0].getAttribute("id");
+            var d = $DELTA[id1] + $DELTA[id2];
+            // if there is a budget limit, then check if this cell goes over the limit
+            if( typeof $KAPR_LIMIT !== 'undefined' && $KAPR_LIMIT > 0 && $KAPR + d > $KAPR_LIMIT) {
+                $(this).css('cursor', 'not-allowed');
+                // $(this).classList.remove("clickable_big_cell");
+            }
+            var bar_style = 'width:' + pround(d,2) + '%';
+            $("#privacy-risk-delta").attr("style", bar_style);
+            $("#privacy-risk-delta-value").html(" + " + pround(d,2) + "%");
         }
-        var bar_style = 'width:' + pround(d,2) + '%';
-        $("#privacy-risk-delta").attr("style", bar_style);
-        $("#privacy-risk-delta-value").html(" + " + pround(d,2) + "%");
     }, function() {
         $("#privacy-risk-delta").attr("style", 'width: 0%');
         $("#privacy-risk-delta-value").html(" ")
