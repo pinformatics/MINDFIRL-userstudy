@@ -175,13 +175,34 @@ def show_introduction2():
 @state_machine('pre_survey')
 def pre_survey():
     if request.method == 'POST':
+        user_data_key = str(session['user_id']) + '_user_data'
+        formatted_data = "uid:" + session['user_id'] + "," + "type: pre_survey_data, value: "
         f = request.form
         for key in f:
-            store_key = str(session['user_id']) + '_user_data'+ "_pre_survey_" + key
-            r.set(store_key, f[key]) 
+            formatted_data += key + ":" + f[key] + "|" 
+        formatted_data += ";"    
+        r.append(user_data_key, formatted_data)
         return redirect('/next')
     if request.method == 'GET':
         return render_template('pre_survey.html', uid=str(session['user_id']))
+
+
+
+@app.route('/post_survey', methods=['GET', 'POST'])
+@state_machine('post_survey')
+def post_survey():
+    if request.method == 'POST':
+        user_data_key = str(session['user_id']) + '_user_data'
+        formatted_data = "uid:" + session['user_id'] + "," + "type: post_survey_data, value: '"
+        f = request.form
+        for key in f:
+           formatted_data += key + ":" + f[key] + "|" 
+        formatted_data += "';"    
+        r.append(user_data_key, formatted_data)
+        print(r.get(user_data_key))
+        return redirect('/next')
+    if request.method == 'GET':
+        return render_template('post_survey.html', uid=str(session['user_id']), umode=session[session['user_id'] + '_mode'])
 
 @app.route('/save_data', methods=['GET', 'POST'])
 def save_data():

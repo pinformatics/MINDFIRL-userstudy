@@ -25,9 +25,8 @@ function all_questions_answered_grading() {
     var i = 0;
     var c = $(".ion-android-radio-button-on").each(function() {
         i += 1;
-    });
-    //return true; // disable this feature for dev.
-    console.log();
+    }); 
+    console.log(parseInt($(".table_row").length));   
     return (i == parseInt($(".table_row").length));
 }
 

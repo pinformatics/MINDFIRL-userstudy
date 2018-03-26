@@ -1,277 +1,410 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>PPIRL</title>
-        <link rel="shortcut icon" href="../static/images/site/favicon.ico" type="image/x-icon" />
+<head>
+    <meta charset="UTF-8">
+    <title>Post Study Survey</title>
+</head>
+<body>
+<div id="survey">
+    <!--<h1>Post-Study Survey</h1>-->
 
-        <link rel="stylesheet" href="../static/css/site.css" type="text/css">
-        <link rel="stylesheet" href="../static/css/style.css?q=12" type="text/css">
-        <link rel="stylesheet" href="../static/css/ionicons.min.css" type="text/css">
-        <link rel="stylesheet" href="../static/css/select.css?q=12" type="text/css">
-        <link rel="stylesheet" href="../static/css/bootstrap.min.css" type="text/css">
-        <link rel="stylesheet" href="../static/css/footer.css" type="text/css">
-        <link rel="stylesheet" href="../static/css/animate.min.css">
+    <div style="width: 700px">
+        <h4>Please answer these few questions about the study</h4>
+        <hr>
+    </div>
 
-        <script src="../static/javascript/jquery-3.2.1.min.js"></script>
-        <script src="../static/javascript/popper.min.js"></script>
-        <script src="../static/javascript/bootstrap.min.js"></script>
-        <script src="../static/javascript/site.js"></script>
-        <script src="../static/javascript/choice_panel.js?v=3"></script>
-        <script src="../static/javascript/grading.js"></script>
-        <script src="../static/javascript/form_submit.js?v=5"></script>
-        <script src="../static/javascript/clickable.js?v=10"></script>
-        <script type=text/javascript>
-            $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-            $THIS_URL = "{{ thisurl }}";
-            $NEXT_URL = $SCRIPT_ROOT + "{{ url_for('next') }}";
-            $user_data = "user in url: " + $THIS_URL + ";";
-            $DELTA = {
-            {% for d in delta %}
-                "{{ d[0] }}":{{ d[1]}},
-            {% endfor %}
-            }
-        </script>
-    </head>
+    <br>
 
-    <body>
-        <div id="wrapper">
-            <div id="title">
-                <h3>{{ title }}</h3>
-            </div>
-            <div id="page-number">
-                （ page: {{ page_number }}/17 ）
-            </div>
-            <div style="clear:both"></div>
-            <div id="content">
-                <div class="privacy-budget-div">
-                    <!--
-                    <div>Character disclosed: <span id="character-disclosed-value">0%</span></div>
-                    <div class="progress">
-                        <div id="character-disclosed-bar" class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 0%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
-                        <div class="progress-bar bg-warning" role="progressbar" style="width: 0%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    -->
-                    <div>Privacy risk: <span id="privacy-risk-value">0%</span><span id="privacy-risk-delta-value"></span></div>
-                    <div class="progress">
-                        <div id="privacy-risk-bar" class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 0%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
-                        <div id="privacy-risk-delta" class="progress-bar bg-warning" role="progressbar" style="width: 0%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                </div>
-                <div id="table">
-                    <div id="table_head">
-                        <div class="table_col1">Pair</div>
-                        <div class="table_col2">ID</div>
-                        <div class="table_col3">FFreq</div>
-                        <div class="table_col4 table_names">First Name</div>
-                        <div class="table_col4_5 hidden_element">s</div>
-                        <div class="table_col5 table_names">Last Name</div>
-                        <div class="table_col6">LFreq</div>
-                        <div class="table_col7">DoB(M/D/Y)</div>
-                        <div class="table_col8">Sex</div>
-                        <div class="table_col9">Race</div>
-                        <div class="table_col10">Choice Panel</div>
-                    </div>
-                    <div id="table_content">
-                        {% for r in data %}
-                            {% if loop.index is divisibleby 2 %}
-                        <div class="table_row table_row_even">
-                            {% else %}
-                        <div class="table_row table_row_odd">
-                            {% endif %}
-                            <div class="table_col1 pair_number">{{ loop.index }}</div>
-                            <div class="table_col2 clickable_cell" id = "test_col" mode="masked">
-                                <div class="sub_row1" id="{{ ids[loop.index0][0][0] }}">
-                                    {{ r[0][1]|safe }}
-                                </div>
-                                <div class="sub_row2">
-                                    {{ icons[loop.index0][0]|safe }}
-                                </div>
-                                <div class="sub_row3" id="{{ ids[loop.index0][1][0] }}">
-                                    {{ r[1][1]|safe }}
-                                </div>
-                            </div>
-                            <div class="table_col3">
-                                <div class="sub_row1 tooltip1">
-                                    {{ r[0][2]|safe }}
-                                    <span class="tooltiptext1">
-                                        {% if 'infinity' in r[0][2] %}
-                                            Very common
-                                        {% elif 'common' in r[0][2] %}
-                                            Common name
-                                        {% elif 'rare' in r[0][2] %}
-                                            Rare name
-                                        {% else %}
-                                            Unique name
-                                        {% endif %}
-                                    </span>
-                                </div>
-                                <div class="sub_row2">
-                                </div>
-                                <div class="sub_row3  tooltip1">
-                                    {{ r[1][2]|safe }}
-                                    <span class="tooltiptext1">
-                                        {% if 'infinity' in r[1][2] %}
-                                            Very common
-                                        {% elif 'common' in r[1][2] %}
-                                            Common name
-                                        {% elif 'rare' in r[1][2] %}
-                                            Rare name
-                                        {% else %}
-                                            Unique name
-                                        {% endif %}
-                                    </span>
-                                </div>
-                            </div>
-                            
-                            <div class="{% if 'svg' in icons[loop.index0][2] %}names_big_cell clickable_big_cell{% endif %}">
-                            <div class="table_col4 table_names {% if 'svg' not in icons[loop.index0][2] %}clickable_cell{% endif %}" mode="masked">
-                                <div class="sub_row1" id="{{ ids[loop.index0][0][1] }}">
-                                    {{ r[0][3]|safe }}
-                                </div>
-                                <div class="sub_row2">
-                                    {{ icons[loop.index0][1]|safe }}
-                                </div>
-                                <div class="sub_row3" id="{{ ids[loop.index0][1][1] }}">
-                                    {{ r[1][3]|safe }}
-                                </div>
-                            </div>
-                            <div class="table_col4_5">
-                                {{ icons[loop.index0][2]|safe }}
-                            </div>
-                            <div class="table_col5 table_names {% if 'svg' not in icons[loop.index0][2] %}clickable_cell{% endif %}" mode="masked">
-                                <div class="sub_row1" id="{{ ids[loop.index0][0][2] }}">
-                                    {{ r[0][4]|safe }}
-                                </div>
-                                <div class="sub_row2">
-                                    {{ icons[loop.index0][3]|safe }}
-                                </div>
-                                <div class="sub_row3" id="{{ ids[loop.index0][1][2] }}">
-                                    {{ r[1][4]|safe }}
-                                </div>
-                            </div>
-                            </div>
-                            <div class="table_col6">
-                                <div class="sub_row1 tooltip1">
-                                    {{ r[0][5]|safe }}
-                                    <span class="tooltiptext1">
-                                        {% if 'infinity' in r[0][5] %}
-                                            Very common
-                                        {% elif 'common' in r[0][5] %}
-                                            Common name
-                                        {% elif 'rare' in r[0][5] %}
-                                            Rare name
-                                        {% else %}
-                                            Unique name
-                                        {% endif %}
-                                    </span>
-                                </div>
-                                <div class="sub_row2">
-                                </div>
-                                <div class="sub_row3 tooltip1">
-                                    {{ r[1][5]|safe }}
-                                    <span class="tooltiptext1">
-                                        {% if 'infinity' in r[1][5] %}
-                                            Very common
-                                        {% elif 'common' in r[1][5] %}
-                                            Common name
-                                        {% elif 'rare' in r[1][5] %}
-                                            Rare name
-                                        {% else %}
-                                            Unique name
-                                        {% endif %}
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="table_col7 clickable_cell" mode="masked">
-                                <div class="sub_row1" id="{{ ids[loop.index0][0][3] }}">
-                                    {{ r[0][6]|safe }}
-                                </div>
-                                <div class="sub_row2">
-                                    {{ icons[loop.index0][4]|safe }}
-                                </div>
-                                <div class="sub_row3" id="{{ ids[loop.index0][1][3] }}">
-                                    {{ r[1][6]|safe }}
-                                </div>
-                            </div>
-                            <div class="table_col8 clickable_cell" mode="masked">
-                                <div class="sub_row1" id="{{ ids[loop.index0][0][4] }}">
-                                    {{ r[0][7]|safe }}
-                                </div>
-                                <div class="sub_row2">
-                                    {{ icons[loop.index0][5]|safe }}
-                                </div>
-                                <div class="sub_row3" id="{{ ids[loop.index0][1][4] }}">
-                                    {{ r[1][7]|safe }}
-                                </div>
-                            </div>
-                            <div class="table_col9 clickable_cell" mode="masked">
-                                <div class="sub_row1" id="{{ ids[loop.index0][0][5] }}">
-                                    {{ r[0][8]|safe }}
-                                </div>
-                                <div class="sub_row2">
-                                    {{ icons[loop.index0][6]|safe }}
-                                </div>
-                                <div class="sub_row3" id="{{ ids[loop.index0][1][5] }}">
-                                    {{ r[1][8]|safe }}
-                                </div>
-                            </div>
-                            <div class="table_col10">
-                                <div class="choice-panel">
-                                    <div class="choice-label">
-                                        <span class="fill"></span>
-                                        <span>H</span>
-                                        <span class="fill"></span>
-                                        <span>M</span>
-                                        <span class="fill"></span>
-                                        <span>L</span>
-                                        <span class="fill"></span>
-                                        <span>L</span>
-                                        <span class="fill"></span>
-                                        <span>M</span>
-                                        <span class="fill"></span>
-                                        <span>H</span>
-                                        <span class="fill"></span>
-                                    </div>
-                                    <br/>
-                                    <ul class="mrate choice-button">
-                                        <li class="ion-android-arrow-back"></li>
-                                        <li class="ion-android-radio-button-off input_radio pair1" id="q{{ loop.index }}a1"></li>
-                                        <li class="ion-android-remove"></li>
-                                        <li class="ion-android-radio-button-off input_radio pair1" id="q{{ loop.index }}a2"></li>
-                                        <li class="ion-android-remove"></li>
-                                        <li class="ion-android-radio-button-off input_radio pair1" id="q{{ loop.index }}a3"></li>
-                                        <li class="ion-android-add"></li>
-                                        <li class="ion-android-radio-button-off input_radio pair1" id="q{{ loop.index }}a4"></li>
-                                        <li class="ion-android-remove"></li>
-                                        <li class="ion-android-radio-button-off input_radio pair1" id="q{{ loop.index }}a5"></li>
-                                        <li class="ion-android-remove"></li>
-                                        <li class="ion-android-radio-button-off input_radio pair1" id="q{{ loop.index }}a6"></li>
-                                        <li class="ion-android-arrow-forward"></li>
-                                    </ul>
-                                    <br/>
-                                    <ul class="choice-result">
-                                        <li class="diff">Different</li>
-                                        <li class="same">Same</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div style="clear:both"></div>
-                        {% endfor %}
-                    </div>
-                </div>
+    <div style="font-size: 100%">
 
-                <div id="feedback">
-                </div>
+    <form action="post_survey" method="post" name="post_survey_form">
 
-                <div class="submit_div">
-                    <button id="post_survey_submit" class="submit_button">Submit</button>
-                </div>
-            </div>
-            <!-- End of div content -->
+    <div id="div_difficulty" style="width: 700px;">
+        1. Please explain any issues that made it <strong>harder</strong> to make linkage decisions:<br><br>
+        <textarea name="text_area_difficulty" rows="4" cols="90"></textarea>
+    </div>
+
+    <br><br>
+
+    <div id="div_easiness" style="width: 700px;">
+        2. Please explain any features that made it <strong>easier</strong> to make linkage decisions:<br><br>
+        <textarea name="text_area_easiness" rows="4" cols="90"></textarea>
+    </div>
+
+    <br><br>
+    <div id="div_column_difficulty" style="display: inline-block; width: 700px;">
+        3. Please rate how difficult it was to <strong>make decisions</strong> when there was a difference in each column.<br><br>
+        <ol type="a">
+            <li>First Name:
+                <select name="fname_diff" style="position: absolute; left: 200px;">
+                    <option value="0">Please select</option>
+                    <option value="1">1 - Very Difficult</option>
+                    <option value="2">2 - Somewhat Difficult</option>
+                    <option value="3">3 - Slightly Difficult</option>
+                    <option value="4">4 - Not particularly easy or difficult</option>
+                    <option value="5">5 - Slightly Easy</option>
+                    <option value="6">6 - Somewhat Easy</option>
+                    <option value="7">7 - Very Easy</option>
+                </select>
+            </li><br>
+            <li>Last Name:
+                <select name="lname_diff" style="position: absolute; left: 200px;">
+                    <option value="0">Please select</option>
+                    <option value="1">1 - Very Difficult</option>
+                    <option value="2">2 - Somewhat Difficult</option>
+                    <option value="3">3 - Slightly Difficult</option>
+                    <option value="4">4 - Not particularly easy or difficult</option>
+                    <option value="5">5 - Slightly Easy</option>
+                    <option value="6">6 - Somewhat Easy</option>
+                    <option value="7">7 - Very Easy</option>
+                </select>
+            </li><br>
+            <li>DoB:
+                <select name="dob_diff" style="position: absolute; left: 200px;">
+                    <option value="0">Please select</option>
+                    <option value="1">1 - Very Difficult</option>
+                    <option value="2">2 - Somewhat Difficult</option>
+                    <option value="3">3 - Slightly Difficult</option>
+                    <option value="4">4 - Not particularly easy or difficult</option>
+                    <option value="5">5 - Slightly Easy</option>
+                    <option value="6">6 - Somewhat Easy</option>
+                    <option value="7">7 - Very Easy</option>
+                </select>
+
+            </li><br>
+            <li>ID.:
+                <select name="id_diff" style="position: absolute; left: 200px;">
+                    <option value="0">Please select</option>
+                    <option value="1">1 - Very Difficult</option>
+                    <option value="2">2 - Somewhat Difficult</option>
+                    <option value="3">3 - Slightly Difficult</option>
+                    <option value="4">4 - Not particularly easy or difficult</option>
+                    <option value="5">5 - Slightly Easy</option>
+                    <option value="6">6 - Somewhat Easy</option>
+                    <option value="7">7 - Very Easy</option>
+                </select>
+            </li><br>
+            <li>Race:
+                <select name="race_diff" style="position: absolute; left: 200px;">
+                    <option value="0">Please select</option>
+                    <option value="1">1 - Very Difficult</option>
+                    <option value="2">2 - Somewhat Difficult</option>
+                    <option value="3">3 - Slightly Difficult</option>
+                    <option value="4">4 - Not particularly easy or difficult</option>
+                    <option value="5">5 - Slightly Easy</option>
+                    <option value="6">6 - Somewhat Easy</option>
+                    <option value="7">7 - Very Easy</option>
+                </select>
+            </li><br>
+            <li>Sex:
+                <select name="sex_diff" style="position: absolute; left: 200px;">
+                    <option value="0">Please select</option>
+                    <option value="1">1 - Very Difficult</option>
+                    <option value="2">2 - Somewhat Difficult</option>
+                    <option value="3">3 - Slightly Difficult</option>
+                    <option value="4">4 - Not particularly easy or difficult</option>
+                    <option value="5">5 - Slightly Easy</option>
+                    <option value="6">6 - Somewhat Easy</option>
+                    <option value="7">7 - Very Easy</option>
+                </select>
+            </li>
+        </ol>
+    </div>
+
+    <br><br>
+    <div id="div_column_sotting" style="display: inline-block; width: 700px;">
+        4. Please rate how difficult it was to <strong>spot (detect) a difference in each column.</strong><br><br>
+        <ol type="a">
+            <li>First Name:
+                <select name="fname_spot" style="position: absolute; left: 200px;">
+                    <option value="0">Please select</option>
+                    <option value="1">1 - Very Difficult</option>
+                    <option value="2">2 - Somewhat Difficult</option>
+                    <option value="3">3 - Slightly Difficult</option>
+                    <option value="4">4 - Not particularly easy or difficult</option>
+                    <option value="5">5 - Slightly Easy</option>
+                    <option value="6">6 - Somewhat Easy</option>
+                    <option value="7">7 - Very Easy</option>
+                </select>
+            </li><br>
+            <li>Last Name:
+                <select name="lname_spot" style="position: absolute; left: 200px;">
+                    <option value="0">Please select</option>
+                    <option value="1">1 - Very Difficult</option>
+                    <option value="2">2 - Somewhat Difficult</option>
+                    <option value="3">3 - Slightly Difficult</option>
+                    <option value="4">4 - Not particularly easy or difficult</option>
+                    <option value="5">5 - Slightly Easy</option>
+                    <option value="6">6 - Somewhat Easy</option>
+                    <option value="7">7 - Very Easy</option>
+                </select>
+            </li><br>
+            <li>DoB:
+                <select name="dob_spot" style="position: absolute; left: 200px;">
+                    <option value="0">Please select</option>
+                    <option value="1">1 - Very Difficult</option>
+                    <option value="2">2 - Somewhat Difficult</option>
+                    <option value="3">3 - Slightly Difficult</option>
+                    <option value="4">4 - Not particularly easy or difficult</option>
+                    <option value="5">5 - Slightly Easy</option>
+                    <option value="6">6 - Somewhat Easy</option>
+                    <option value="7">7 - Very Easy</option>
+                </select>
+
+            </li><br>
+            <li>ID:
+                <select name="id_spot" style="position: absolute; left: 200px;">
+                    <option value="0">Please select</option>
+                    <option value="1">1 - Very Difficult</option>
+                    <option value="2">2 - Somewhat Difficult</option>
+                    <option value="3">3 - Slightly Difficult</option>
+                    <option value="4">4 - Not particularly easy or difficult</option>
+                    <option value="5">5 - Slightly Easy</option>
+                    <option value="6">6 - Somewhat Easy</option>
+                    <option value="7">7 - Very Easy</option>
+                </select>
+            </li><br>
+            <li>Race:
+                <select name="race_spot" style="position: absolute; left: 200px;">
+                    <option value="0">Please select</option>
+                    <option value="1">1 - Very Difficult</option>
+                    <option value="2">2 - Somewhat Difficult</option>
+                    <option value="3">3 - Slightly Difficult</option>
+                    <option value="4">4 - Not particularly easy or difficult</option>
+                    <option value="5">5 - Slightly Easy</option>
+                    <option value="6">6 - Somewhat Easy</option>
+                    <option value="7">7 - Very Easy</option>
+                </select>
+            </li><br>
+            <li>Sex:
+                <select name="sex_spot" style="position: absolute; left: 200px;">
+                    <option value="0">Please select</option>
+                    <option value="1">1 - Very Difficult</option>
+                    <option value="2">2 - Somewhat Difficult</option>
+                    <option value="3">3 - Slightly Difficult</option>
+                    <option value="4">4 - Not particularly easy or difficult</option>
+                    <option value="5">5 - Slightly Easy</option>
+                    <option value="6">6 - Somewhat Easy</option>
+                    <option value="7">7 - Very Easy</option>
+                </select>
+            </li><br>
+        </ol>
+    </div>
+
+    <br><br>
+    <div id="div_type_diff" style="display: inline-block; width: 700px;">
+        5. Please rate how difficult it was to <strong>spot (detect) how pairs were different for various types of errors.</strong> <br><br>
+        <ol type="a">
+            <li>Missing:
+                <select name="spot_missing" style="position: absolute; left: 200px;">
+                    <option value="0">Please select</option>
+                    <option value="1">1 - Very Difficult</option>
+                    <option value="2">2 - Somewhat Difficult</option>
+                    <option value="3">3 - Slightly Difficult</option>
+                    <option value="4">4 - Not particularly easy or difficult</option>
+                    <option value="5">5 - Slightly Easy</option>
+                    <option value="6">6 - Somewhat Easy</option>
+                    <option value="7">7 - Very Easy</option>
+                </select>
+            </li><br>
+            <li>Transpose:
+                <select name="spot_transpose" style="position: absolute; left: 200px;">
+                    <option value="0">Please select</option>
+                    <option value="1">1 - Very Difficult</option>
+                    <option value="2">2 - Somewhat Difficult</option>
+                    <option value="3">3 - Slightly Difficult</option>
+                    <option value="4">4 - Not particularly easy or difficult</option>
+                    <option value="5">5 - Slightly Easy</option>
+                    <option value="6">6 - Somewhat Easy</option>
+                    <option value="7">7 - Very Easy</option>
+                </select>
+            </li><br>
+            <li>Insert:
+                <select name="spot_insert" style="position: absolute; left: 200px;">
+                    <option value="0">Please select</option>
+                    <option value="1">1 - Very Difficult</option>
+                    <option value="2">2 - Somewhat Difficult</option>
+                    <option value="3">3 - Slightly Difficult</option>
+                    <option value="4">4 - Not particularly easy or difficult</option>
+                    <option value="5">5 - Slightly Easy</option>
+                    <option value="6">6 - Somewhat Easy</option>
+                    <option value="7">7 - Very Easy</option>
+                </select>
+
+            </li><br>
+            <li>Replace:
+                <select name="spot_replace" style="position: absolute; left: 200px;">
+                    <option value="0">Please select</option>
+                    <option value="1">1 - Very Difficult</option>
+                    <option value="2">2 - Somewhat Difficult</option>
+                    <option value="3">3 - Slightly Difficult</option>
+                    <option value="4">4 - Not particularly easy or difficult</option>
+                    <option value="5">5 - Slightly Easy</option>
+                    <option value="6">6 - Somewhat Easy</option>
+                    <option value="7">7 - Very Easy</option>
+                </select>
+            </li><br>
+            <li>Different:
+                <select name="spot_diff" style="position: absolute; left: 200px;">
+                    <option value="0">Please select</option>
+                    <option value="1">1 - Very Difficult</option>
+                    <option value="2">2 - Somewhat Difficult</option>
+                    <option value="3">3 - Slightly Difficult</option>
+                    <option value="4">4 - Not particularly easy or difficult</option>
+                    <option value="5">5 - Slightly Easy</option>
+                    <option value="6">6 - Somewhat Easy</option>
+                    <option value="7">7 - Very Easy</option>
+                </select>
+            </li><br>
+            <li>Name Swap:
+                <select name="spot_nswap" style="position: absolute; left: 200px;">
+                    <option value="0">Please select</option>
+                    <option value="1">1 - Very Difficult</option>
+                    <option value="2">2 - Somewhat Difficult</option>
+                    <option value="3">3 - Slightly Difficult</option>
+                    <option value="4">4 - Not particularly easy or difficult</option>
+                    <option value="5">5 - Slightly Easy</option>
+                    <option value="6">6 - Somewhat Easy</option>
+                    <option value="7">7 - Very Easy</option>
+                </select>
+            </li><br>
+            <li>Date Swap:
+                <select name="spot_dswap" style="position: absolute; left: 200px;">
+                    <option value="0">Please select</option>
+                    <option value="1">1 - Very Difficult</option>
+                    <option value="2">2 - Somewhat Difficult</option>
+                    <option value="3">3 - Slightly Difficult</option>
+                    <option value="4">4 - Not particularly easy or difficult</option>
+                    <option value="5">5 - Slightly Easy</option>
+                    <option value="6">6 - Somewhat Easy</option>
+                    <option value="7">7 - Very Easy</option>
+                </select>
+            </li><br>
+        </ol>
+    </div>
+
+
+    <br><br>
+    <div id="div_freq" style="width: 700px;">
+        6. Did you take into account the rarity/commonness of the first name and last name when you made linkage decisions?<br><br>
+        <!--&nbsp;&nbsp;&nbsp;&nbsp;-->
+        &nbsp;&nbsp;&nbsp;
+        <input type="radio" id="e1" name="frequency" value="Yes"> Yes &nbsp;&nbsp;
+        <input type="radio" id="e2" name="frequency" value="No"> No
+        <br><br>
+        &nbsp;&nbsp;&nbsp; If yes, why? If not, why not?:
+        <textarea name="freq_dec" rows="4" cols="90"></textarea>
+        <br><br>
+    </div>
+
+
+    <div name="div_int" style="width: 700px;">
+        7. Was there anything you did not understand about the task or interface? Please explain.<br><br>
+        <textarea name="inter_under" rows="4" cols="90"></textarea>
+    </div>
+
+    <br><br>
+    <div id="div_tips" style="width: 800px;">
+        8. Please share any comments or feedback about the user study or ways to improve the interface to support decision making.<br><br>
+        <textarea name="tips" rows="4" cols="90"></textarea>
+    </div>
+
+    {% if umode in ['2', '3', '4'] %}
+    <div>
+            <br><br>
+        <div style="width: 800px;">
+            9. How did you decide which cells to click/open?<br><br>
+            <textarea name="which_cells_open" rows="4" cols="90"></textarea>
         </div>
-        <!-- End of div wrapper -->
-        {% include "footer.html" ignore missing %}
-    </body>
+        
+            <br><br>
+        <div style="width: 800px;">
+            10. How attentive were you in opening up only the necessary cells? <br><br>
+            <select name="attention_necessary" style="position: absolute; ">
+                    <option value="0">Please select</option>
+                    <option value="1">1 - Not attentive</option>
+                    <option value="2">2 - A little attentive</option>
+                    <option value="3">3 - Somewhat attentive</option>
+                    <option value="4">4 - Very attentive</option>
+            </select>
+        </div>
+
+    </div>
+
+    {% endif%}
+
+
+    {% if umode in ['3', '4'] %}
+    <div>
+       <br><br><br>
+        <div style="width: 800px;">
+            11. Did the meter help influence how much you opened up? <br><br>
+            <select name="meter_influence" style="position: absolute; ">
+                    <option value="0">Please select</option>
+                    <option value="1">1 - Not really</option>
+                    <option value="2">2 - A little</option>
+                    <option value="3">3 - Somewhat</option>
+                    <option value="4">4 - Very much</option>
+            </select>
+        </div>
+
+        <br><br><br>
+        <div style="width: 800px;">
+            12. Was the meter easy to understand and intuitive?<br><br>
+            <textarea name="meter_understandablity" rows="4" cols="90"></textarea>
+           <!--  <select id="meter_understandablity" style="position: absolute; left: 200px;">
+                    <option value="0">Please select</option>
+                    <option value="1">1 - Not really</option>
+                    <option value="2">2 - A little</option>
+                    <option value="3">3 - Somewhat</option>
+                    <option value="4">4 - Very much</option>
+            </select> -->
+        </div>
+
+        <br><br>
+        <div style="width: 800px;">
+            13. Without the meter how much do you think you would have opened up?<br><br>
+            <textarea name="meter_openingup" rows="4" cols="90"></textarea>
+        </div>
+
+    </div>
+
+    {% endif%}
+
+    {% if umode in ['4'] %}
+    <div>
+            <br><br>
+        <div style="width: 800px;">
+            14. Was the budget (red line) with the meter enough to comfortably make decisions? <br>
+            <img src="/static/images/module_intros/budget_limit.png" style="width: 750px;"></img><br>
+            <textarea name="limit_comfortable" rows="4" cols="90"></textarea>
+        </div>
+        
+            <br><br>
+        <div style="width: 800px;">
+            15. Did the limit (red line) influence how much you opened up?<br><br>
+            <select name="limit_influence" >
+                    <option value="0">Please select</option>
+                    <option value="1">1 - Not really</option>
+                    <option value="2">2 - A little</option>
+                    <option value="3">3 - Somewhat</option>
+                    <option value="4">4 - Very much</option>
+            </select>
+        </div>
+
+    </div>
+
+    {% endif%}        
+
+    <br><br>
+
+    <div id="div_submit">
+        <input type="submit" id="submitComments" name="button_submit" value="Submit" style="margin-left: 300px;" >
+    </div>
+
+    </form>
+
+</div>
+</div>
+</body>
 </html>

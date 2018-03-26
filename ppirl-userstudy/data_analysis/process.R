@@ -77,27 +77,48 @@ attention_test <- c(1,7,13,19,25,31)
 
 
 # question level user
-df_u_question <- 
+df_u_question <-
   df_u_raw %>% 
   rename(u_id = uid) %>% 
   filter(type == "final_answer",
          str_detect(extra, "record_linkage")) %>%
   separate(value, into = c("q_id", "choice"), sep = "a", convert = T) %>% 
-  mutate(q_id = q_id %>% str_replace("p", "") %>% as.integer(),
-         confidence = if_else(choice > 3, choice - 3, abs(choice - 4)),
+  mutate(q_id = q_id %>% str_replace("p", "") %>% as.integer()) %>% 
+  left_join(df_q_info, by = "q_id") %>% 
+  mutate(confidence = if_else(choice > 3, choice - 3, abs(choice - 4)),
          user_answer = if_else(choice > 3, 1, 0),
-         attention = q_id %in% attention_test) %>% 
+         attention = q_type %in% attention_test) %>% 
   group_by(u_id, q_id) %>% 
   filter(timestamp == min(timestamp)) %>% 
   ungroup() %>% 
-  left_join(df_q_info, by = "q_id") %>% 
   mutate(grade = ifelse(user_answer == q_answer, 1, 0),
          sample = as.integer(u_id)%%10) %>% 
   select(-type,-timestamp, -extra) %>% 
   mutate_if(is.character,as.integer) %>% 
   left_join(df_kapr_question, by = c("u_id", "q_id")) %>% 
   mutate(kapr_question = kapr_question %>% if_else(is.na(.), 0, .),
-         total_kapr_from_questions = sum(kapr_question))
+         total_kapr_from_questions = sum(kapr_question)) 
+
+df_score_attention_page <- 
+  df_u_question %>% 
+  left_join(df_q_type_ordering, "q_type") %>% 
+  group_by(u_id, page) %>%
+  arrange(u_id, page) %>% 
+  summarise(page_score = mean(grade[!attention]),
+            attention = sum(grade[attention])) %>% 
+  ungroup()
+
+df_page_score <- 
+  df_score_attention_page %>%
+  select(u_id, page, page_score) %>% 
+  mutate(page = str_c("page_", page, "_score")) %>% 
+  spread(page, page_score)
+  
+df_page_attention <- 
+    df_score_attention_page %>%
+    select(u_id, page, attention) %>% 
+    mutate(page = str_c("page_", page, "_attention")) %>% 
+    spread(page, attention)
 
 df_kapr_page <- 
   df_u_question %>% 
@@ -127,6 +148,8 @@ df_u_key_info <-
   left_join(df_kapr_user, "u_id") %>% 
   left_join(df_kapr_page, "u_id") %>% 
   left_join(df_u_mode, "u_id") %>% 
+  left_join(df_page_attention, "u_id") %>% 
+  left_join(df_page_score, "u_id") %>% 
   select(-total_kapr_from_questions, -total_kapr_from_pages)
 
 
