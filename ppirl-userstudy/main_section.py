@@ -275,7 +275,7 @@ def show_section2():
             r.set(key, 'M')
 
     # get the delta information
-    working_data.set_kapr_size(6)
+    working_data.set_kapr_size(6*6)
     delta = list()
     for i in range(config.DATA_PAIR_PER_PAGE*current_page, config.DATA_PAIR_PER_PAGE*(current_page+1)):
         data_pair = working_data.get_data_pair_by_index(i)
@@ -333,8 +333,10 @@ def show_section2_next():
     ids = zip(ids_list[0::2], ids_list[1::2])
 
     KAPR_key = str(session['user_id']) + '_KAPR'
-    KAPR = 0
-    r.set(KAPR_key, KAPR)
+    if current_page%6 == 0:
+        KAPR = 0
+        r.set(KAPR_key, KAPR)
+    KAPR = 100*float(r.get(KAPR_key))
 
     # set the user-display-status as masked for all cell
     for id1 in ids_list:
@@ -367,6 +369,7 @@ def show_section2_next():
         'delta': delta_dict,
         'is_last_page': is_last_page,
         'page_number': 'page: ' + str(current_page+1),
-        'page_content': page_content
+        'page_content': page_content,
+        'kapr': KAPR
     }
     return jsonify(ret)

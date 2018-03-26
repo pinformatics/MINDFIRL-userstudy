@@ -8,7 +8,7 @@
 function pround(number, precision) {
     var factor = Math.pow(10, precision);
     var ret = Math.round(number * factor) / factor;
-    if(ret < 0.01) {
+    if(number > 0 && ret < 0.01) {
         return 0.01;
     }
     return ret;
