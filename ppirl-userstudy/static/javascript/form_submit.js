@@ -163,7 +163,12 @@ $(function() {
                     refresh_delta();
                     reset_choice_panel();
                     if($THIS_URL == '/section2') {
-                        reset_kapr();
+                        $KAPR = data['kapr'];
+                        var bar_style = 'width:' + data['kapr'] + '%';
+                        $("#privacy-risk-bar").attr("style", bar_style);
+                        $("#privacy-risk-value").html(pround(data['kapr'],1)+"%")
+                        $("#privacy-risk-delta").attr("style", 'width: 0%');
+                        $("#privacy-risk-delta-value").html(" ")
                         if(parseInt(data['page_number'].split(":")[1]) > 6) {
                             create_end_session();
                         }

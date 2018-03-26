@@ -326,13 +326,20 @@ input[type="radio"] {
 }
 
 .privacy-budget-div {
-    width: 820px;
-    border-style: solid;
-    border-width: 2px;
+    width: 1620px;
+    /*
+    border-left-style: solid;
+    border-left-width: 2px;
     border-color: #1e5162;
-    padding: 5px 5px 5px 5px;
+    */
+    padding: 5px 5px 0px 0px;
     vertical-align: bottom;
     display: inline-block;
+}
+
+.privacy-budget-div progress{
+    width: 1600px;
+    height: 20px;
 }
 
 .privacy-budget-div-empty {
@@ -345,7 +352,7 @@ input[type="radio"] {
     width: 110px;
     vertical-align: bottom;
     display: inline-block;
-    margin-left: 815px;
+    margin-left: 15px;
 }
 
 .tool-bar {

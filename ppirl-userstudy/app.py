@@ -242,7 +242,7 @@ def open_cell():
         kapr_limit = float(r.get(str(session['user_id'])+'section1_kapr_limit'))
     else:
         working_data = get_main_section_data(str(session['user_id']), 2)
-        working_data.set_kapr_size(6)
+        working_data.set_kapr_size(6*6)
         full_data = DATASET2
         kapr_limit = float(r.get(str(session['user_id'])+'section2_kapr_limit'))
 
@@ -280,7 +280,7 @@ def open_big_cell():
         kapr_limit = float(r.get(session['user_id']+'section1_kapr_limit'))
     else:
         working_data = get_main_section_data(session['user_id'], 2)
-        working_data.set_kapr_size(6)
+        working_data.set_kapr_size(6*6)
         full_data = DATASET2
         kapr_limit = float(r.get(str(session['user_id'])+'section2_kapr_limit'))
 
