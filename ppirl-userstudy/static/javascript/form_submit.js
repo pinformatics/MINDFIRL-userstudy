@@ -172,6 +172,9 @@ $(function() {
                         if(parseInt(data['page_number'].split(":")[1]) > 6) {
                             create_end_session();
                         }
+                        if(($USTUDY_MODE == 3 || $USTUDY_MODE == 4) && (parseInt(data['page_number'].split(":")[1])-1)%6 == 0) {
+                            alert("You have finished a batch of 6 pages of questions. Now you are moving to the next batch. The privacy budget bar will be reset.")
+                        }
                     }
                     if(data['is_last_page'] == 0) {
                         $('#button_next_rl').attr("disabled", false);
