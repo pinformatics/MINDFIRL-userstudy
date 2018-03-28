@@ -118,13 +118,22 @@
     background-color: #EAF2FF;
 }
 
-.img_right_wrong{
+.img_wrong_tutorial {
     position: absolute; 
     left: 1735px; 
     margin-top:35px; 
     height: 38px; 
     width: 38px;
 }
+
+.img_wrong_main {
+    position: absolute; 
+    left: 1690px; 
+    margin-top: 37px; 
+    height: 38px; 
+    width: 38px;
+}
+
 
 .table_row_right {
     border-right: green;
