@@ -6,17 +6,47 @@
 */
 
 function get_responses() {
-    
-    var responses = new Array();
-    var i = 0;
-    var c = $(".ion-android-radio-button-on").each(function() {
-        responses[i] = this.id;
-        i += 1;
-    });
 
-    return {
-        "response": responses.join()
+    i = 0;
+    var responses = new Array();
+    var ids = new Array();
+    var html_ids = new Array();
+    var screen_ids = new Array();
+    $(".ion-android-radio-button-on").each(function() {
+            var screen_id = $(this).parent().parent().parent().parent().children(".table_col1").text();
+            var id_ans = this.id;
+            var id = id_ans.split("a");
+            var response = id[1];
+            id = id[0].split("p")[1];
+            ids[i] = id;
+            html_ids[i] = id_ans;
+            responses[i] = response;
+            screen_ids[i] = screen_id;
+            i += 1;
+    })
+
+    results = {
+        "responses": responses.join(),
+        "ids": ids.join(),
+        "html_ids": html_ids.join(),
+        "screen_ids": screen_ids.join()
     };
+
+    // console.log(results);
+
+    return results;
+
+    
+    // var responses = new Array();
+    // var i = 0;
+    // var c = $(".ion-android-radio-button-on").each(function() {
+    //     responses[i] = this.id;
+    //     i += 1;
+    // });
+
+    // return {
+    //     "response": responses.join()
+    // };
 }
 
 
@@ -69,6 +99,34 @@ $(function() {
               var wrong_ids = data.wrong_ids;
               var right_ids = data.right_ids;
               console.log(wrong_ids);
+              var responses = get_responses();
+
+              $("#table").html(data.page_content);
+              $('#page-number').remove();
+
+              // resuming the choice panel
+
+              var ids = responses["html_ids"].split(",");
+              console.log(ids);
+              // var ids = data.responses;
+              // console.log(ids);
+              for(var i = 0; i < ids.length; i++) {
+                  var id = ids[i];
+                  $("#"+id).removeClass("ion-android-radio-button-off");
+                  $("#"+id).addClass("ion-android-radio-button-on");
+                  var $diff = $("#"+id).parent().parent().find("li.diff");
+                  var $same = $("#"+id).parent().parent().find("li.same");
+                  if(id.indexOf("a1") > 0 || id.indexOf("a2") > 0 || id.indexOf("a3") > 0) {
+                      $diff.css("border-color", "#30819c");
+                      $same.css("border-color", "transparent");
+                  }
+                  else {
+                      $diff.css("border-color", "transparent");
+                      $same.css("border-color", "#30819c");
+                  }
+              }
+                
+
               disable_choice_panel();
 
               for(i = 0; i <= wrong_ids.length; i++){

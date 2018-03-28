@@ -111,10 +111,32 @@ def grade_pratice_full_mode(tutorial_section, page):
     data_file = 'data/tutorial/' + str(tutorial_section) + "/" + str(page) + '.csv'
     pairs = dl.load_data_from_csv(data_file)
     feedback = list()
-    responses = request.args.get('response').split(',')
+    responses = request.args.get('responses').split(',')
     all_correct = True
     wrong_ids = []
     right_ids = []
+
+
+
+    ustudy_mode = int(r.get(session['user_id']+'_ustudy_mode'))
+    data_mode = 'full'
+    working_data = dm.DataPairList(data_pairs = pairs)
+    # current_page = 1
+    pairs_formatted = working_data.get_data_display(data_mode)[:]
+    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    icons = working_data.get_icons()[:]
+    ids_list = working_data.get_ids()[:]
+    ids = zip(ids_list[0::2], ids_list[1::2])
+
+    
+
+    page_content = render_template('tutorial/table.html', 
+        data=data, 
+        icons=icons, 
+        ids=ids, 
+        ustudy_mode=ustudy_mode
+    )
+
   
     for i in range(0, len(pairs), 2):
         pair_id = pairs[i][0]
@@ -131,8 +153,11 @@ def grade_pratice_full_mode(tutorial_section, page):
             all_correct = False
     if all_correct:
         feedback.append('<h5>Good job!</h5>')
+
+    feedback.append('<h5>We have opened all the records for you to review!</h5>')
+    # print responses
     
-    return jsonify(result=feedback, wrong_ids = wrong_ids, right_ids = right_ids)
+    return jsonify(result=feedback, wrong_ids = wrong_ids, right_ids = right_ids, page_content = page_content)
 
 
 @tutorial.route('/ppirl_tutorial1')

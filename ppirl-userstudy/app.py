@@ -191,10 +191,13 @@ def feedback_main_section():
 
 
     if len(wrong_attempts) == 0:
-        feedback = "You got all of the questions in this page right!"
+        feedback = "You got all of the questions in this page right! "
+        if(session[session['user_id'] + '_mode'] != '1'):
+            feedback += "We have opened all the records for you to review. "
     else:
-        feedback += "Question(s) you got wrong: " + ", ".join(wrong_attempts) + "\n"
-        # feedback += "You might want to consider opening more relevant information if it would help you get more questions right."
+        feedback += "The question(s) you got wrong are " + ", ".join(wrong_attempts) + "\n"
+        if(session[session['user_id'] + '_mode'] != '1'):
+            feedback += ". All the records have been opened so that you can review!"
 
     return jsonify(result=feedback, wrong_ids=wrong_ids, right_ids=right_ids, page_content=page_content)
 
