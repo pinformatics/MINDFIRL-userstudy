@@ -524,73 +524,73 @@ def get_icon_string(s1, s2, helper1, helper2):
                 k = 0
                 while k < len(helper1):
                     if helper1[k] == '*':
-                        #ret += '<span class="hidden_element">*</span>'
-                        icons.append('E')
+                        ret += '<img class="space_icon_full" src="/static/images/site/space.png" alt="space">'
+                        # icons.append('E')
                         k += 1
                         i += 1
                         j += 1
                     elif k+1 < len(helper1) and i+1 < len(s1) and j+1 < len(s2) and helper1[k] not in ['*', '_', '?'] and helper1[k+1] not in ['*', '_', '?'] and s1[i] == s2[j+1] and s1[i+1] == s2[j]:
-                        #ret += '<img class="transpose_icon" src="/static/images/site/transpose.png" alt="transpose">'
-                        icons.append('T')
-                        icons.append('T')
+                        ret += '<img class="transpose_icon" src="/static/images/site/transpose.png" alt="transpose">'
+                        # icons.append('T')
+                        # icons.append('T')
                         k += 2
                         i += 2
                         j += 2
                     elif helper1[k] == '_' or helper1[k] == '?':
                         if helper1[k] == "_":
-                            #if not k+1 == len(helper1) and helper1[k+1] == "_":
-                            #    ret += '<img class="space_icon" src="/static/images/site/space.png" alt="space">'
-                            #else:
-                            #    ret += '<img class="indel_icon" src="/static/images/site/indel.png" alt="indel">'
-                            icons.append('I')
+                            if not k+1 == len(helper1) and helper1[k+1] == "_":
+                               ret += '<img class="space_icon" src="/static/images/site/space.png" alt="space">'
+                            else:
+                               ret += '<img class="indel_icon" src="/static/images/site/indel.png" alt="indel">'
+                            # icons.append('I')
                         k += 1
                         j += 1
                     elif helper2[k] == '_' or helper2[k] == '?':
                         if helper2[k] == '_':
-                            #if not k+1 == len(helper2) and helper2[k+1] == "_":
-                            #    ret += '<img class="space_icon" src="/static/images/site/space.png" alt="space">'
-                            #else:
-                            #    ret += '<img class="indel_icon" src="/static/images/site/indel.png" alt="indel">'
-                            icons.append('I')
+                            if not k+1 == len(helper2) and helper2[k+1] == "_":
+                               ret += '<img class="space_icon" src="/static/images/site/space.png" alt="space">'
+                            else:
+                               ret += '<img class="indel_icon" src="/static/images/site/indel.png" alt="indel">'
+                            # icons.append('I')
                         k += 1
                         i += 1
                     else:
-                        #if not k+1 == len(helper1) and not helper1[k+1] in ["*", "_", "?"] and not helper2[k+1] in ["*", "_", "?"]:
-                        #    ret += '<img class="space_icon" src="/static/images/site/space.png" alt="space">'
-                        #else:
-                        #    ret += '<img class="replace_icon" src="/static/images/site/replace.png" alt="replace">'
-                        icons.append('R')
+                        if not k+1 == len(helper1) and not helper1[k+1] in ["*", "_", "?"] and not helper2[k+1] in ["*", "_", "?"]:
+                           ret += '<img class="space_icon" src="/static/images/site/space.png" alt="space">'
+                        else:
+                           ret += '<img class="replace_icon" src="/static/images/site/replace.png" alt="replace">'
+                        # icons.append('R')
                         k += 1
                         i += 1
                         j += 1
 
-                end = 0
-                i = 0
-                while i < len(icons):
-                    item = ''
-                    if icons[i] == 'R':
-                        l = i;
-                        while i+1 < len(icons) and icons[i+1] == 'R':
-                            i += 1
-                        pos = 0.5*(l+i)
-                        item = '<img class="replace_icon" src="/static/images/site/replace.png" alt="replace" style="margin-left:%fpx;">' % (9.59*pos-end-2)
-                        end = 9.59*pos-2 + 13
-                    elif icons[i] == 'I':
-                        l = i;
-                        while i+1 < len(icons) and icons[i+1] == 'I':
-                            i += 1
-                        pos = 0.5*(l+i)
-                        item = '<img class="indel_icon" src="/static/images/site/indel.png" alt="indel" style="margin-left:%fpx;">' % (9.59*pos-end-2)
-                        end = 9.59*pos-2 + 13
-                    elif icons[i] == 'T':
-                        pos = i;
-                        item = '<img class="transpose_icon" src="/static/images/site/transpose.png" alt="transpose" style="margin-left:%fpx;">' % (9.59*pos-end)
-                        end = 9.59*pos + 20
-                        i += 1
-                    ret += item
-                    i += 1
-                item = '<img class="space_icon" src="/static/images/site/space.png" alt="space" style="margin-left:%fpx;">' % (9.6*len(icons)-end)
-                ret += item
+                # end = 0
+                # i = 0
+                # while i < len(icons):
+                #     item = ''
+                #     if icons[i] == 'R':
+                #         l = i;
+                #         while i+1 < len(icons) and icons[i+1] == 'R':
+                #             i += 1
+                #         pos = 0.5*(l+i)
+                #         item = '<img class="replace_icon" src="/static/images/site/replace.png" alt="replace" style="margin-left:%fpx;">' % (9.59*pos-end-2)
+                #         end = 9.59*pos-2 + 13
+                #     elif icons[i] == 'I':
+                #         l = i;
+                #         while i+1 < len(icons) and icons[i+1] == 'I':
+                #             i += 1
+                #         pos = 0.5*(l+i)
+                #         item = '<img class="indel_icon" src="/static/images/site/indel.png" alt="indel" style="margin-left:%fpx;">' % (9.59*pos-end-2)
+                #         end = 9.59*pos-2 + 13
+                #     elif icons[i] == 'T':
+                #         pos = i;
+                #         item = '<img class="transpose_icon" src="/static/images/site/transpose.png" alt="transpose" style="margin-left:%fpx;">' % (9.59*pos-end)
+                #         end = 9.59*pos + 20
+                #         i += 1
+                #     ret += item
+                #     i += 1
+                # item = '<img class="space_icon" src="/static/images/site/space.png" alt="space" style="margin-left:%fpx;">' % (9.6*len(icons)-end)
+                # ret += item
                 return ret
 
 
