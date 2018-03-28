@@ -28,3 +28,9 @@ df_sample_check %>%
 
 overlap <-
 df_sample_check$df %>% reduce(semi_join, "X1")
+
+df_sample_check %>% 
+  filter(section == 3, 
+         sample == 3) %>% 
+  pull(df)
+

@@ -22,8 +22,13 @@
             </div>
             <div id="content">
                 <div>
-Now you are moving to Section 2.<br/>
-You are not required to finish all the questions in this section. Just finish as much as you can.<br/><br/>
+                    Good job! You have completed Section {{ section - 1}}. Now you are moving to Section {{ section }}.<br/>
+                    Just finish as much as you can.<br/><br/>
+                    {% if session[session['user_id'] + '_mode'] in ['3', '4'] %}
+
+                    Your meter will be reset.
+
+                    {% endif %}
                 </div>
                 <div class="submit_div">
                     <form>

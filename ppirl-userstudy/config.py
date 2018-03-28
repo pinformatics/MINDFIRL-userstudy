@@ -45,8 +45,24 @@ SEQUENCE_MODE4 = [
     'main_section.show_section1_guide',    #30
     'main_section.show_record_linkage_task',    #31
     'main_section.show_section2_guide',    #32
-    'main_section.show_section2_budget',
-    'main_section.show_section2',    #33
+    # 'main_section.show_section2_budget',
+    'main_section.show_section2', 
+    'main_section.show_section3_guide',  
+    'main_section.show_section3',
+    'main_section.show_section4_guide',  
+    'main_section.show_section4',
+    'main_section.show_section5_guide',  
+    'main_section.show_section5',
+    'main_section.show_section6_guide',  
+    'main_section.show_section6',
+    'main_section.show_section7_guide',  
+    'main_section.show_section7',
+    'main_section.show_section8_guide',  
+    'main_section.show_section8',
+    'main_section.show_section9_guide',  
+    'main_section.show_section9',
+    'main_section.show_section10_guide',  
+    'main_section.show_section10',       
     'post_survey',
     'show_thankyou'    #34
 ]
@@ -68,7 +84,23 @@ SEQUENCE_MODE1 =  [
     'main_section.show_section1_guide',    #30
     'main_section.show_record_linkage_task',    #31
     'main_section.show_section2_guide',    #32
-    'main_section.show_section2',    #33
+    'main_section.show_section2', 
+    'main_section.show_section3_guide',  
+    'main_section.show_section3',
+    'main_section.show_section4_guide',  
+    'main_section.show_section4',
+    'main_section.show_section5_guide',  
+    'main_section.show_section5',
+    'main_section.show_section6_guide',  
+    'main_section.show_section6',
+    'main_section.show_section7_guide',  
+    'main_section.show_section7',
+    'main_section.show_section8_guide',  
+    'main_section.show_section8',
+    'main_section.show_section9_guide',  
+    'main_section.show_section9',
+    'main_section.show_section10_guide',  
+    'main_section.show_section10',          #33
     'post_survey',
     'show_thankyou' 
 ]
@@ -104,7 +136,23 @@ SEQUENCE_MODE2 =  [
     'main_section.show_section1_guide',    #30
     'main_section.show_record_linkage_task',    #31
     'main_section.show_section2_guide',    #32
-    'main_section.show_section2',    #33
+    'main_section.show_section2', 
+    'main_section.show_section3_guide',  
+    'main_section.show_section3',
+    'main_section.show_section4_guide',  
+    'main_section.show_section4',
+    'main_section.show_section5_guide',  
+    'main_section.show_section5',
+    'main_section.show_section6_guide',  
+    'main_section.show_section6',
+    'main_section.show_section7_guide',  
+    'main_section.show_section7',
+    'main_section.show_section8_guide',  
+    'main_section.show_section8',
+    'main_section.show_section9_guide',  
+    'main_section.show_section9',
+    'main_section.show_section10_guide',  
+    'main_section.show_section10',          #33
     'post_survey',
     'show_thankyou'    #34
 ]
@@ -142,7 +190,23 @@ SEQUENCE_MODE3 = [
    'main_section.show_section1_guide',    #30
    'main_section.show_record_linkage_task',
    'main_section.show_section2_guide',    #32
-   'main_section.show_section2',    #33
+   'main_section.show_section2',    #33 
+   'main_section.show_section3_guide',  
+   'main_section.show_section3',
+   'main_section.show_section4_guide',  
+   'main_section.show_section4',
+   'main_section.show_section5_guide',  
+   'main_section.show_section5',
+   'main_section.show_section6_guide',  
+   'main_section.show_section6',
+   'main_section.show_section7_guide',  
+   'main_section.show_section7',
+   'main_section.show_section8_guide',  
+   'main_section.show_section8',
+   'main_section.show_section9_guide',  
+   'main_section.show_section9',
+   'main_section.show_section10_guide',  
+   'main_section.show_section10',       
    'post_survey',
    'show_thankyou' 
 ]

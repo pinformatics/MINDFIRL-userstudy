@@ -10,6 +10,7 @@ import redis
 import logging
 import math
 import copy
+import re
 import data_loader as dl
 import data_display as dd
 import data_model as dm
@@ -37,15 +38,32 @@ if not r.exists('user_id_generator'):
 
 
 def get_main_section_data(uid, section):
-    data_num = int(uid)%10
-    if data_num == 0:
-        data_num = 10
-    data_num -= 1
+    sample = int(uid)%10
+    if sample == 0:
+        sample = 10
+    sample -= 1
 
     if section == 1:
-        return DATA_SECTION1[data_num]
-    else:
-        return DATA_SECTION2[data_num]
+        return DATA_SECTION1[sample]
+    elif section == 2:
+        return DATA_SECTION2[sample]
+    elif section == 3:
+        return DATA_SECTION3[sample]
+    elif section == 4:
+        return DATA_SECTION4[sample]    
+    elif section == 5:
+        return DATA_SECTION5[sample]
+    elif section == 6:
+        return DATA_SECTION6[sample]
+    elif section == 7:
+        return DATA_SECTION7[sample]    
+    elif section == 8:
+        return DATA_SECTION8[sample]
+    elif section == 9:
+        return DATA_SECTION9[sample]
+    elif section == 10:
+        return DATA_SECTION10[sample]    
+
 
 def get_sequence_for_mode():
     return config.SEQUENCE['Mode_'+r.get(str(session['user_id'])+'_ustudy_mode')]
@@ -240,11 +258,13 @@ def open_cell():
         working_data = get_main_section_data(session['user_id'], 1)
         full_data = DATASET
         kapr_limit = float(r.get(str(session['user_id'])+'section1_kapr_limit'))
+    # elif 'show_section' in get_url_for_index(session['state']):
     else:
-        working_data = get_main_section_data(str(session['user_id']), 2)
+        section = int(re.findall(r'\d+', get_url_for_index(session['state']))[0])
+        working_data = get_main_section_data(str(session['user_id']), section)
         working_data.set_kapr_size(6*6)
         full_data = DATASET2
-        kapr_limit = float(r.get(str(session['user_id'])+'section2_kapr_limit'))
+        kapr_limit = float(r.get(str(session['user_id'])+'section'+str(section)+'_kapr_limit'))
 
     id1 = request.args.get('id1')
     id2 = request.args.get('id2')
@@ -279,10 +299,11 @@ def open_big_cell():
         full_data = DATASET
         kapr_limit = float(r.get(session['user_id']+'section1_kapr_limit'))
     else:
-        working_data = get_main_section_data(session['user_id'], 2)
+        section = int(re.findall(r'\d+', get_url_for_index(session['state']))[0])
+        working_data = get_main_section_data(str(session['user_id']), section)
         working_data.set_kapr_size(6*6)
         full_data = DATASET2
-        kapr_limit = float(r.get(str(session['user_id'])+'section2_kapr_limit'))
+        kapr_limit = float(r.get(str(session['user_id'])+'section'+str(section)+'_kapr_limit'))
 
     id1 = request.args.get('id1')
     id2 = request.args.get('id2')
