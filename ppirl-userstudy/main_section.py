@@ -137,7 +137,7 @@ def show_record_linkage_task():
         ids=ids, 
         title='Section 1', 
         thisurl='/record_linkage', 
-        page_number=str(current_page+1)+"/6", 
+        page_number=str(current_page+1), 
         delta=delta, 
         kapr = KAPR,
         kapr_limit = kapr_limit, 
@@ -205,6 +205,43 @@ def show_record_linkage_next():
         'ustudy_mode': ustudy_mode,
         'delta': delta_dict,
         'is_last_page': is_last_page,
+        'page_number': 'page: ' + str(current_page+1)+'/'+str(page_size),
+        'page_content': page_content
+    }
+    return jsonify(ret)
+
+
+@main_section.route('/record_linkage/open')
+def show_record_linkage_open():
+    ustudy_mode = int(r.get(session['user_id']+'_ustudy_mode'))
+    data_mode = 'full'
+    working_data = get_main_section_data(session['user_id'], 1)
+
+    page_size = int(r.get(str(session['user_id']) + '_page_size'))
+    current_page = int(r.get(str(session['user_id'])+'_current_page'))
+    if current_page >= page_size:
+        ret = {
+            'result': 'no more pages'
+        }
+        return jsonify(ret)
+    
+    pairs_formatted = working_data.get_data_display(data_mode)[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
+    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    icons = working_data.get_icons()[config.DATA_PAIR_PER_PAGE*current_page:config.DATA_PAIR_PER_PAGE*(current_page+1)]
+    ids_list = working_data.get_ids()[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
+    ids = zip(ids_list[0::2], ids_list[1::2])
+
+    page_content = render_template('record_linkage_next.html', 
+        data=data, 
+        icons=icons, 
+        ids=ids, 
+        pair_num_base=6*current_page+1, 
+        ustudy_mode=ustudy_mode
+    )
+
+    ret = {
+        'result': 'success',
+        'ustudy_mode': ustudy_mode,
         'page_number': 'page: ' + str(current_page+1)+'/'+str(page_size),
         'page_content': page_content
     }
