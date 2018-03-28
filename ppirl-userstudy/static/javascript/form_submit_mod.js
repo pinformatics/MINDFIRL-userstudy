@@ -156,7 +156,7 @@ $(function() {
                     var row = $("#"+wrong_id+"-1-0").parent().parent();
                     // row.attr("class", "table_row table_row_wrong");
                     // row.addClass("table_row_wrong");
-                    row.prepend('<img src="/static/images/site/wrong.png" class="img_right_wrong" />')
+                    row.prepend('<img src="/static/images/site/red_cross.png" class="img_right_wrong" />')
                 }
 
                 for (var i = 0; i < right_ids.length; i++){ 
