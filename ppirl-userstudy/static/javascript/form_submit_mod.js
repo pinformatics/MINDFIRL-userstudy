@@ -64,6 +64,7 @@ function get_responses(){
     i = 0;
     var responses = new Array();
     var ids = new Array();
+    var html_ids = new Array();
     var screen_ids = new Array();
     $(".ion-android-radio-button-on").each(function() {
             var screen_id = $(this).parent().parent().parent().parent().children(".table_col1").text();
@@ -72,6 +73,7 @@ function get_responses(){
             var response = id[1];
             id = id[0].split("p")[1];
             ids[i] = id;
+            html_ids[i] = id_ans;
             responses[i] = response;
             screen_ids[i] = screen_id;
             i += 1;
@@ -80,6 +82,7 @@ function get_responses(){
     results = {
         "responses": responses.join(),
         "ids": ids.join(),
+        "html_ids": html_ids.join(),
         "screen_ids": screen_ids.join()
     };
 
@@ -141,15 +144,39 @@ $(function() {
             alert("Please answer all questions to continue.");
         }
         else {
-          
-
             // $('#button_next_rl').attr("disabled", "disabled");
-        
+            $('#submit_grade').attr("disabled", "disabled");
 
             $.getJSON('/feedback_main_section', get_responses(), function(data) {
                 var feedback_message = data.result;
                 var wrong_ids = data.wrong_ids;
                 var right_ids = data.right_ids;
+                var page_content = data.page_content;
+                // for resuming the choice panel
+                var responses = get_responses();
+
+                // update table content
+                $("#table_content").html(page_content);
+                remove_clickable_cells();
+
+                // resuming the choice panel
+                var ids = responses["html_ids"].split(",");
+                for(var i = 0; i < ids.length; i++) {
+                    var id = ids[i];
+                    $("#"+id).removeClass("ion-android-radio-button-off");
+                    $("#"+id).addClass("ion-android-radio-button-on");
+                    var $diff = $("#"+id).parent().parent().find("li.diff");
+                    var $same = $("#"+id).parent().parent().find("li.same");
+                    if(id.indexOf("a1") > 0 || id.indexOf("a2") > 0 || id.indexOf("a3") > 0) {
+                        $diff.css("border-color", "#30819c");
+                        $same.css("border-color", "transparent");
+                    }
+                    else {
+                        $diff.css("border-color", "transparent");
+                        $same.css("border-color", "#30819c");
+                    }
+                }
+                
                 // console.log(wrong_ids);
                 for (var i = 0; i < wrong_ids.length; i++){ 
                     var wrong_id = wrong_ids[i];
@@ -212,7 +239,6 @@ $(function() {
                 post($SCRIPT_ROOT+'/save_data', $user_data, "post");
                 $user_data = "";
             });
-                        
         }
         return false;
     });
