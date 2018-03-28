@@ -192,6 +192,12 @@
     vertical-align: top;
 }
 
+.space_icon_full {
+    width: 8.5px;
+    height: 25px;
+}
+
+
 .space_icon {
     width: 3.5px;
     height: 25px;
