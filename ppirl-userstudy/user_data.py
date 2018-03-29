@@ -47,9 +47,12 @@ def grade_final_answer(data, data_pair_list):
     size = data_pair_list.size()
     correct = 0
     for d in data:
+        # print 'url' not in d or'/main_section/' in d['url']
         if 'type' not in d or d['type'] != 'final_answer':
             continue
-        if 'url' not in d or d['url'] not in ['/record_linkage', '/section2']:
+        if 'url' not in d:
+            continue
+        if not d['url'] == '/record_linkage' and not '/main_section' in d['url']:
             continue
 
         answer_id = d['value']

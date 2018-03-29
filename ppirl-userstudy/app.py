@@ -391,11 +391,14 @@ def pull_data():
 
     ret = ''
     for d in data:
-        if 'type' in d and d['type'] == 'performance1':
-            ret += ('section 1: ' + d['value'] + ';\n')
-    for d in data:
-        if 'type' in d and d['type'] == 'performance2':
-            ret += ('section 2: ' + d['value'] + ';\n')
+        if 'type' in d and 'performance' in d['type']:
+            section = re.findall(r'\d+', d['type'])[0]
+            ret += ('section ' + section + ': ' + d['value'] + ';\n')
+    #     if 'type' in d and d['type'] == 'performance1':
+    #         ret += ('section 1: ' + d['value'] + ';\n')
+    # for d in data:
+    #     if 'type' in d and d['type'] == 'performance2':
+    #         ret += ('section 2: ' + d['value'] + ';\n')
     for d in data:
         if 'type' in d and d['type'] == 'final_KAPR_section1':
             ret += ('Final privacy budget used in section 1: ' + str(round(100*float(d['value']), 2)) + '% out of ' + d['total'] + '%;\n')
