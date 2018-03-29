@@ -110,7 +110,7 @@ def show_tutorial_privacy_practice():
 def grade_pratice_full_mode(tutorial_section, page):
     data_file = 'data/tutorial/' + str(tutorial_section) + "/" + str(page) + '.csv'
     pairs = dl.load_data_from_csv(data_file)
-    feedback = list()
+    feedback = ""
     responses = request.args.get('responses').split(',')
     all_correct = True
     wrong_ids = []
@@ -147,15 +147,20 @@ def grade_pratice_full_mode(tutorial_section, page):
         elif answer == '0' and (q+'a1' in responses or q+'a2' in responses or q+'a3' in responses):
             right_ids.append(pair_id)
         else:
-            print feedback
-            feedback.append('<h5>' + ", ".join(pairs[i][18:]) + '</h5>')
+            if tutorial_section == 'privacy':
+                feedback += '<br>'+", ".join(pairs[i][18:])
             wrong_ids.append(pair_id)
             all_correct = False
     if all_correct:
-        feedback.append('<h5>Good job!</h5>')
+        feedback += 'Good job! '
+    else:
+        feedback += 'Please review the questions you got wrong. '
 
-    feedback.append('<h5>We have opened all the records for you to review!</h5>')
+    if tutorial_section in ['clickable', 'privacy']:
+        feedback += 'We have opened all the records for you to review. '
     # print responses
+
+    feedback += 'Please click the next button when you are done.'
     
     return jsonify(result=feedback, wrong_ids = wrong_ids, right_ids = right_ids, page_content = page_content)
 

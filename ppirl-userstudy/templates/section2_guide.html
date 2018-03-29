@@ -21,14 +21,19 @@
                 <h3>Instructions</h3>
             </div>
             <div id="content">
-                <div>
-                    Good job! You have completed Section {{ section - 1}}. Now you are moving to Section {{ section }}.<br/>
-                    Just finish as much as you can.<br/><br/>
-                    {% if session[session['user_id'] + '_mode'] in ['3', '4'] %}
+                 
+                <div class="module_intros">
 
-                    Your meter will be reset.
+                 {% if session[session['user_id'] + '_mode'] in ['3', '4']: %}
 
-                    {% endif %}
+                    <img src="/static/images/module_intros/main_study_mode1.jpg"/>
+
+                 {% else: %}
+
+                    <img src="/static/images/module_intros/main_study_mode1.jpg"/>
+
+                 {% endif %}
+                </div>
                 </div>
                 <div class="submit_div">
                     <form>

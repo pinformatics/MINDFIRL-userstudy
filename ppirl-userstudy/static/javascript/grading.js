@@ -12,18 +12,27 @@ function get_responses() {
     var ids = new Array();
     var html_ids = new Array();
     var screen_ids = new Array();
+    // $(".ion-android-radio-button-on").each(function() {
+    //         var screen_id = $(this).parent().parent().parent().parent().children(".table_col1").text();
+    //         var id_ans = this.id;
+    //         var id = id_ans.split("a");
+    //         var response = id[1];
+    //         id = id[0].split("p")[1];
+    //         ids[i] = id;
+    //         html_ids[i] = id_ans;
+    //         responses[i] = response;
+    //         screen_ids[i] = screen_id;
+    //         i += 1;
+    // })
+
     $(".ion-android-radio-button-on").each(function() {
-            var screen_id = $(this).parent().parent().parent().parent().children(".table_col1").text();
-            var id_ans = this.id;
-            var id = id_ans.split("a");
-            var response = id[1];
-            id = id[0].split("p")[1];
-            ids[i] = id;
-            html_ids[i] = id_ans;
-            responses[i] = response;
-            screen_ids[i] = screen_id;
-            i += 1;
-    })
+        responses[i] = this.id;
+        html_ids[i] = this.id;
+        var screen_id = $(this).parent().parent().parent().parent().children(".table_col1").text();
+
+        i += 1;
+    });
+
 
     results = {
         "responses": responses.join(),
@@ -129,6 +138,8 @@ $(function() {
 
               disable_choice_panel();
 
+              console.log(wrong_ids);
+
               for(i = 0; i <= wrong_ids.length; i++){
                 var id = $("#"+"q"+wrong_ids[i]+"a1");
                 var row = id.parent().parent().parent().parent();
@@ -138,13 +149,13 @@ $(function() {
                 row.prepend('<img src="/static/images/site/red_cross.png" class="img_wrong_tutorial" />')
               };
 
-              for(i = 0; i <= right_ids.length; i++){
-                var id = $("#"+"q"+right_ids[i]+"a1");
-                var row = id.parent().parent().parent().parent();
-                // row.attr("class","table_row table_row_right");
-                // row.addClass("table_row_right");
-                // row.prepend('<img src="/static/images/site/right.png" class="img_right_wrong" />')
-              };
+              // for(i = 0; i <= right_ids.length; i++){
+              //   var id = $("#"+"q"+right_ids[i]+"a1");
+              //   var row = id.parent().parent().parent().parent();
+              //   // row.attr("class","table_row table_row_right");
+              //   // row.addClass("table_row_right");
+              //   // row.prepend('<img src="/static/images/site/right.png" class="img_right_wrong" />')
+              // };
 
                         
               feedback.fadeOut(250, function(){

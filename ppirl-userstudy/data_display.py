@@ -524,7 +524,8 @@ def get_icon_string(s1, s2, helper1, helper2):
                 k = 0
                 while k < len(helper1):
                     if helper1[k] == '*':
-                        ret += '<img class="space_icon_full" src="/static/images/site/space.png" alt="space">'
+                        # ret += '<img class="space_icon_full" src="/static/images/site/space.png" alt="space">'
+                        ret += '<span class="hidden_element">*</span>'
                         # icons.append('E')
                         k += 1
                         i += 1
