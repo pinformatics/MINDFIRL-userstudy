@@ -363,6 +363,16 @@ input[type="radio"] {
 }
 
 .page-number-div {
+    position: absolute;
+    width: 110px;
+    /*vertical-align: bottom;*/
+    display: inline-block;
+    /*margin-left: 15px;*/
+    left: 1700px;
+    /*top: 75px;*/
+}
+
+.page-number-div-meter {
     width: 110px;
     vertical-align: bottom;
     display: inline-block;
