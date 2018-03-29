@@ -605,7 +605,7 @@ def get_icon_string(s1, s2, helper1, helper2):
                         i += 1
                     ret += item
                     i += 1
-                item = '<img class="space_icon" src="/static/images/site/space.png" alt="space" style="margin-left:%fpx;">' % (9.6*len(icons)-end)
+                item = '<img class="space_icon" src="/static/images/site/space.png" alt="space" style="margin-left:%fpx;">' % (8.8*len(icons)-end)
                 ret += item
                 return ret
 
