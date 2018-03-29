@@ -110,7 +110,7 @@ function create_end_session() {
         var r = confirm("Are you sure to end your session?");
         if (r == true) {
             $(window).off("beforeunload");
-            window.location.href = $NEXT_URL;
+            window.location.href = '/post_survey';
         } 
     })
 }
@@ -158,7 +158,7 @@ $(function() {
                     // update table content
                     $("#table_content").html(data['page_content']);
                     // update page number
-                    $("#page-number").html(data['page_number']);
+                    $("#page-number").html(data['page_number']+'/6');
                     make_cell_clickable();
                     refresh_delta();
                     reset_choice_panel();
@@ -169,13 +169,14 @@ $(function() {
                         $("#privacy-risk-value").html(pround(data['kapr'],1)+"%")
                         $("#privacy-risk-delta").attr("style", 'width: 0%');
                         $("#privacy-risk-delta-value").html(" ")
-                        if(parseInt(data['page_number'].split(":")[1]) > 6) {
-                            create_end_session();
-                        }
+                        
                         if(($USTUDY_MODE == 3 || $USTUDY_MODE == 4) && (parseInt(data['page_number'].split(":")[1])-1)%6 == 0) {
                             alert("You have finished a batch of 6 pages of questions. Now you are moving to the next batch. The privacy budget bar will be reset.")
                         }
                     }
+                    //if(parseInt(data['section_num']) > 2) {
+                    //    create_end_session();
+                    //}
                     if(data['is_last_page'] == 0) {
                         $('#button_next_rl').attr("disabled", false);
                     }
