@@ -23,7 +23,7 @@
         {% if thisurl == '/record_linkage' %}
         <script src="../static/javascript/form_submit_mod.js?v=36"></script>
         {% elif thisurl != '/record_linkage' %}
-        <script src="../static/javascript/form_submit.js?v=38"></script>
+        <script src="../static/javascript/form_submit.js?v=42"></script>
         {% endif %}
         <script type=text/javascript>
             $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
@@ -57,6 +57,19 @@
             <div id="title">
                 <h3>{{ title | safe }}</h3>
             </div>
+            <script type=text/javascript>
+                {% if thisurl != '/record_linkage' %}
+                    {% if section_num > 2 %}
+                        $("#end_session").bind('click', function() {
+                            var r = confirm("Are you sure to end your session?");
+                            if (r == true) {
+                                $(window).off("beforeunload");
+                                window.location.href = '/post_survey';
+                            } 
+                        })
+                    {% endif %}
+                {% endif %}
+            </script>
             
             <div id="content">
                 <div class="tool-bar">

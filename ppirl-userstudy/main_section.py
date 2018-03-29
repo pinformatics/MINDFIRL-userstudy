@@ -253,7 +253,6 @@ def show_record_linkage_open():
 def show_main_section_guide(section_num=2):
     user_data_key = session['user_id'] + '_user_data'
     section_num = int(section_num)
-    print(section_num)
     last_section = section_num - 1
 
     # grading last section
@@ -343,7 +342,7 @@ def show_main_section(section_num=2):
     if section_num+1 <= 10:
         next_url = '/main_section_guide/' + str(section_num+1)
     else:
-        next_url = '/thankyou'
+        next_url = '/post_survey'
 
     return render_template('record_linkage_ppirl.html', 
         data=data, 
@@ -358,7 +357,8 @@ def show_main_section(section_num=2):
         kapr_limit = kapr_limit, 
         uid=str(session['user_id']),
         pair_num_base=6*current_page+1,
-        ustudy_mode=ustudy_mode
+        ustudy_mode=ustudy_mode,
+        section_num=section_num
     )
 
 
@@ -429,7 +429,8 @@ def show_main_section_next():
         'is_last_page': is_last_page,
         'page_number': 'page: ' + str(current_page+1),
         'page_content': page_content,
-        'kapr': KAPR
+        'kapr': KAPR,
+        'section_num': section_num
     }
     return jsonify(ret)
 
