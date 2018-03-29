@@ -159,7 +159,7 @@ $(function() {
 
                         
               feedback.fadeOut(250, function(){
-                feedback.html(data.result);  
+                feedback.text(data.result);  
                 feedback.css("color","#660000");
                 if($("#clickable_practice").length == 1) {
                     var expenditure = $("#privacy-risk-value").text().replace("%","").trim();
