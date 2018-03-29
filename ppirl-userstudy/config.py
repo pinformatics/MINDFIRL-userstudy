@@ -44,9 +44,9 @@ SEQUENCE_MODE4 = [
     'tutorial.show_tutorial_clickable_practice', #29 DATA_CLICKABLE_PRACTICE
     'main_section.show_section1_guide',    #30
     'main_section.show_record_linkage_task',    #31
-    'main_section.show_section2_guide',    #32
+    'main_section.show_main_section_guide',    #32
     # 'main_section.show_section2_budget',
-    'main_section.show_section2', 
+    'main_section.show_main_section', 
     'main_section.show_section3_guide',  
     'main_section.show_section3',
     'main_section.show_section4_guide',  

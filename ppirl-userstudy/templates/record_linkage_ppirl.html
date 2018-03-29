@@ -29,6 +29,9 @@
             $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
             $THIS_URL = "{{ thisurl }}";
             $NEXT_URL = $SCRIPT_ROOT + "{{ url_for('next') }}";
+            {% if thisurl != '/record_linkage' %}
+                $NEXT_URL = "{{ nexturl }}";
+            {% endif %}
 
             var dt = new Date();
             $timestamp = Math.round(dt.getTime()/1000);
