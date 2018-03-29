@@ -86,9 +86,17 @@
                 <div class="privacy-budget-div-empty">
                 </div>
                 {% endif %}
-                <div id="page-number" class="page-number-div">
+
+            
+            {% if ustudy_mode > 2: %}
+                <div id="page-number" class="page-number-div-meter">    
+            {% else: %}
+                <div id="page-number" class="page-number-div">    
+            {% endif %}
                     page: <span id="page-number">{{ page_number }}/6</span>
                 </div>
+
+                
                 </div>
                 <div style="clear:both"></div>
                 <div id="table">
