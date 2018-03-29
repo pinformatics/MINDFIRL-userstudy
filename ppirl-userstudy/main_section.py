@@ -350,7 +350,7 @@ def show_main_section(section_num=2):
         icons=icons, 
         ids=ids, 
         title='Section <span id="end_session">%d</span>' % section_num, 
-        thisurl='/main_section', 
+        thisurl='/main_section/'+str(section_num), 
         nexturl=next_url,
         page_number=str(current_page+1), 
         delta=delta, 
