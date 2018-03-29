@@ -199,7 +199,7 @@
 
 
 .space_icon {
-    width: 4px;
+    width: 4.5px;
     height: 25px;
 }
 
@@ -209,13 +209,13 @@
 }
 
 .replace_icon {
-    width: 9px;
-    height: 9px;
+    width: 13px;
+    height: 13px;
 }
 
 .indel_icon {
-    width: 9px;
-    height: 9px;
+    width: 13px;
+    height: 13px;
 }
 
 .transpose_icon {

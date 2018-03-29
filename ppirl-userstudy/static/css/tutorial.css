@@ -36,9 +36,9 @@
 {
     position: absolute;
     margin-top: 10%;
-    margin-left: 50%;
+    margin-left: 55%;
     width: 30%;
-    font-size: 200px;
+    font-size: 30px;
     color: black;
     /*padding:1px;*/
     /*border:thin solid black;*/
@@ -47,10 +47,10 @@
 .TblFeedbackShort
 {
     position: absolute;
-    margin-top: 5%;
-    margin-left: 50%;
+    margin-top: 3%;
+    margin-left: 55%;
     width: 30%;
-    font-size: 200px;
+    font-size: 30px;
     color: black;
     /*padding:1px;*/
     /*border:thin solid black;*/
