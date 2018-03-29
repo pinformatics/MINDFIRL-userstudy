@@ -435,12 +435,10 @@ def show_thankyou():
     #r.append(user_data_key, 'type: session_end,timestamp: '+str(time.time())+';\n')
     user_data = r.get(user_data_key)
     data = ud.parse_user_data(user_data)
-    # TODO! TODO! TODO! TODO! TODO! TODO! TODO! TODO! TODO! TODO! 
-    # SECTION 2 pair num must be different from section 1! section 2 num be a factor of 6
-    result = ud.grade_final_answer(data, get_main_section_data(session['user_id'], 2))
+    result = ud.grade_final_answer(data, get_main_section_data(session['user_id'], 10))
     performance2 = {
         'uid': session['user_id'],
-        'type': 'performance2',
+        'type': 'performance10',
         'value': str(result[0]) + ' out of ' + str(result[1]),
         'timestamp': int(time.time()),
         'source': 'server'

@@ -253,7 +253,6 @@ def show_record_linkage_open():
 def show_main_section_guide(section_num=2):
     user_data_key = session['user_id'] + '_user_data'
     section_num = int(section_num)
-    print(section_num)
     last_section = section_num - 1
 
     # grading last section
