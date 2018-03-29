@@ -271,7 +271,9 @@ def show_main_section_guide(section_num=2):
     }
     r.append(user_data_key, ud.format_user_data(performance))
 
-    return render_template('section2_guide.html', uid=str(session['user_id']), section=section_num)
+    next_url = '/main_section/' + str(section_num)
+
+    return render_template('section2_guide.html', uid=str(session['user_id']), section=section_num, nexturl=next_url)
 
 
 @main_section.route('/main_section/<section_num>')
@@ -339,7 +341,7 @@ def show_main_section(section_num=2):
     r.set(str(session['user_id'])+'section'+str(section_num)+'_kapr_limit', kapr_limit)
 
     if section_num+1 <= 10:
-        next_url = '/main_section/' + str(section_num+1)
+        next_url = '/main_section_guide/' + str(section_num+1)
     else:
         next_url = '/thankyou'
 
