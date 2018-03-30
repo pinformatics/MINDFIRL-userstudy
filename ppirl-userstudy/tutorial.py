@@ -149,7 +149,7 @@ def grade_pratice_full_mode(tutorial_section, page):
             right_ids.append(pair_id)
         else:
             if tutorial_section == 'privacy':
-                custom_feedback += '<br>'+", ".join(pairs[i][18:])
+                custom_feedback += ", ".join(pairs[i][18:]) + '<br>'
             wrong_ids.append(pair_id)
             all_correct = False
     if all_correct:
