@@ -238,34 +238,73 @@ df_id_sampling <-
   slice(1) %>% 
   ungroup()
 
+sample_df <- function(df){
+  df %>% sample_n(df$n[1])
+}
+
 for(sample in seq_len(10)) {
   
   df_id_sampling_i <- df_id_sampling
+  df_samples <- list()
   
   for(section in seq_len(11)) {
-    if(section == 6){
-      browser()
-    }
-    sampling_section <- ls_df_lookup_scrambled[[section]]
+    # if(section == 6){
+    #   browser()
+    # }
     
-    df_samplei_sectionj <- 
-      df_id_sampling_i %>% 
-      semi_join(sampling_section, "type") %>% 
+    # browser()
+    
+    df_sampling_section <- 
+      ls_df_lookup_scrambled[[section]] %>% 
       group_by(type) %>% 
-      sample_n(1) %>% 
-      ungroup() %>%
-      left_join(sampling_section, "type") %>%
-      ungroup() %>%
-      select(-type)
-    
-    df_id_sampling_i <- 
+      mutate(type_n = row_number()) %>% 
+      ungroup()
+      
+    df_sampling_count <- df_sampling_section %>% count(type)
+
+    df_sample_i_section_j <- 
       df_id_sampling_i %>% 
-      filter(!id %in% df_samplei_sectionj$id)
-    
-    starred_data %>% 
-      inner_join(df_samplei_sectionj, "id") %>% 
+      left_join(df_sampling_count, "type") %>% 
+      filter(!is.na(n)) %>% 
+      group_by(type, n) %>% 
+      nest() %>% 
+      mutate(data = map2(data, n, ~sample_n(.x, .y))) %>% 
+      unnest(data) %>% 
+      group_by(type) %>% 
+      mutate(type_n = row_number()) %>% 
+      ungroup() %>% 
+      left_join(df_sampling_section, by = c("type", "type_n")) %>% 
       arrange(qnum) %>% 
-      select(-qnum) %>% 
+      select(-one_of("type", "n", "type_n"))
+        
+    # df_samplei_sectionj <- 
+    #   df_id_sampling_i %>% 
+    #   semi_join(sampling_section, "type") %>% 
+    #   group_by(type) %>% 
+    #   sample_n(1) %>% 
+    #   ungroup() %>%
+    #   left_join(sampling_section, "type") %>%
+    #   ungroup() %>%
+    #   select(-type)
+    # 
+    # if(section > 1) df_samplei_sectionj %>% semi_join(df_samples %>% bind_rows()) %>% print()
+    # 
+    df_id_sampling_i <-
+      df_id_sampling_i %>%
+      filter(!id %in% df_sample_i_section_j$id)
+    # 
+    # df_samples[[section]] <-    
+    #   starred_data %>% 
+    #   inner_join(df_samplei_sectionj, "id") %>% 
+    #   arrange(qnum) %>% 
+    #   select(-qnum)
+    # 
+    # df_samples %>% bind_rows() %>% count(type, id, sort = T) %>% mutate(n = n/2) %>% print()
+    # 
+    starred_data %>%
+      inner_join(df_sample_i_section_j, "id") %>%
+      arrange(qnum) %>%
+      select(-qnum) %>%
       write_csv(str_c("data_output/samples_sections_scrambling/section_", section, "_sample_", sample, ".csv"), col_names = FALSE)
     
   }

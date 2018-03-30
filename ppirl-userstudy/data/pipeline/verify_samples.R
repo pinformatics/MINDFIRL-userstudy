@@ -16,6 +16,20 @@ df_sample_check <-
          df = map(file_name, read_csv, col_names = F), 
          n = map_int(df, nrow))
 
+df_sample_check %>% 
+  filter(sample == 1,
+         section %in% 1:10) %>% 
+  pull(df) %>% 
+  bind_rows() %>% 
+  count(id = X1, type = X16, sort = T) %>% 
+  mutate(n = n/2)
+
+
+df_sample_check %>% 
+  filter(sample == 1, 
+         section %in% 1:2) %>% 
+  pull(df)
+
 
 df_sample_check %>% 
   arrange(section, sample) %>% 
@@ -29,13 +43,6 @@ df_sample_check %>%
 overlap <-
 df_sample_check$df %>% reduce(semi_join, "X1")
 
-df_sample_check %>% 
-  filter(sample == 7,
-         section %in% 1:10) %>% 
-  pull(df) %>% 
-  bind_rows() %>% 
-  count(id = X1, type = X16, sort = T) %>% 
-  mutate(n = n/2)
 
 
 
