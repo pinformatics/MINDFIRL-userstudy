@@ -81,11 +81,18 @@ def index():
         r.set('user_id_'+user_id, user_id)
         ustudy_mode = request.args.get('mode')
         ustudy_budget = request.args.get('budget')
+        # print '>>>>>>>>>>>>>>>>>>>>>'
+        # print ustudy_mode, ustudy_budget
         if ustudy_mode is None:
             ustudy_mode = '1'
+        if ustudy_mode == '4' and ustudy_budget is None:
+            ustudy_budget = 'moderate'
+        if ustudy_mode == '5' and ustudy_budget is None:
+            ustudy_mode = '4'
+            ustudy_budget = 'minimum'        
         if ustudy_budget is None:
             ustudy_budget = '0'
-        if ustudy_mode != '4':
+        if not ustudy_mode in ['4', '5']:
             ustudy_budget = '0'
         if int(ustudy_mode) not in [1,2,3,4]:
             return page_not_found('page_not_found')
@@ -102,9 +109,14 @@ def index():
             ustudy_budget = request.args.get('budget')
             if ustudy_mode is None:
                 ustudy_mode = '1'
+            if ustudy_mode == '4' and ustudy_budget is None:
+                ustudy_budget = 'moderate'
+            if ustudy_mode == '5' and ustudy_budget is None:
+                ustudy_mode = '4'
+                ustudy_budget = 'minimum'        
             if ustudy_budget is None:
                 ustudy_budget = '0'
-            if ustudy_mode != '4':
+            if not ustudy_mode in ['4', '5']:
                 ustudy_budget = '0'
             if int(ustudy_mode) not in [1,2,3,4]:
                 return page_not_found('page_not_found')
@@ -207,7 +219,7 @@ def feedback_main_section():
     if not session[session['user_id'] + '_mode'] == '1':
             feedback += "All the records have been opened so that you can review! "    
 
-    feedback += 'Click on the next button to continue'
+    feedback += 'Click on the next button to continue.'
 
     return jsonify(result=feedback, wrong_ids=wrong_ids, right_ids=right_ids, page_content=page_content)
 
