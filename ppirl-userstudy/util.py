@@ -45,6 +45,8 @@ def state_machine(function_name):
                     if i != 0 and i < session['state']:
                         return redirect_by_state()
                     session['state'] = i
+                    user_id = session["user_id"]
+                    r.set("session_"+str(user_id)+"_state", str(session['state']))
                     break
             return f(*args, **kwargs)
         return inner_wrapper
