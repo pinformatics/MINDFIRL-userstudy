@@ -276,6 +276,22 @@ def show_main_section_guide(section_num=2):
     }
     r.append(user_data_key, ud.format_user_data(performance))
 
+    # get final KAPR
+    KAPR_key = session['user_id'] + '_KAPR'
+    final_KAPR = r.get(KAPR_key)
+    kapr_limit = r.get(session['user_id']+'section%d_kapr_limit' % section_num)
+    if final_KAPR is not None and kapr_limit is not None:
+        kapr_info = 'type:final_KAPR_section1, value:' + str(final_KAPR) + ',total:' + kapr_limit + ';\n'
+        kapr_info = {
+            'uid': session['user_id'],
+            'type': 'final_KAPR_section10',
+            'value': str(final_KAPR),
+            'timestamp': int(time.time()),
+            'source': 'server',
+            'total': kapr_limit
+        }
+        r.append(user_data_key, ud.format_user_data(kapr_info))
+
     next_url = '/main_section/' + str(section_num)
 
     return render_template('section2_guide.html', uid=str(session['user_id']), section=section_num, nexturl=next_url)
