@@ -59,6 +59,11 @@ def show_record_linkage_task():
     """
     section 1
     """
+    # check for coming back user, not using session['state'] because the state stops at main section
+    main_section_num = r.get(session['user_id']+'_main_section_num')
+    if main_section_num:
+        return redirect('/main_section_guide/'+main_section_num)
+
     ustudy_mode = int(r.get(session['user_id']+'_ustudy_mode'))
     ustudy_budget = r.get(session['user_id']+'_ustudy_budget')
     data_mode = 'masked'
@@ -271,6 +276,22 @@ def show_main_section_guide(section_num=2):
     }
     r.append(user_data_key, ud.format_user_data(performance))
 
+    # get final KAPR
+    KAPR_key = session['user_id'] + '_KAPR'
+    final_KAPR = r.get(KAPR_key)
+    kapr_limit = r.get(session['user_id']+'section%d_kapr_limit' % section_num)
+    if final_KAPR is not None and kapr_limit is not None:
+        kapr_info = 'type:final_KAPR_section1, value:' + str(final_KAPR) + ',total:' + kapr_limit + ';\n'
+        kapr_info = {
+            'uid': session['user_id'],
+            'type': 'final_KAPR_section10',
+            'value': str(final_KAPR),
+            'timestamp': int(time.time()),
+            'source': 'server',
+            'total': kapr_limit
+        }
+        r.append(user_data_key, ud.format_user_data(kapr_info))
+
     next_url = '/main_section/' + str(section_num)
 
     return render_template('section2_guide.html', uid=str(session['user_id']), section=section_num, nexturl=next_url)
@@ -298,13 +319,27 @@ def show_main_section(section_num=2):
     dp_list_size = working_data.get_size()
 
     # if the user is in this section the first time, or coming back
+    #first_flag = True
+    #page_size_key = str(session['user_id']) + '_section2_page_size'
+    #current_page_key = str(session['user_id']) + '_section2_current_page'
+    #current_page = 0
+    #page_size = int(math.ceil(1.0*dp_list_size/config.DATA_PAIR_PER_PAGE))
+    #r.set(page_size_key, str(page_size))
+    #r.set(current_page_key, current_page)
+
+    # if the user is in this section the first time, or coming back
     first_flag = True
-    page_size_key = str(session['user_id']) + '_section2_page_size'
-    current_page_key = str(session['user_id']) + '_section2_current_page'
-    current_page = 0
-    page_size = int(math.ceil(1.0*dp_list_size/config.DATA_PAIR_PER_PAGE))
-    r.set(page_size_key, str(page_size))
-    r.set(current_page_key, current_page)
+    page_size_key = str(session['user_id']) + '_page_size_section' + str(section_num)
+    current_page_key = str(session['user_id']) + '_current_page_section' + str(section_num)
+    if (not r.get(current_page_key) is None) and (not r.get(current_page_key) == '0'):
+        page_size = int(r.get(page_size_key))
+        current_page = int(r.get(current_page_key))
+        first_flag = False
+    else:
+        current_page = 0
+        page_size = int(math.ceil(1.0*dp_list_size/config.DATA_PAIR_PER_PAGE))
+        r.set(page_size_key, str(page_size))
+        r.set(current_page_key, current_page)
 
     pairs_formatted = working_data.get_data_display(data_mode)[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
@@ -385,14 +420,14 @@ def show_main_section_next(section_num=2):
     section_num = int(r.get(session['user_id']+'_main_section_num'))
     working_data = get_main_section_data(session['user_id'], section_num)
 
-    page_size = int(r.get(str(session['user_id']) + '_section2_page_size'))
-    current_page = int(r.get(str(session['user_id'])+'_section2_current_page'))+1
+    page_size = int(r.get(str(session['user_id']) + '_page_size_section' + str(section_num)))
+    current_page = int(r.get(str(session['user_id'])+'_current_page_section' + str(section_num)))+1
     if current_page >= page_size or (current_page+1)*6 > working_data.size():
         ret = {
             'result': 'no more pages'
         }
         return jsonify(ret)
-    r.incr(str(session['user_id'])+'_section2_current_page')
+    r.incr(str(session['user_id'])+'_current_page_section' + str(section_num))
     
     is_last_page = 0
     if current_page == page_size - 1:

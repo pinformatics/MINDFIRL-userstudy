@@ -468,12 +468,12 @@ def show_thankyou():
     # get final KAPR
     KAPR_key = session['user_id'] + '_KAPR'
     final_KAPR = r.get(KAPR_key)
-    kapr_limit = r.get(session['user_id']+'section1_kapr_limit')
-    if final_KAPR is not None:
+    kapr_limit = r.get(session['user_id']+'section10_kapr_limit')
+    if final_KAPR is not None and kapr_limit is not None:
         kapr_info = 'type:final_KAPR_section1, value:' + str(final_KAPR) + ',total:' + kapr_limit + ';\n'
         kapr_info = {
             'uid': session['user_id'],
-            'type': 'final_KAPR_section1',
+            'type': 'final_KAPR_section10',
             'value': str(final_KAPR),
             'timestamp': int(time.time()),
             'source': 'server',
