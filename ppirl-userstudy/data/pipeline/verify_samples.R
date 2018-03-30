@@ -30,7 +30,13 @@ overlap <-
 df_sample_check$df %>% reduce(semi_join, "X1")
 
 df_sample_check %>% 
-  filter(section == 3, 
-         sample == 3) %>% 
-  pull(df)
+  filter(sample == 7,
+         section %in% 1:10) %>% 
+  pull(df) %>% 
+  bind_rows() %>% 
+  count(id = X1, type = X16, sort = T) %>% 
+  mutate(n = n/2)
+
+
+
 

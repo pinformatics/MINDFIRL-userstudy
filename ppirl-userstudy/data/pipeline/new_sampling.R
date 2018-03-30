@@ -231,29 +231,6 @@ ls_df_lookup_scrambled %>%
   bind_rows() %>% 
   count(type, sort = T)
 
- 
- 
- 
-# # create the lookup table by scrambling again (just to ensure the questions are scrambled even by group)
-# # the lookup has type and question_number 
-# 
-# 
-# lookup_scrambled <-
-#   df_target_page %>% 
-#   select(-group) %>% 
-#   group_by(page) %>% 
-#   sample_n(6) %>% 
-#   ungroup() %>% 
-#   mutate(qnum = row_number()) %T>%
-#   write_csv("scrambled_order.csv") %>% 
-#   select(-page)
-# 
-# attention_test <- 
-#   df_type_group %>% 
-#   filter(group == 1) %>% 
-#   pull(type)
-# 
-
 df_id_sampling <- 
   starred_data %>% 
   select(id, type) %>% 
@@ -266,6 +243,9 @@ for(sample in seq_len(10)) {
   df_id_sampling_i <- df_id_sampling
   
   for(section in seq_len(11)) {
+    if(section == 6){
+      browser()
+    }
     sampling_section <- ls_df_lookup_scrambled[[section]]
     
     df_samplei_sectionj <- 
@@ -273,13 +253,14 @@ for(sample in seq_len(10)) {
       semi_join(sampling_section, "type") %>% 
       group_by(type) %>% 
       sample_n(1) %>% 
-      left_join(sampling_section, "type") %>% 
-      ungroup() %>% 
+      ungroup() %>%
+      left_join(sampling_section, "type") %>%
+      ungroup() %>%
       select(-type)
     
     df_id_sampling_i <- 
-      df_id_sampling %>% 
-      anti_join(df_samplei_sectionj, by = "id")
+      df_id_sampling_i %>% 
+      filter(!id %in% df_samplei_sectionj$id)
     
     starred_data %>% 
       inner_join(df_samplei_sectionj, "id") %>% 
@@ -288,62 +269,6 @@ for(sample in seq_len(10)) {
       write_csv(str_c("data_output/samples_sections_scrambling/section_", section, "_sample_", sample, ".csv"), col_names = FALSE)
     
   }
-# 
-#   # group by type and get one random pair for each type
-#   # sampling to ensure different samples get different questions
-#   ids_table <-
-#     starred_data %>%
-#     select(id, type) %>% 
-#     group_by(type) %>%
-#     sample_n(1) %>% 
-#     ungroup()
-#    
-#   # extract the data corresponding to the ids we filtered in step 1
-#   # this table is obviously not scrambled
-#   (sample_i <- 
-#       starred_data %>% filter(id %in% ids_table$id))
-#   
-#   # number and arrange by lookup
-#   sample_i_scrambled <- 
-#     sample_i %>%
-#     left_join(lookup_scrambled, by = "type") %>%
-#     arrange(qnum) %>% 
-#     select(-qnum) 
-#   
-#   #extract everything but those ids for section 2
-#   (section2  <- 
-#     starred_data %>%
-#     filter(!(id %in% ids_table$id)) %>%
-#     filter(!(type %in% attention_test)))
-#   
-#   (sec2_ids_scrambled <- 
-#     section2 %>%
-#     pull(id) %>%
-#     unique() %>% 
-#     sample(., length(.)))
-#   
-#   #we create a lookup for those gids
-#   (lookup_sec2 <- 
-#     tibble(id = sec2_ids_scrambled) %>%
-#     mutate(qnum = 1:n()))
-#   
-#   section2_scrambled <- 
-#     section2 %>%
-#     left_join(lookup_sec2, by = "id") %>%
-#     arrange(qnum) %>% 
-#     select(-qnum)
-# 
-
-  # sample_i %>%
-  #   write_csv(paste0("./data_output/samples_ordered/section1_",i,".csv"), col_names = F)
-  # section2 %>%
-  #   write_csv(paste0("./data_output/samples_ordered/section2_",i,".csv"), col_names = F)
-  # 
-  # sample_i_scrambled %>%
-  #   write_csv(paste0("./data_output/samples_scrambled/section1_",i,".csv"), col_names = F)
-  # section2_scrambled %>%
-  #   write_csv(paste0("./data_output/samples_scrambled/section2_",i,".csv"), col_names = F)
+  
 }
 
-# names(starred_data) <- col_names
-# write_csv(starred_data,"./data_output/main_section_full.csv", col_names = F)
