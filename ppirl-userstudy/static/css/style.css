@@ -10,7 +10,7 @@
 #title {
     width: 1800px;
     text-align: center;
-    margin-bottom: 5px;
+    margin-bottom: 2px;
 }
 
 #content {
@@ -282,7 +282,7 @@ input[type="radio"] {
     background-color: #30819C;
     border: none;
     color: white;
-    padding: 15px 32px;
+    padding: 15px 32px 0px 32px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
