@@ -137,6 +137,7 @@ def grade_pratice_full_mode(tutorial_section, page):
         ustudy_mode=ustudy_mode
     )
 
+    custom_feedback = ""
   
     for i in range(0, len(pairs), 2):
         pair_id = pairs[i][0]
@@ -148,17 +149,18 @@ def grade_pratice_full_mode(tutorial_section, page):
             right_ids.append(pair_id)
         else:
             if tutorial_section == 'privacy':
-                feedback += '\n'+", ".join(pairs[i][18:])
+                custom_feedback += '<br>'+", ".join(pairs[i][18:])
             wrong_ids.append(pair_id)
             all_correct = False
     if all_correct:
-        feedback += 'Good job! '
+        feedback += 'Good job!<br> '
     else:
-        feedback += 'Please review the questions you got wrong. '
+        feedback += 'Please review the questions you got wrong. <br>'
 
     if tutorial_section in ['clickable', 'privacy']:
-        feedback += 'We have opened all the records for you to review. '
-    # print responses
+        feedback += 'We have opened all the records for you to review. <br>'
+    
+    feedback += custom_feedback
 
     feedback += 'Please click the next button when you are done.'
     
