@@ -589,23 +589,23 @@ def get_icon_string(s1, s2, helper1, helper2):
                         while i+1 < len(icons) and icons[i+1] == 'R':
                             i += 1
                         pos = 0.5*(l+i)
-                        item = '<img class="replace_icon" src="/static/images/site/replace.png" alt="replace" style="margin-left:%fpx;">' % (9.59*pos-end-2)
-                        end = 9.59*pos-2 + 13
+                        item = '<img class="replace_icon" src="/static/images/site/replace.png" alt="replace" style="margin-left:%fpx;">' % (8.8*pos-end-2)
+                        end = 8.8*pos-2 + 13
                     elif icons[i] == 'I':
                         l = i;
                         while i+1 < len(icons) and icons[i+1] == 'I':
                             i += 1
                         pos = 0.5*(l+i)
-                        item = '<img class="indel_icon" src="/static/images/site/indel.png" alt="indel" style="margin-left:%fpx;">' % (9.59*pos-end-2)
-                        end = 9.59*pos-2 + 13
+                        item = '<img class="indel_icon" src="/static/images/site/indel.png" alt="indel" style="margin-left:%fpx;">' % (8.8*pos-end-2)
+                        end = 8.8*pos-2 + 13
                     elif icons[i] == 'T':
                         pos = i;
-                        item = '<img class="transpose_icon" src="/static/images/site/transpose.png" alt="transpose" style="margin-left:%fpx;">' % (9.59*pos-end)
-                        end = 9.59*pos + 20
+                        item = '<img class="transpose_icon" src="/static/images/site/transpose.png" alt="transpose" style="margin-left:%fpx;">' % (8.8*pos-end)
+                        end = 8.8*pos + 20
                         i += 1
                     ret += item
                     i += 1
-                item = '<img class="space_icon" src="/static/images/site/space.png" alt="space" style="margin-left:%fpx;">' % (9.6*len(icons)-end)
+                item = '<img class="space_icon" src="/static/images/site/space.png" alt="space" style="margin-left:%fpx;">' % (8.8*len(icons)-end)
                 ret += item
                 return ret
 

@@ -138,7 +138,7 @@ def index():
         r.set("session_"+str(user_id)+"_state", 0)
         session['state'] = 0
     else:
-        session['state'] = index
+        session['state'] = int(index)
 
     # saving user data
     data = {
@@ -150,7 +150,12 @@ def index():
         'ustudy_mode': ustudy_mode,
         'ustudy_budget': ustudy_budget
     }
-    r.set(user_data_key, ud.format_user_data(data))
+    previous_user_data = r.get(user_data_key)
+    if not previous_user_data:
+        r.set(user_data_key, ud.format_user_data(data))
+    else:
+        r.append(user_data_key, ud.format_user_data(data))
+    #r.set(user_data_key, ud.format_user_data(data))
 
     r.set("session_"+str(user_id), session)
 
@@ -387,8 +392,8 @@ def next():
     sequence = config.SEQUENCE
     state = session['state'] + 1
     session['state'] += 1
-    user_id = session["user_id"]
-    r.set("session_"+str(user_id)+"_state", str(session['state']))
+    #user_id = session["user_id"]
+    #r.set("session_"+str(user_id)+"_state", str(session['state']))
     return redirect(url_for(get_url_for_index(session['state'])))
 
 

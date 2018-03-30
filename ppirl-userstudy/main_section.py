@@ -345,6 +345,18 @@ def show_main_section(section_num=2):
     else:
         next_url = '/post_survey'
 
+
+    # saving user data
+    user_data_key = session['user_id'] + '_user_data'
+    enter_main_section = {
+        'uid': session['user_id'],
+        'type': 'enter main section',
+        'value': str(section_num),
+        'timestamp': int(time.time()),
+        'source': 'server'
+    }
+    r.append(user_data_key, ud.format_user_data(enter_main_section))
+
     return render_template('record_linkage_ppirl.html', 
         data=data, 
         icons=icons, 
@@ -364,7 +376,7 @@ def show_main_section(section_num=2):
 
 
 @main_section.route('/main_section/next')
-def show_main_section_next():
+def show_main_section_next(section_num=2):
     ustudy_mode = int(r.get(session['user_id']+'_ustudy_mode'))
     data_mode = 'masked'
     if ustudy_mode == 1:
