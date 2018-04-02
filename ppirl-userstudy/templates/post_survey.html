@@ -393,6 +393,78 @@
 
     {% endif%}        
 
+    <div>
+         <br><br>
+        <div style="width: 800px;">
+            <i> Assume that researchers were given permission to use personal health information to link from multiple hospitals using personally identifing information (e.g., names, dob, ssn etc) using the kinds of software you just used. You just found out that they also had your information. Answer the following questions.</i> <br><br>
+            {% if umode == '4' %}
+            16. 
+            {% elif umode == '3' %}
+            14. 
+            {% elif umode == '2' %}
+            11. 
+            {% else %}
+            9.
+            {% endif %}
+            How comfortable are you to give permission to researchers to use your personal health information to link from multiple databases using your personally identifing information (e.g., names, dob, ssn etc) knowing how they would access your data?<br><br>
+            <select name="comfortable_info" >
+                    <option value="0">Please select</option>
+                    <option value="1">1 - Very Uncomfortable</option>
+                    <option value="2">2 - Somewhat Uncomfortable</option>
+                    <option value="3">3 - Okay to give permission</option>
+                    <option value="4">4 - Somewhat comfortable</option>
+                    <option value="5">5 - Very comfortable</option>
+            </select>
+        </div>
+
+        <div style="width: 800px;">
+            <br><br>
+            {% if umode == '4' %}
+            17. 
+            {% elif umode == '3' %}
+            15. 
+            {% elif umode == '2' %}
+            12. 
+            {% else %}
+            10.
+            {% endif %}
+            Are there things you like about the software that would be useful to communicate to subjects of the data?<br><br>
+            <textarea name="communicate_like" rows="4" cols="90"></textarea>
+        </div>
+
+        <div style="width: 800px;">
+            <br><br>
+            {% if umode == '4' %}
+            18. 
+            {% elif umode == '3' %}
+            16. 
+            {% elif umode == '2' %}
+            13. 
+            {% else %}
+            11.
+            {% endif %}
+            What things are you concerned about that would be useful to communicate to subjects of the data?<br><br>
+            <textarea name="communicate_concerned" rows="4" cols="90"></textarea>
+        </div>
+
+        <div style="width: 800px;">
+            <br><br>
+            {% if umode == '4' %}
+            19. 
+            {% elif umode == '3' %}
+            17. 
+            {% elif umode == '2' %}
+            14. 
+            {% else %}
+            12.
+            {% endif %}
+            What other information about the software or how it was used would you like to know?<br><br>
+            <textarea name="other_info_know" rows="4" cols="90"></textarea>
+        </div>
+
+    </div>
+
+
     <br><br>
 
     <div id="div_submit">
