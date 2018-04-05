@@ -270,7 +270,7 @@ def post_survey():
         print(r.get(user_data_key))
         return redirect('/next')
     if request.method == 'GET':
-        return render_template('post_survey.html', uid=str(session['user_id']), umode=session[session['user_id'] + '_mode'])
+        return render_template('post_survey.html', uid=str(session['user_id']), umode=session[session['user_id'] + '_mode'], ubudget=r.get(str(session['user_id'])+'_ustudy_budget'))
 
 @app.route('/save_data', methods=['GET', 'POST'])
 def save_data():
