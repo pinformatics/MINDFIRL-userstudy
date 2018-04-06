@@ -438,7 +438,7 @@ def show_tutorial_clickable_practice_post():
         data=data, 
         icons=icons, 
         ids=ids, 
-        title='Demo', 
+        title='Demo: See how the meter and budget feel', 
         thisurl='/tutorial/practice_post', 
         page_number="1", 
         delta=delta, 
