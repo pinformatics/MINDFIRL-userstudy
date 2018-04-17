@@ -29,23 +29,23 @@ mail = Mail(app)
 
 CONFIG = {
     'sequence': [
-        'show_introduction',
+        'show_introduction', #1
         # 'show_introduction2',
         # 'show_RL_tutorial',
         # 'show_instruction_base_mode',
         # 'show_pratice_base_mode',
-        'show_instruction_full_mode',
-        'show_pratice_full_mode',
+        'show_instruction_full_mode', #2
+        'show_pratice_full_mode', #3
         # 'show_privacy_in_RL',
-        'show_instruction_masked_mode',
-        'show_pratice_masked_mode',
-        'show_instruction_minimum_mode',
-        'show_pratice_minimum_mode',
-        'show_instruction_moderate_mode',
-        'show_pratice_moderate_mode',
-        'show_instruction_ppirl',
-        'show_record_linkage_task',
-        'show_thankyou'
+        'show_instruction_masked_mode', #4
+        'show_pratice_masked_mode', #5
+        # 'show_instruction_minimum_mode',
+        # 'show_pratice_minimum_mode',
+        'show_instruction_moderate_mode', #6
+        'show_pratice_moderate_mode', #7
+        'show_instruction_ppirl', #8
+        'show_record_linkage_task', #9, 10
+        'show_thankyou' #11
     ]
 }
 
@@ -173,7 +173,7 @@ def show_pratice_full_mode():
     pairs_formatted = dd.format_data(pairs, 'full')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = dd.generate_icon(pairs)
-    return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/full_mode', page_number=7)
+    return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/full_mode', page_number=3)
 
 
 @app.route('/practice/masked_mode')
@@ -183,7 +183,7 @@ def show_pratice_masked_mode():
     pairs_formatted = dd.format_data(pairs, 'masked')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = dd.generate_icon(pairs)
-    return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/masked_mode', page_number=10)
+    return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/masked_mode', page_number=5)
 
 
 @app.route('/practice/minimum_mode')
@@ -193,7 +193,7 @@ def show_pratice_minimum_mode():
     pairs_formatted = dd.format_data(pairs, 'minimum')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = dd.generate_icon(pairs)
-    return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/minimum_mode', page_number=12)
+    return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/minimum_mode', page_number=7)
 
 
 @app.route('/practice/moderate_mode')
@@ -203,7 +203,7 @@ def show_pratice_moderate_mode():
     pairs_formatted = dd.format_data(pairs, 'moderate')
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = dd.generate_icon(pairs)
-    return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/moderate_mode', page_number=14)
+    return render_template('record_linkage_d.html', data=data, icons=icons, title='Section 1: practice', thisurl='/practice/moderate_mode', page_number=7)
 
 
 @app.route('/practice/<table_mode>/grading')
@@ -270,7 +270,7 @@ def show_record_linkage_task():
         delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'])
         delta_cdp += dm.cdp_delta(data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 0, total_characters)
 
-    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 2: Minimum Necessary Disclosure For Interactive record Linkage', thisurl='/record_linkage', page_number=16, delta=delta, delta_cdp=delta_cdp)
+    return render_template('record_linkage_ppirl.html', data=data, icons=icons, ids=ids, title='Section 2: Minimum Necessary Disclosure For Interactive record Linkage', thisurl='/record_linkage', page_number=9, delta=delta, delta_cdp=delta_cdp)
 
 
 @app.route('/thankyou')
