@@ -14,3 +14,5 @@ MAIL_USERNAME = 'mindfirl@gmail.com'
 MAIL_PASSWORD = 'Abcd1234$'
 
 MAIL_DEFAULT_SENDER = 'mindfirl@gmail.com'
+
+MAIL_RECEIVER = 'mindfirl@gmail.com'
