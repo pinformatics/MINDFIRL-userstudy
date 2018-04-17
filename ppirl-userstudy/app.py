@@ -20,8 +20,8 @@ app.config.from_object(__name__)
 Session(app)
 """
 
-# ENV = 'development'
-ENV = 'production'
+ENV = 'development'
+# ENV = 'production'
 
 app.config.from_pyfile('config.py')
 
@@ -30,13 +30,13 @@ mail = Mail(app)
 CONFIG = {
     'sequence': [
         'show_introduction',
-        'show_introduction2',
-        'show_RL_tutorial',
+        # 'show_introduction2',
+        # 'show_RL_tutorial',
         'show_instruction_base_mode',
         'show_pratice_base_mode',
         'show_instruction_full_mode',
         'show_pratice_full_mode',
-        'show_privacy_in_RL',
+        # 'show_privacy_in_RL',
         'show_instruction_masked_mode',
         'show_pratice_masked_mode',
         'show_instruction_minimum_mode',
