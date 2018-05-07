@@ -412,7 +412,7 @@ def show_tutorial_clickable_practice_post():
     icons = DATA_CLICKABLE_PRACTICE.get_icons()
     ids_list = DATA_CLICKABLE_PRACTICE.get_ids()
     ids = zip(ids_list[0::2], ids_list[1::2])
-    print data
+    #print data
 
     # KAPR - K-Anonymity privacy risk
     KAPR_key = session['user_id'] + '_KAPR'

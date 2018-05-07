@@ -66,7 +66,8 @@ def get_main_section_data(uid, section):
 
 
 def get_sequence_for_mode():
-    return config.SEQUENCE['Mode_'+r.get(str(session['user_id'])+'_ustudy_mode')]
+    mode = r.get(str(session['user_id']+'_ustudy_mode'))
+    return config.SEQUENCE['Mode_'+mode]
 
 def get_url_for_index(index):
     return get_sequence_for_mode()[int(index)]
@@ -157,7 +158,8 @@ def index():
         r.append(user_data_key, ud.format_user_data(data))
     #r.set(user_data_key, ud.format_user_data(data))
 
-    r.set("session_"+str(user_id), session)
+    r.set("session_"+str(user_id), session['user_id'])
+    print(type(session['user_id']))
 
     r.set(str(session['user_id'])+'_ustudy_mode', ustudy_mode)
     r.set(str(session['user_id'])+'_ustudy_budget', ustudy_budget)
