@@ -572,7 +572,7 @@ def flush_redis():
 def save_data_choice():
     data_choice = request.form.get('data_choice')
     r.set("data_choice_" + session['user_id'], data_choice)
-    print r.get("data_choice_" + session['user_id'])
+    #print r.get("data_choice_" + session['user_id'])
     return redirect(url_for('next'))
 
 
