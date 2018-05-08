@@ -35,8 +35,8 @@ Session(app)
 """
 
 
-# ENV = 'development'
-ENV = 'production'
+ENV = 'development'
+# ENV = 'production'
 
 
 app.config.from_pyfile('config.py')
@@ -515,29 +515,21 @@ def save_survey():
 
 		all_answers = ',\n'.join([header, r1, r2, r3])
 		r.set(time_stamp+'_survey', all_answers)
-
-        	raffle_email = request.form.get("raffle_email")        
+		raffle_email = request.form.get("raffle_email")        
     
 		if(len(raffle_email) > 0):
 		    mail.send(Message(subject="Mindfil_raffle", body = raffle_email, recipients=['ilan50_guru@tamu.edu']))
-
        		msg = Message(subject='Survey answers', body=all_answers, recipients=['mindfil.ppirl@gmail.com'])
 	        mail.send(msg)
-
 	        return "<h2>Thank you!</h2>"
-        # if request.form.getlist('q1_o1'):
-            # q1_c1 = True
-        # r.set("opt",request.form.get('q1_o1'))
-        # return r.get("opt")
-        a = ', '.join(request.form.getlist('q1'))
-        b = ', '.join(request.form.getlist('q2'))
-        c = ', '.join(request.form.getlist('q3'))
-        all_answers = '\n'.join([a, b, c])
-        r.set(session['user_cookie']+'_survey', all_answers)
-        return "Thank you!"
-
+         
+		a = ', '.join(request.form.getlist('q1'))
+		b = ', '.join(request.form.getlist('q2'))
+		c = ', '.join(request.form.getlist('q3'))
+		all_answers = '\n'.join([a, b, c])
+		r.set(session['user_cookie']+'_survey', all_answers)
+		return "Thank you!"
     else:
-        # return r.get("opt")
         return "get"
 
 
