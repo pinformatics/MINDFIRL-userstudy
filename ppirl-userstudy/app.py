@@ -6,7 +6,7 @@ import json
 import hashlib
 import collections
 import os
-# import redis
+import redis
 import logging
 import data_loader as dl
 import data_display as dd
@@ -34,9 +34,10 @@ app.config.from_object(__name__)
 Session(app)
 """
 
-
-# ENV = 'development'
-ENV = 'production'
+if 'DYNO' in os.environ:
+    ENV = 'production'
+else:
+    ENV = 'development'
 
 
 app.config.from_pyfile('config.py')
