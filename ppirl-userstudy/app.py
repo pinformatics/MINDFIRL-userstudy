@@ -35,8 +35,8 @@ Session(app)
 """
 
 
-ENV = 'development'
-# ENV = 'production'
+# ENV = 'development'
+ENV = 'production'
 
 
 app.config.from_pyfile('config.py')
