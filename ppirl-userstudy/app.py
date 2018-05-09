@@ -74,7 +74,7 @@ elif ENV == 'development':
     r = redis.Redis(host='localhost', port=6379, db=0)
 
 
-DATASET = dl.load_data_from_csv('data/section2.csv')
+DATASET = dl.load_data_from_csv('data/ppirl.csv')
 DATA_PAIR_LIST = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/ppirl.csv'))
 
 
@@ -308,10 +308,13 @@ def open_cell():
     pair_id = int(pair_num)
     attr_id = int(attr_num)
 
+    print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",pair_id, attr_id;
+
     pair = DATA_PAIR_LIST.get_data_pair(pair_id)
     attr = pair.get_attributes(attr_id)
     attr1 = attr[0]
     attr2 = attr[1]
+
     helper = pair.get_helpers(attr_id)
     helper1 = helper[0]
     helper2 = helper[1]
@@ -319,8 +322,11 @@ def open_cell():
     if mode == 'full':
         return jsonify({"value1": attr1, "value2": attr2, "mode": "full"})
 
+    print id1;
+
     attr_display_next = pair.get_next_display(attr_id = attr_id, attr_mode = mode)
     ret = {"value1": attr_display_next[1][0], "value2": attr_display_next[1][1], "mode": attr_display_next[0]}
+    print ret
 
     # TODO: assert the mode is consistent with the display_mode in redis
 
@@ -348,6 +354,7 @@ def open_cell():
     """
 
     # get K-Anonymity based Privacy Risk
+    print session['user_cookie']
     old_display_status1 = list()
     old_display_status2 = list()
     key1_prefix = session['user_cookie'] + '-' + pair_num + '-1-'
@@ -355,6 +362,8 @@ def open_cell():
     for attr_i in range(6):
         old_display_status1.append(r.get(key1_prefix + str(attr_i)))
         old_display_status2.append(r.get(key2_prefix + str(attr_i)))
+
+    print ret['mode'],ret['mode']=='partial'
 
     # update the display status in redis
     key1 = session['user_cookie'] + '-' + pair_num + '-1-' + attr_num
@@ -377,6 +386,8 @@ def open_cell():
         display_status1.append(r.get(key1_prefix + str(attr_i)))
         display_status2.append(r.get(key2_prefix + str(attr_i)))
 
+    print display_status1
+
     old_KAPR = dm.get_KAPR_for_dp(DATASET, pair, old_display_status1)
     KAPR = dm.get_KAPR_for_dp(DATASET, pair, display_status1)
     KAPRINC = KAPR - old_KAPR
@@ -389,6 +400,7 @@ def open_cell():
     # refresh the delta of KAPR
     new_delta_list = dm.KAPR_delta(DATASET, pair, display_status1)
     ret['new_delta'] = new_delta_list
+    print ret
 
     return jsonify(ret)
 
@@ -490,7 +502,7 @@ def post_survey():
         data_pair = DATA_PAIR_LIST.get_data_pair_by_index(i)
         delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'])
 
-    return render_template('post_survey.html', data=data, icons=icons, ids=ids, title='Section 2: Minimum Necessary Disclosure For Interactive record Linkage', thisurl='/record_linkage', page_number=16, delta=delta)
+    return render_template('post_survey.html', data=data, icons=icons, ids=ids, thisurl='/record_linkage', page_number=16, delta=delta)
 
 
 @app.route("/save_survey", methods=['GET', 'POST'])
