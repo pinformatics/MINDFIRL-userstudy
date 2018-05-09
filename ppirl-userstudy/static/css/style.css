@@ -288,3 +288,58 @@ input[type="radio"] {
     border-color: gray;
     padding: 5px 5px 5px 5px;
 }
+
+
+.button-link{
+     background:none!important;
+     color:inherit;
+     border:none; 
+     padding:0!important;
+     font: inherit;
+     /*border is optional*/
+     border-bottom:1px solid #444; 
+     cursor: pointer;
+     color: #772233;
+}
+
+select {
+     width:85%;
+}
+
+
+.email_hover{
+    color: #772233;
+    font-style: italic;
+    border-bottom-style: dotted;
+}
+
+table{
+    /*table-layout: fixed;*/
+    width:1500px;
+}
+
+table, th, td {
+   border: 1px solid black;
+   border-color: #d5d5d5;
+}
+
+td {
+    text-align: center;
+}
+
+.header {
+    text-align: center;
+}
+
+.td_item {
+    text-align: left;
+    width: 1200px;
+}
+
+.td_radio {
+    width: 125px;
+}
+
+ input[type='radio']{
+     display: inline-block;
+ }

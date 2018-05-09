@@ -16,3 +16,5 @@ MAIL_USERNAME = 'mindfil.ppirl@gmail.com'
 MAIL_PASSWORD = 'Abcd1234$'
 
 MAIL_DEFAULT_SENDER = 'mindfil.ppirl@gmail.com'
+
+MAIL_RECEIVER = 'mindfil.ppirl@gmail.com'

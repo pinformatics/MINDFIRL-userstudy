@@ -14,8 +14,9 @@ import data_model as dm
 from flask_mail import Mail, Message
 import logging
 import sys
+import config
 
-
+recipient = config.MAIL_RECEIVER
 # from app import app, mail
 
 app = Flask(__name__)
@@ -495,43 +496,22 @@ def post_survey():
 @app.route("/save_survey", methods=['GET', 'POST'])
 def save_survey():
     if request.method == "POST":
+    	f = request.form
+    	print ">>>>>>>>>>>>>>>>>>>>>>>>" 
+    	# print request.form['']
+    	# print request.form.get('comments')
+    	resps = ""
+    	for key in f.keys():
+    	        variable = key
+    	        value = f.get(variable)
+    	        resps += variable + ',' + '"' + value + '"' + "\n" 
 
-		# ses = session['user_cookie']
-		time_stamp = str(time.time())
-
-		header = ','.join(['timestamp', "question", "choice_1", "choice_2"])
-
-
-		q1_c1 = request.form.get('q1_c1')
-		q1_c2 = request.form.get('q1_c2')
-		r1 = ','.join([time_stamp,"1",q1_c1,q1_c2])
-
-		q2_c1 = request.form.get('q2_c1')
-		q2_c2 = request.form.get('q2_c2')
-		r2 = ','.join([time_stamp,"2",q2_c1,q2_c2])        
-
-		q3_c1 = request.form.get('q3_c1')
-		q3_c2 = request.form.get('q3_c2')
-		r3 = ','.join([time_stamp,"3",q3_c1,q3_c2])        
-
-		all_answers = ',\n'.join([header, r1, r2, r3])
-		r.set(time_stamp+'_survey', all_answers)
-		raffle_email = request.form.get("raffle_email")        
-    
-		if(len(raffle_email) > 0):
-		    mail.send(Message(subject="Mindfil_raffle", body = raffle_email, recipients=['ilan50_guru@tamu.edu']))
-       		msg = Message(subject='Survey answers', body=all_answers, recipients=['mindfil.ppirl@gmail.com'])
-	        mail.send(msg)
-	        return "<h2>Thank you!</h2>"
-         
-		a = ', '.join(request.form.getlist('q1'))
-		b = ', '.join(request.form.getlist('q2'))
-		c = ', '.join(request.form.getlist('q3'))
-		all_answers = '\n'.join([a, b, c])
-		r.set(session['user_cookie']+'_survey', all_answers)
-		return "Thank you!"
+        msg = Message(subject='Aim 3 Survey', body=resps, recipients=[recipient])
+        mail.send(msg)
+    	       
+        return "Thank you!"
     else:
-        return "get"
+        return "error"
 
 
 
