@@ -18,13 +18,13 @@
         <script src="../static/javascript/bootstrap.min.js"></script>
         <script src="../static/javascript/site.js"></script>
         <script src="../static/javascript/choice_panel.js?v=3"></script>
-        <script src="../static/javascript/grading.js"></script>
-        <script src="../static/javascript/form_submit.js?v=7"></script>
+        <!-- <script src="../static/javascript/grading.js"></script> -->
+        <!-- <script src="../static/javascript/form_submit.js?v=7"></script> -->
         <script src="../static/javascript/clickable.js?v=17"></script>
         <script type=text/javascript>
             $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
             $THIS_URL = "{{ thisurl }}";
-            $NEXT_URL = $SCRIPT_ROOT + "{{ url_for('next') }}";
+            
             $user_data = "user in url: " + $THIS_URL + ";";
             $DELTA = {
             {% for d in delta %}
@@ -537,7 +537,7 @@
     
 
     
-    <script>
+    <script  type=text/javascript>
         $('#email_hover').attr('title', 'In our preliminary voting, we encountered duplicate votes due to system errors. As a result, we are asking for your email address so that we can ensure there is only one vote for you. Once we have cleaned the data, we will delete your email to ensure that your responses are anonymous.');
         $('#email_hover').on('click', function(){
             alert('In our preliminary voting, we encountered duplicate votes due to system errors. As a result, we are asking for your email address so that we can ensure there is only one vote for you. Once we have cleaned the data, we will delete your email to ensure that your responses are anonymous.');
@@ -737,8 +737,4 @@
     };
     </script>
 
-
-
-        <!-- End of div wrapper -->
-       
 </html>
