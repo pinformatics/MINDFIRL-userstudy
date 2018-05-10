@@ -19,6 +19,7 @@ from flask_sendgrid import SendGrid
 app = Flask(__name__)
 
 app.config['SENDGRID_API_KEY'] = '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'
+# app.config['SENDGRID_API_KEY'] = os.environ.get('SENDGRID_API_KEY')
 app.config['SENDGRID_DEFAULT_FROM'] = 'mindfil.ppirl@gmail.com'
 mail = SendGrid(app)
 
@@ -107,13 +108,9 @@ def save_survey():
     for key in f.keys():
         variable = key.encode('utf8')
         value = f.get(variable).encode('utf8')
-        resps += variable + ','.encode('utf8') + '"'.encode('utf8') + value + '"'.encode('utf8') + "\n".encode('utf8') 
-    mail.send_email(
-    from_email=MAIL_SENDER,
-    to_email=MAIL_RECEIVER,
-    subject='Aim 3 survey',
-    text=resps,
-    )
+        resps += variable + ','.encode('utf8') + '"'.encode('utf8') + value + '"'.encode('utf8') + ";".encode('utf8') 
+    
+    mail.send_email(from_email=MAIL_SENDER,to_email=MAIL_RECEIVER,subject='Aim 3 survey',text=resps)
     
     # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
     # data = {
@@ -140,6 +137,7 @@ def save_survey():
     # response = sg.client.mail.send.post(request_body=data)
     # msg = Message(subject='Aim 3 Survey', body=resps, recipients=[MAIL_RECEIVER])
     # mail.send(msg)
+
     return "Thank you!"
 
 @app.route('/get_cell', methods=['GET', 'POST'])
