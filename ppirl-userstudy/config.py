@@ -9,10 +9,10 @@ MAIL_USE_TLS = False
 
 MAIL_USE_SSL = True
 
-MAIL_USERNAME = 'mindfirl@gmail.com'
+MAIL_USERNAME = 'mindfil.ppirl@gmail.com'
 
 MAIL_PASSWORD = 'Abcd1234$'
 
-MAIL_DEFAULT_SENDER = 'mindfirl@gmail.com'
+MAIL_DEFAULT_SENDER = 'mindfil.ppirl@gmail.com'
 
-MAIL_RECEIVER = 'mindfirl@gmail.com'
+MAIL_RECEIVER = 'mindfil.ppirl@gmail.com'

@@ -20,9 +20,10 @@ SESSION_TYPE = 'redis'
 app.config.from_object(__name__)
 Session(app)
 """
-
-ENV = 'development'
-# ENV = 'production'
+if 'DYNO' in os.environ:
+    ENV = 'production'
+else:
+    ENV = 'development'
 
 app.config.from_pyfile('config.py')
 
@@ -88,7 +89,64 @@ def show_record_linkages():
     user_data_key = session['user_cookie'] + '_user_data'
     r.set(user_data_key, 'Session start time: ' + str(time.time()) + ';\n')
 
-    return redirect(url_for('show_introduction'))
+    return redirect(url_for('show_survey_link'))
+
+@app.route('/survey_link')
+def show_survey_link():
+    #pairs = dl.load_data_from_csv('data/ppirl.csv')
+    #total_characters = dd.get_total_characters(pairs)
+    #pairs = pairs[0:12]
+
+    pairs_formatted = DATA_PAIR_LIST.get_data_display('masked')[0:12]
+    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    icons = DATA_PAIR_LIST.get_icons()[0:6]
+    ids_list = DATA_PAIR_LIST.get_ids()[0:12]
+    ids = zip(ids_list[0::2], ids_list[1::2])
+
+    # percentage of character disclosure
+    total_characters = DATA_PAIR_LIST.get_total_characters()
+    mindfil_total_characters_key = session['user_cookie'] + '_mindfil_total_characters'
+    r.set(mindfil_total_characters_key, total_characters)
+    mindfil_disclosed_characters_key = session['user_cookie'] + '_mindfil_disclosed_characters'
+    r.set(mindfil_disclosed_characters_key, 0)
+
+
+    # KAPR - K-Anonymity privacy risk
+    KAPR_key = session['user_cookie'] + '_KAPR'
+    r.set(KAPR_key, 0)
+
+    # set the user-display-status as masked for all cell
+    for id1 in ids_list:
+        for i in range(6):
+            key = session['user_cookie'] + '-' + id1[i]
+            r.set(key, 'M')
+
+    # get the delta information
+    delta = list()
+    delta_cdp = list()
+    for i in range(6):
+        data_pair = DATA_PAIR_LIST.get_data_pair_by_index(i)
+        delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'])
+        delta_cdp += dm.cdp_delta(data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 0, total_characters)
+    return render_template('survey_link.html', data=data, icons=icons, ids=ids, title='Section 2: Minimum Necessary Disclosure For Interactive record Linkage', thisurl='/record_linkage', page_number=16, delta=delta, delta_cdp=delta_cdp)
+
+@app.route("/save_survey", methods=['GET', 'POST'])
+def save_survey():
+    if request.method == "POST":
+        f = request.form
+        
+        resps = ""
+        for key in f.keys():
+                variable = key
+                value = f.get(variable)
+                resps += variable + ',' + '"' + value + '"' + "\n" 
+
+        msg = Message(subject='Aim 3 Survey', body=resps, recipients=[MAIL_RECEIVER])
+        mail.send(msg)
+               
+        return "Thank you!"
+    else:
+        return "error"
 
 
 @app.route('/introduction')
