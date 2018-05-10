@@ -12,7 +12,7 @@ import data_loader as dl
 import data_display as dd
 import data_model as dm
 from flask_mail import Mail, Message
-# from config import *
+from config import *
 
 app = Flask(__name__)
 """
@@ -28,11 +28,11 @@ app.config.update(dict(
     TESTING = False,
     MAIL_SERVER = 'smtp.gmail.com',
     MAIL_PORT = 587,
-    MAIL_USE_TLS = True,
-    MAIL_USE_SSL = False,
+    MAIL_USE_TLS = False,
+    MAIL_USE_SSL = True,
     MAIL_USERNAME = 'mindfil.ppirl@gmail.com',
     MAIL_PASSWORD = 'Abcd1234$',
-    MAIL_DEFAULT_SENDER = ('aim3','mindfil.ppirl@gmail.com')
+    MAIL_DEFAULT_SENDER = 'mindfil.ppirl@gmail.com'
 ))
 
 MAIL_RECEIVER = 'mindfil.ppirl@gmail.com'
