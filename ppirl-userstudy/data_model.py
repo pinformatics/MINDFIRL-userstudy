@@ -473,7 +473,6 @@ def KAPR_delta(DATASET, data_pair, display_status):
     for i in range(6):
         state = display_status[i]
         next_display = data_pair.get_next_display(i, state)
-        print(next_display)
         if next_display[0] == 'full':
             display_status[i] = 'F'
         elif next_display[0] == 'partial':

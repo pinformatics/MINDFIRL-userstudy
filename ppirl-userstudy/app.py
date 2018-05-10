@@ -17,6 +17,7 @@ from flask_sendgrid import SendGrid
 
 
 app = Flask(__name__)
+app.secret_key = 'a9%z$/`9h8FMnh893;*g783'
 
 app.config['SENDGRID_API_KEY'] = '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'
 # app.config['SENDGRID_API_KEY'] = os.environ.get('SENDGRID_API_KEY')
@@ -45,7 +46,7 @@ Session(app)
 # ))
 
 
-MAIL_SENDER = 'mindfil.ppirl@gmail.com'
+MAIL_SENDER = 'sysulqb@gmail.com'
 MAIL_RECEIVER = 'mindfil.ppirl@gmail.com'
 
 # mail = Mail(app)
@@ -61,12 +62,11 @@ DATA_PAIR_LIST = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/ppirl.
 @app.route('/')
 @app.route('/survey_link')
 def show_survey_link():
-    mail.send_email(
-    from_email=MAIL_SENDER,
-    to_email=MAIL_RECEIVER,
-    subject='Aim 3 start',
-    text='Start',
-    )
+    #mail.send_email(from_email=MAIL_SENDER, to_email=MAIL_RECEIVER, subject='Aim 3 start', text='Start')
+    try:
+        mail.send_email(to_email=MAIL_RECEIVER, subject='Subject', text='Body')
+    except Exception as e:
+        print(e)
     
     pairs_formatted = DATA_PAIR_LIST.get_data_display('masked')[0:12]
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
@@ -106,11 +106,18 @@ def save_survey():
     f = request.form
     resps = ""
     for key in f.keys():
-        variable = key.encode('utf8')
-        value = f.get(variable).encode('utf8')
-        resps += variable + ','.encode('utf8') + '"'.encode('utf8') + value + '"'.encode('utf8') + ";".encode('utf8') 
+        if key:
+            variable = key.encode('utf8')
+            if variable and f.get(variable):
+                value = f.get(variable).encode('utf8')
+                resps += variable + ','.encode('utf8') + '"'.encode('utf8') + value + '"'.encode('utf8') + ";".encode('utf8') 
     
-    mail.send_email(from_email=MAIL_SENDER,to_email=MAIL_RECEIVER,subject='Aim 3 survey',text=resps)
+    try:
+        mail.send_email(from_email=MAIL_SENDER,to_email=MAIL_RECEIVER,subject='Aim 3 survey',text=resps)
+    except Exception as e:
+        print(e)
+    survey_key = 'survey_' + str(time.time())
+    r.set(survey_key, str(f))
     
     # sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
     # data = {
@@ -224,4 +231,14 @@ def open_cell():
 
     return jsonify(ret)
 
-app.secret_key = 'a9%z$/`9h8FMnh893;*g783'
+
+@app.route('/pull_survey')
+def pull_survey():
+    ret = ''
+    for key in r.scan_iter("survey_*"):
+        user_data = r.get(key)
+        ret = ret + 'key: ' + key + ';'
+        ret = ret + user_data + '<br/><br/><br/>'
+    return ret
+
+
