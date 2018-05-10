@@ -22,17 +22,28 @@ Session(app)
 """
 
 # app.config.from_pyfile('config.py')
-
-
 app.config.update(dict(
+    MAIL_SUPPRESS_SEND = False,
+    MAIL_DEBUG = True,
+    TESTING = False,
     MAIL_SERVER = 'smtp.gmail.com',
     MAIL_PORT = 587,
     MAIL_USE_TLS = True,
     MAIL_USE_SSL = False,
     MAIL_USERNAME = 'mindfil.ppirl@gmail.com',
     MAIL_PASSWORD = 'Abcd1234$',
-    MAIL_DEFAULT_SENDER = 'mindfil.ppirl@gmail.com'
+    MAIL_DEFAULT_SENDER = ('aim3','mindfil.ppirl@gmail.com')
 ))
+
+# app.config.update(dict(
+#     MAIL_SERVER = 'smtp.gmail.com',
+#     MAIL_PORT = 587,
+#     MAIL_USE_TLS = True,
+#     MAIL_USE_SSL = False,
+#     MAIL_USERNAME = 'mindfil.ppirl@gmail.com',
+#     MAIL_PASSWORD = 'Abcd1234$',
+#     MAIL_DEFAULT_SENDER = 'mindfil.ppirl@gmail.com'
+# ))
 
 MAIL_RECEIVER = 'mindfil.ppirl@gmail.com'
 
