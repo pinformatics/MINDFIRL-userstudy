@@ -35,16 +35,6 @@ app.config.update(dict(
     MAIL_DEFAULT_SENDER = ('aim3','mindfil.ppirl@gmail.com')
 ))
 
-# app.config.update(dict(
-#     MAIL_SERVER = 'smtp.gmail.com',
-#     MAIL_PORT = 587,
-#     MAIL_USE_TLS = True,
-#     MAIL_USE_SSL = False,
-#     MAIL_USERNAME = 'mindfil.ppirl@gmail.com',
-#     MAIL_PASSWORD = 'Abcd1234$',
-#     MAIL_DEFAULT_SENDER = 'mindfil.ppirl@gmail.com'
-# ))
-
 MAIL_RECEIVER = 'mindfil.ppirl@gmail.com'
 
 mail = Mail(app)
@@ -60,7 +50,7 @@ DATA_PAIR_LIST = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/ppirl.
 @app.route('/')
 @app.route('/survey_link')
 def show_survey_link():
-    mail.send(Message(subject='Aim 3 Survey', body="test", recipients=[MAIL_RECEIVER]))
+    # mail.send(Message(subject='Aim 3 Survey', body="test", recipients=[MAIL_RECEIVER]))
     pairs_formatted = DATA_PAIR_LIST.get_data_display('masked')[0:12]
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = DATA_PAIR_LIST.get_icons()[0:6]
@@ -96,12 +86,12 @@ def show_survey_link():
 
 @app.route("/save_survey", methods=['POST'])
 def save_survey():
-    # f = request.form
+    f = request.form
     resps = ""
-    # for key in f.keys():
-    #     variable = key.encode('utf8')
-    #     value = f.get(variable).encode('utf8')
-    #     resps += variable + ','.encode('utf8') + '"'.encode('utf8') + value + '"'.encode('utf8') + "\n".encode('utf8') 
+    for key in f.keys():
+        variable = key.encode('utf8')
+        value = f.get(variable).encode('utf8')
+        resps += variable + ','.encode('utf8') + '"'.encode('utf8') + value + '"'.encode('utf8') + "\n".encode('utf8') 
     msg = Message(subject='Aim 3 Survey', body=resps, recipients=[MAIL_RECEIVER])
     mail.send(msg)
     return "Thank you!"
