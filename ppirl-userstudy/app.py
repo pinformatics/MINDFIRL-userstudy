@@ -18,8 +18,8 @@ from flask_sendgrid import SendGrid
 
 app = Flask(__name__)
 
-app.config['SENDGRID_API_KEY'] = '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'
-# app.config['SENDGRID_API_KEY'] = os.environ.get('SENDGRID_API_KEY')
+# app.config['SENDGRID_API_KEY'] = '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'
+app.config['SENDGRID_API_KEY'] = os.environ.get('SENDGRID_API_KEY')
 app.config['SENDGRID_DEFAULT_FROM'] = 'mindfil.ppirl@gmail.com'
 mail = SendGrid(app)
 
