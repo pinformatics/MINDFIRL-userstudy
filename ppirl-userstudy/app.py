@@ -54,6 +54,12 @@ CONFIG = {
 
 ENV = 'production'
 
+if 'DYNO' in os.environ:
+    ENV = 'production'
+else:
+    ENV = 'development'
+
+
 if ENV == 'production':
     r = redis.from_url(os.environ.get("REDIS_URL"))
 elif ENV == 'development':
@@ -80,19 +86,20 @@ def state_machine(function_name):
     return wrapper
 
 
+# @app.route('/')
+# def show_record_linkages():
+#     session['user_cookie'] = hashlib.sha224("salt12138" + str(time.time()) + '.' + str(randint(1,10000))).hexdigest()
+#      # timing info on next click 
+#     timing_info = "Begin: " + time.strftime("%a, %d %b %Y %H:%M:%S")
+#     msg = Message(subject='user click: ' + session['user_cookie'], body=timing_info, recipients=[MAIL_RECEIVER])
+#     mail.send(msg)
+#     print(session['user_cookie'])
+#     user_data_key = session['user_cookie'] + '_user_data'
+#     r.set(user_data_key, 'Session start time: ' + str(time.time()) + ';\n')
+
+#     return redirect(url_for('show_survey_link'))
+
 @app.route('/')
-def show_record_linkages():
-    session['user_cookie'] = hashlib.sha224("salt12138" + str(time.time()) + '.' + str(randint(1,10000))).hexdigest()
-     # timing info on next click 
-    timing_info = "Begin: " + time.strftime("%a, %d %b %Y %H:%M:%S")
-    msg = Message(subject='user click: ' + session['user_cookie'], body=timing_info, recipients=[MAIL_RECEIVER])
-    mail.send(msg)
-    print(session['user_cookie'])
-    user_data_key = session['user_cookie'] + '_user_data'
-    r.set(user_data_key, 'Session start time: ' + str(time.time()) + ';\n')
-
-    return redirect(url_for('show_survey_link'))
-
 @app.route('/survey_link')
 def show_survey_link():
     #pairs = dl.load_data_from_csv('data/ppirl.csv')
