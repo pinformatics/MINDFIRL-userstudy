@@ -54,16 +54,16 @@ CONFIG = {
 
 ENV = 'production'
 
-# if 'DYNO' in os.environ:
-#     ENV = 'production'
-# else:
-#     ENV = 'development'
+if 'DYNO' in os.environ:
+    ENV = 'production'
+else:
+    ENV = 'development'
 
-r = redis.from_url(os.environ.get("REDIS_URL"))
+
 # if ENV == 'production':
-#     r = redis.from_url(os.environ.get("REDIS_URL"))
+r = redis.from_url(os.environ.get("REDIS_URL"))
 # elif ENV == 'development':
-#     r = redis.Redis(host='localhost', port=6379, db=0)
+    # r = redis.Redis(host='localhost', port=6379, db=0)
 
 
 
@@ -111,6 +111,9 @@ def show_survey_link():
     icons = DATA_PAIR_LIST.get_icons()[0:6]
     ids_list = DATA_PAIR_LIST.get_ids()[0:12]
     ids = zip(ids_list[0::2], ids_list[1::2])
+
+    session['user_cookie'] = hashlib.sha224("salt12138" + str(time.time()) + '.' + str(randint(1,10000))).hexdigest()
+
 
     # percentage of character disclosure
     total_characters = DATA_PAIR_LIST.get_total_characters()
