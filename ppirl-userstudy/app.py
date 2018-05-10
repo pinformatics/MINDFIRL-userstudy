@@ -7,7 +7,7 @@ import hashlib
 import collections
 import os
 import redis
-import logging
+# import logging
 import data_loader as dl
 import data_display as dd
 import data_model as dm
@@ -52,7 +52,7 @@ CONFIG = {
 }
 
 
-ENV = 'production'
+
 
 if 'DYNO' in os.environ:
     ENV = 'production'
@@ -60,10 +60,10 @@ else:
     ENV = 'development'
 
 
-# if ENV == 'production':
-r = redis.from_url(os.environ.get("REDIS_URL"))
-# elif ENV == 'development':
-# r = redis.Redis(host='localhost', port=6379, db=0)
+if ENV == 'production':
+    r = redis.from_url(os.environ.get("REDIS_URL"))
+elif ENV == 'development':
+    r = redis.Redis(host='localhost', port=6379, db=0)
 
 
 
@@ -424,7 +424,7 @@ def open_cell():
         r.set(key2, 'P')
     else:
         print("Error: invalid display status.")
-        logging.error('Error: invalid display status.')
+        # logging.error('Error: invalid display status.')
 
     display_status1 = list()
     display_status2 = list()
