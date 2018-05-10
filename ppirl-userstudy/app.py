@@ -12,7 +12,7 @@ import data_loader as dl
 import data_display as dd
 import data_model as dm
 from flask_mail import Mail, Message
-from config import *
+# from config import *
 
 app = Flask(__name__)
 """
