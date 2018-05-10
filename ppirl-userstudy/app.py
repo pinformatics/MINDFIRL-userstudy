@@ -61,9 +61,9 @@ else:
 
 
 # if ENV == 'production':
-# r = redis.from_url(os.environ.get("REDIS_URL"))
+r = redis.from_url(os.environ.get("REDIS_URL"))
 # elif ENV == 'development':
-r = redis.Redis(host='localhost', port=6379, db=0)
+# r = redis.Redis(host='localhost', port=6379, db=0)
 
 
 
