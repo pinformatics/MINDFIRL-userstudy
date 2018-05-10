@@ -51,9 +51,9 @@ MAIL_RECEIVER = 'mindfil.ppirl@gmail.com'
 # mail = Mail(app)
 
 if 'DYNO' in os.environ:
-    r = redis.from_url(os.environ.get("REDIS_URL"))
+    r = redis.from_url(os.environ.get("REDIS_URL"), decode_responses=True)
 else:
-    r = redis.Redis(host='localhost', port=6379, db=0)
+    r = redis.Redis(host='localhost', port=6379, db=0, charset="utf-8", decode_responses=True)
 
 DATASET = dl.load_data_from_csv('data/section2.csv')
 DATA_PAIR_LIST = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/ppirl.csv'))
@@ -72,8 +72,8 @@ def show_survey_link():
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = DATA_PAIR_LIST.get_icons()[0:6]
     ids_list = DATA_PAIR_LIST.get_ids()[0:12]
-    ids = zip(ids_list[0::2], ids_list[1::2])
-    session['user_cookie'] = hashlib.sha224("salt12138" + str(time.time()) + '.' + str(randint(1,10000))).hexdigest()
+    ids = list(zip(ids_list[0::2], ids_list[1::2]))
+    session['user_cookie'] = hashlib.sha224((str(time.time()) + str(randint(1,100))).encode('utf-8')).hexdigest()
 
     total_characters = DATA_PAIR_LIST.get_total_characters()
     mindfil_total_characters_key = session['user_cookie'] + '_mindfil_total_characters'

@@ -650,110 +650,110 @@ if __name__ == '__main__':
     helper1 = attr1
     helper2 = attr2
     res = get_string_display(attr1, attr2, helper1, helper2, 'full')
-    print res
+    print(res)
     res = get_string_display(attr1, attr2, helper1, helper2, 'partial')
-    print res
+    print(res)
     res = get_string_display(attr1, attr2, helper1, helper2, 'masked')
-    print res
+    print(res)
 
     attr1 = '1022119365'
     attr2 = '1022119365'
     helper1 = '**********'
     helper2 = '**********'
     res = get_string_display(attr1, attr2, helper1, helper2, 'full')
-    print res
+    print(res)
     res = get_string_display(attr1, attr2, helper1, helper2, 'partial')
-    print res
+    print(res)
     res = get_string_display(attr1, attr2, helper1, helper2, 'masked')
-    print res
+    print(res)
 
     attr1 = '1000151475'
     attr2 = '1000151575'
     helper1 = '*******4**'
     helper2 = '*******5**'
     res = get_string_display(attr1, attr2, helper1, helper2, 'full')
-    print res
+    print(res)
     res = get_string_display(attr1, attr2, helper1, helper2, 'partial')
-    print res
+    print(res)
     res = get_string_display(attr1, attr2, helper1, helper2, 'masked')
-    print res
+    print(res)
 
     attr1 = 'SHIESHA'
     attr2 = 'SHAMEESHA'
     helper1 = '**I__****'
     helper2 = '**AME****'
     res = get_string_display(attr1, attr2, helper1, helper2, 'full')
-    print res
+    print(res)
     res = get_string_display(attr1, attr2, helper1, helper2, 'partial')
-    print res
+    print(res)
     res = get_string_display(attr1, attr2, helper1, helper2, 'masked')
-    print res
+    print(res)
 
     attr1 = '1530042971'
     attr2 = '1350082931'
     helper1 = '*53**4**7*'
     helper2 = '*35**8**3*'
     res = get_string_display(attr1, attr2, helper1, helper2, 'full')
-    print res
+    print(res)
     res = get_string_display(attr1, attr2, helper1, helper2, 'partial')
-    print res
+    print(res)
     res = get_string_display(attr1, attr2, helper1, helper2, 'masked')
-    print res
+    print(res)
 
     attr1 = '12/27/1944'
     attr2 = '12/27/1904'
     helper1 = '**/**/**4*'
     helper2 = '**/**/**0*'
     res = get_date_display(attr1, attr2, helper1, helper2, 'full')
-    print res
+    print(res)
     res = get_date_display(attr1, attr2, helper1, helper2, 'partial')
-    print res
+    print(res)
     res = get_date_display(attr1, attr2, helper1, helper2, 'masked')
-    print res
+    print(res)
 
     attr1 = '12/28/1950'
     attr2 = '12/28/1905'
     helper1 = '**/**/**50'
     helper2 = '**/**/**05'
     res = get_date_display(attr1, attr2, helper1, helper2, 'full')
-    print res
+    print(res)
     res = get_date_display(attr1, attr2, helper1, helper2, 'partial')
-    print res
+    print(res)
     res = get_date_display(attr1, attr2, helper1, helper2, 'masked')
-    print res
+    print(res)
 
     attr1 = '01/09/1960'
     attr2 = '09/01/1960'
     helper1 = '01/09/****'
     helper2 = '09/01/****'
     res = get_date_display(attr1, attr2, helper1, helper2, 'full')
-    print res
+    print(res)
     res = get_date_display(attr1, attr2, helper1, helper2, 'partial')
-    print res
+    print(res)
     res = get_date_display(attr1, attr2, helper1, helper2, 'masked')
-    print res
+    print(res)
 
     attr1 = '01/09/1935'
     attr2 = '01/09/1935'
     helper1 = '**/**/****'
     helper2 = '**/**/****'
     res = get_date_display(attr1, attr2, helper1, helper2, 'full')
-    print res
+    print(res)
     res = get_date_display(attr1, attr2, helper1, helper2, 'partial')
-    print res
+    print(res)
     res = get_date_display(attr1, attr2, helper1, helper2, 'masked')
-    print res
+    print(res)
 
     attr1 = '10/01/1990'
     attr2 = '09/19/1995'
     helper1 = '10/01/1990'
     helper2 = '09/19/1995'
     res = get_date_display(attr1, attr2, helper1, helper2, 'full')
-    print res
+    print(res)
     res = get_date_display(attr1, attr2, helper1, helper2, 'partial')
-    print res
+    print(res)
     res = get_date_display(attr1, attr2, helper1, helper2, 'masked')
-    print res
+    print(res)
 
     pairs = list()
     pairs.append(['1','1002415935','303','DARIUS','FLOWE','163','05/11/1994','M','B','*********5','***IUS','*****','**/**/****','*','*','8','2','0'])
@@ -761,9 +761,9 @@ if __name__ == '__main__':
     pairs.append(['2','1000255792','10','SOL','BADAME','1','07/16/1914','M','W','1000255792','SOL','BADAME','**/**/****','*','*','33','6','1'])
     pairs.append(['2','','1','BADAME','SOL','1','07/16/1914','M','W','','BADAME','SOL','**/**/****','*','*','33','6','1'])
     data = format_data(pairs, 'base')
-    print data
+    print(data)
     data = format_data(pairs, 'full')
-    print data
-    print data[0][2]
+    print(data)
+    print(data[0][2])
 
 

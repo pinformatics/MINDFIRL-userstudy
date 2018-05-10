@@ -207,7 +207,7 @@ class DataPair(object):
 
     def get_next_display(self, attr_id, attr_mode):
         if attr_mode not in ['full', 'partial', 'masked', 'F', 'P', 'M']:
-            logging.error('Error: unsupported attribute display mode.')
+            logging.error('Error: unsupported attribute display mode: %s' % attr_mode)
 
         ret = list()
         if attr_mode == 'masked' or attr_mode == 'M':
@@ -313,7 +313,7 @@ class DataPairList(object):
                 logging.error('Error: inconsistent pair number.')
             self._data.append(DataPair(data_pairs[i], data_pairs[i+1]))
             pair_num = int(data_pairs[i][0])
-            location = i/2
+            location = int(i/2)
             self._id_hash[pair_num] = location
 
 
@@ -332,7 +332,7 @@ class DataPairList(object):
             logging.error('Error: inconsistent pair number.')
 
         pair_num = int(dp[0][0])
-        location = len(self._data)
+        location = int(len(self._data))
         self._data.append(DataPair(dp[0], dp[1]))
         self._id_hash[pair_num] = location
 
@@ -473,6 +473,7 @@ def KAPR_delta(DATASET, data_pair, display_status):
     for i in range(6):
         state = display_status[i]
         next_display = data_pair.get_next_display(i, state)
+        print(next_display)
         if next_display[0] == 'full':
             display_status[i] = 'F'
         elif next_display[0] == 'partial':
