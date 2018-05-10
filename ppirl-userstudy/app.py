@@ -7,7 +7,7 @@ import hashlib
 import collections
 import os
 import redis
-# import logging
+import logging
 import data_loader as dl
 import data_display as dd
 import data_model as dm
