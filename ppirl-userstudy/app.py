@@ -72,13 +72,13 @@ def show_survey_link():
 @app.route("/save_survey", methods=['POST'])
 def save_survey():
     # f = request.form
-    resps = ""
+    # resps = ""
     # for key in f.keys():
     #     variable = key.encode('utf8')
     #     value = f.get(variable).encode('utf8')
     #     resps += variable + ','.encode('utf8') + '"'.encode('utf8') + value + '"'.encode('utf8') + "\n".encode('utf8') 
-    msg = Message(subject='Aim 3 Survey', body=resps, recipients=[MAIL_RECEIVER])
-    mail.send(msg)
+    # msg = Message(subject='Aim 3 Survey', body=resps, recipients=[MAIL_RECEIVER])
+    # mail.send(msg)
     return "Thank you!"
 
 @app.route('/get_cell', methods=['GET', 'POST'])
