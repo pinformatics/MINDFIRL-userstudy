@@ -20,10 +20,10 @@ SESSION_TYPE = 'redis'
 app.config.from_object(__name__)
 Session(app)
 """
-if 'DYNO' in os.environ:
-    ENV = 'production'
-else:
-    ENV = 'development'
+# if 'DYNO' in os.environ:
+#     ENV = 'production'
+# else:
+#     ENV = 'development'
 
 app.config.from_pyfile('config.py')
 
@@ -51,6 +51,8 @@ CONFIG = {
     ]
 }
 
+
+ENV = 'production'
 
 if ENV == 'production':
     r = redis.from_url(os.environ.get("REDIS_URL"))
@@ -89,7 +91,7 @@ def show_record_linkages():
     user_data_key = session['user_cookie'] + '_user_data'
     r.set(user_data_key, 'Session start time: ' + str(time.time()) + ';\n')
 
-    return redirect(url_for('show_introduction'))
+    return redirect(url_for('show_survey_link'))
 
 @app.route('/survey_link')
 def show_survey_link():
