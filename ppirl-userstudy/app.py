@@ -89,7 +89,7 @@ def show_record_linkages():
     user_data_key = session['user_cookie'] + '_user_data'
     r.set(user_data_key, 'Session start time: ' + str(time.time()) + ';\n')
 
-    return redirect(url_for('show_survey_link'))
+    return redirect(url_for('show_introduction'))
 
 @app.route('/survey_link')
 def show_survey_link():
