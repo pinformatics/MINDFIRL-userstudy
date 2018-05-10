@@ -2,7 +2,7 @@ blinker==1.4
 certifi==2018.4.16
 click==6.7
 Flask==0.12.2
-Flask-Mail==0.9.1
+flask-sendgrid==0.6
 gunicorn==19.8.1
 itsdangerous==0.24
 Jinja2==2.9.5
