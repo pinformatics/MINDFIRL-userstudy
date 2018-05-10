@@ -31,9 +31,10 @@ app.config.update(dict(
     MAIL_USE_SSL = False,
     MAIL_USERNAME = 'mindfil.ppirl@gmail.com',
     MAIL_PASSWORD = 'Abcd1234$',
-    MAIL_DEFAULT_SENDER = 'mindfil.ppirl@gmail.com',
-    MAIL_RECEIVER = 'mindfil.ppirl@gmail.com'
+    MAIL_DEFAULT_SENDER = 'mindfil.ppirl@gmail.com'
 ))
+
+MAIL_RECEIVER = 'mindfil.ppirl@gmail.com'
 
 mail = Mail(app)
 
@@ -48,6 +49,7 @@ DATA_PAIR_LIST = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/ppirl.
 @app.route('/')
 @app.route('/survey_link')
 def show_survey_link():
+    mail.send(Message(subject='Aim 3 Survey', body="test", recipients=[MAIL_RECEIVER]))
     pairs_formatted = DATA_PAIR_LIST.get_data_display('masked')[0:12]
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = DATA_PAIR_LIST.get_icons()[0:6]
