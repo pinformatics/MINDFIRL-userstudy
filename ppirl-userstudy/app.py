@@ -61,9 +61,9 @@ else:
 
 
 # if ENV == 'production':
-r = redis.from_url(os.environ.get("REDIS_URL"))
+# r = redis.from_url(os.environ.get("REDIS_URL"))
 # elif ENV == 'development':
-    # r = redis.Redis(host='localhost', port=6379, db=0)
+r = redis.Redis(host='localhost', port=6379, db=0)
 
 
 
@@ -140,7 +140,7 @@ def show_survey_link():
         data_pair = DATA_PAIR_LIST.get_data_pair_by_index(i)
         delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'])
         delta_cdp += dm.cdp_delta(data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 0, total_characters)
-    return render_template('survey_link.html', data=data, icons=icons, ids=ids, title='Section 2: Minimum Necessary Disclosure For Interactive record Linkage', thisurl='/record_linkage', page_number=16, delta=delta, delta_cdp=delta_cdp)
+    return render_template('survey_link.html', data=data, icons=icons, ids=ids, title='Privacy Perserving Interactive Record Linkage (PPIRL)', thisurl='/record_linkage', page_number=16, delta=delta, delta_cdp=delta_cdp)
 
 @app.route("/save_survey", methods=['GET', 'POST'])
 def save_survey():
