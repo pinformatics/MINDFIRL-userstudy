@@ -54,16 +54,16 @@ CONFIG = {
 
 ENV = 'production'
 
-if 'DYNO' in os.environ:
-    ENV = 'production'
-else:
-    ENV = 'development'
+# if 'DYNO' in os.environ:
+#     ENV = 'production'
+# else:
+#     ENV = 'development'
 
-
-if ENV == 'production':
-    r = redis.from_url(os.environ.get("REDIS_URL"))
-elif ENV == 'development':
-    r = redis.Redis(host='localhost', port=6379, db=0)
+r = redis.from_url(os.environ.get("REDIS_URL"))
+# if ENV == 'production':
+#     r = redis.from_url(os.environ.get("REDIS_URL"))
+# elif ENV == 'development':
+#     r = redis.Redis(host='localhost', port=6379, db=0)
 
 
 
