@@ -149,8 +149,8 @@ def save_survey():
         
         resps = ""
         for key in f.keys():
-                variable = key
-                value = f.get(variable)
+                variable = key.encode('utf8')
+                value = f.get(variable).encode('utf8')
                 resps += variable + ',' + '"' + value + '"' + "\n" 
 
         msg = Message(subject='Aim 3 Survey', body=resps, recipients=[MAIL_RECEIVER])
