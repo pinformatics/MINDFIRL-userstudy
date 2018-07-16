@@ -24,6 +24,10 @@ def format_user_data(data):
 
 
 def parse_user_data(user_data):
+    """
+    input: string, user data from front end.
+    output: a list of dict
+    """
     if not user_data:
         return []
     user_data_list = user_data.split(';')
