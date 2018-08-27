@@ -260,11 +260,19 @@ def show_main_section_guide(section_num=2):
     section_num = int(section_num)
     last_section = section_num - 1
 
+
+
     # grading last section
     user_data = r.get(user_data_key)
     data = ud.parse_user_data(user_data)
     print(data)
     result = ud.grade_final_answer(data, get_main_section_data(session['user_id'], last_section))
+
+    print ">>>>>>>>>>>><<<<<<<<<<<<<"
+    print result
+    # print user_data_key
+    # print data
+   
 
     # saving user data
     performance = {
@@ -292,9 +300,11 @@ def show_main_section_guide(section_num=2):
         }
         r.append(user_data_key, ud.format_user_data(kapr_info))
 
-    next_url = '/main_section/' + str(2)
-
-    return render_template('section2_guide.html', uid=str(session['user_id']), section=section_num, nexturl=next_url)
+    if section_num == 2:
+        next_url = '/main_section/' + str(2)
+        return render_template('section2_guide.html', uid=str(session['user_id']), section=section_num, nexturl=next_url)
+    else:
+        return redirect(url_for('post_survey'))
 
 
 @main_section.route('/main_section/<section_num>')
@@ -381,7 +391,7 @@ def show_main_section(section_num=2):
     #     next_url = '/main_section_guide/' + str(section_num+1)
     # else:
     #     next_url = '/post_survey'
-    next_url = "/post_survey"
+    next_url = "/main_section_guide/3"
 
 
     # saving user data
