@@ -364,7 +364,7 @@ def show_main_section(section_num=2):
             r.set(key, 'M')
 
     # get the delta information
-    working_data.set_kapr_size(6*6)
+    working_data.set_kapr_size(6*3)
     delta = list()
     for i in range(config.DATA_PAIR_PER_PAGE*current_page, config.DATA_PAIR_PER_PAGE*(current_page+1)):
         data_pair = working_data.get_data_pair_by_index(i)
@@ -399,7 +399,7 @@ def show_main_section(section_num=2):
         data=data, 
         icons=icons, 
         ids=ids, 
-        title='Section <span id="end_session">%d</span>' % section_num, 
+        title="MINDFIRL (MInimum Necessary Disclosure for Interactive Record Linkage)", 
         thisurl='/main_section', 
         nexturl=next_url,
         page_number=str(current_page+1), 
