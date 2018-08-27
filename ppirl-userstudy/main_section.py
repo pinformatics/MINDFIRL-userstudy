@@ -263,7 +263,7 @@ def show_main_section_guide(section_num=2):
     # grading last section
     user_data = r.get(user_data_key)
     data = ud.parse_user_data(user_data)
-    print data
+    print(data)
     result = ud.grade_final_answer(data, get_main_section_data(session['user_id'], last_section))
 
     # saving user data
