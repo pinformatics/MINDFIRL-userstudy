@@ -43,7 +43,7 @@ def show_instruction_ppirl():
 def show_tutorial_rl_id_1():
     pairs = dl.load_data_from_csv('data/tutorial/rl/id_1.csv')
     pairs_formatted = dd.format_data(pairs, 'full')
-    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    data = list(zip(pairs_formatted[0::2], pairs_formatted[1::2]))
     icons = dd.generate_icon(pairs)
     return render_template('tutorial/rl/id_1.html', data=data, icons=icons, title='Section 1: practice', thisurl='/tutorial/rl/id_1', page_number=5)
 
@@ -57,7 +57,7 @@ def show_tutorial_rl_id_2():
 def show_tutorial_rl_id_3():
     pairs = dl.load_data_from_csv('data/tutorial/rl/id_3.csv')
     pairs_formatted = dd.format_data(pairs, 'full')
-    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    data = list(zip(pairs_formatted[0::2], pairs_formatted[1::2]))
     icons = dd.generate_icon(pairs)
     return render_template('tutorial/rl/id_3.html', data=data, icons=icons, title='Section 1: practice', thisurl='/tutorial/rl/id_3',  page_number=5)
 
@@ -66,7 +66,7 @@ def show_tutorial_rl_id_3():
 def show_tutorial_rl_twin():
     pairs = dl.load_data_from_csv('data/tutorial/rl/twin.csv')
     pairs_formatted = dd.format_data(pairs, 'full')
-    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    data = list(zip(pairs_formatted[0::2], pairs_formatted[1::2]))
     icons = dd.generate_icon(pairs)
     return render_template('tutorial/rl/twin.html', data=data, icons=icons, title='Section 1: practice', thisurl='/tutorial/rl/twin',  page_number=5)
 
@@ -75,7 +75,7 @@ def show_tutorial_rl_twin():
 def show_tutorial_rl_dup():
     pairs = dl.load_data_from_csv('data/tutorial/rl/dup.csv')
     pairs_formatted = dd.format_data(pairs, 'full')
-    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    data = list(zip(pairs_formatted[0::2], pairs_formatted[1::2]))
     icons = dd.generate_icon(pairs)
     return render_template('tutorial/rl/dup.html', data=data, icons=icons, title='Section 1: practice', thisurl='/tutorial/rl/dup',  page_number=5)
 
@@ -84,7 +84,7 @@ def show_tutorial_rl_dup():
 def show_tutorial_rl_missing():
     pairs = dl.load_data_from_csv('data/tutorial/rl/missing.csv')
     pairs_formatted = dd.format_data(pairs, 'full')
-    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    data = list(zip(pairs_formatted[0::2], pairs_formatted[1::2]))
     icons = dd.generate_icon(pairs)
     return render_template('tutorial/rl/missing.html', data=data, icons=icons, title='Section 1: practice', thisurl='/tutorial/rl/missing',  page_number=5)
 
@@ -93,7 +93,7 @@ def show_tutorial_rl_missing():
 def show_tutorial_rl_freq():
     pairs = dl.load_data_from_csv('data/tutorial/rl/freq.csv')
     pairs_formatted = dd.format_data(pairs, 'full')
-    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    data = list(zip(pairs_formatted[0::2], pairs_formatted[1::2]))
     icons = dd.generate_icon(pairs)
     return render_template('tutorial/rl/freq.html', data=data, icons=icons, title='Section 1: practice', thisurl='/tutorial/rl/freq',  page_number=5)
 
@@ -102,7 +102,7 @@ def show_tutorial_rl_freq():
 def show_tutorial_privacy_practice():
     pairs = dl.load_data_from_csv('data/tutorial/privacy/practice.csv')
     pairs_formatted = dd.format_data(pairs, 'masked')
-    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    data = list(zip(pairs_formatted[0::2], pairs_formatted[1::2]))
     icons = dd.generate_icon(pairs)
     return render_template('tutorial/privacy/practice.html', data=data, icons=icons, title='Section 2: practice', thisurl='/tutorial/privacy/practice',  page_number=5)
 
@@ -123,10 +123,10 @@ def grade_pratice_full_mode(tutorial_section, page):
     working_data = dm.DataPairList(data_pairs = pairs)
     # current_page = 1
     pairs_formatted = working_data.get_data_display(data_mode)[:]
-    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    data = list(zip(pairs_formatted[0::2], pairs_formatted[1::2]))
     icons = working_data.get_icons()[:]
     ids_list = working_data.get_ids()[:]
-    ids = zip(ids_list[0::2], ids_list[1::2])
+    ids = list(zip(ids_list[0::2], ids_list[1::2]))
 
     
 
@@ -171,10 +171,10 @@ def grade_pratice_full_mode(tutorial_section, page):
 @state_machine('show_ppirl_tutorial1')
 def show_ppirl_tutorial1():
     pairs_formatted = DATA_TUTORIAL1.get_data_display('masked')
-    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    data = list(zip(pairs_formatted[0::2], pairs_formatted[1::2]))
     icons = DATA_TUTORIAL1.get_icons()
     ids_list = DATA_TUTORIAL1.get_ids()
-    ids = zip(ids_list[0::2], ids_list[1::2])
+    ids = list(zip(ids_list[0::2], ids_list[1::2]))
 
     # KAPR - K-Anonymity privacy risk
     KAPR_key = session['user_id'] + '_KAPR'
@@ -206,10 +206,10 @@ def show_tutorial_clickable_start():
 @state_machine('show_tutorial_clickable_demo')
 def show_tutorial_clickable_demo():
     pairs_formatted = DATA_CLICKABLE_DEMO.get_data_display('masked')
-    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    data = list(zip(pairs_formatted[0::2], pairs_formatted[1::2]))
     icons = DATA_CLICKABLE_DEMO.get_icons()
     ids_list = DATA_CLICKABLE_DEMO.get_ids()
-    ids = zip(ids_list[0::2], ids_list[1::2])
+    ids = list(zip(ids_list[0::2], ids_list[1::2]))
 
     # KAPR - K-Anonymity privacy risk
     KAPR_key = session['user_id'] + '_KAPR'
@@ -285,10 +285,10 @@ def show_tutorial_clickable_decision_making_5():
 @state_machine('show_tutorial_clickable_decision_making_demo')
 def show_tutorial_clickable_decision_making_demo():
     pairs_formatted =  DATA_DM_DEMO.get_data_display('masked')
-    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    data = list(zip(pairs_formatted[0::2], pairs_formatted[1::2]))
     icons = DATA_DM_DEMO.get_icons()
     ids_list = DATA_DM_DEMO.get_ids()
-    ids = zip(ids_list[0::2], ids_list[1::2])
+    ids = list(zip(ids_list[0::2], ids_list[1::2]))
 
     # KAPR - K-Anonymity privacy risk
     KAPR_key = session['user_id'] + '_KAPR'
@@ -357,10 +357,10 @@ def show_tutorial_clickable_prepractice():
 @state_machine('show_tutorial_clickable_practice')
 def show_tutorial_clickable_practice():
     pairs_formatted = DATA_CLICKABLE_PRACTICE.get_data_display('masked')
-    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    data = list(zip(pairs_formatted[0::2], pairs_formatted[1::2]))
     icons = DATA_CLICKABLE_PRACTICE.get_icons()
     ids_list = DATA_CLICKABLE_PRACTICE.get_ids()
-    ids = zip(ids_list[0::2], ids_list[1::2])
+    ids = list(zip(ids_list[0::2], ids_list[1::2]))
 
     # KAPR - K-Anonymity privacy risk
     KAPR_key = session['user_id'] + '_KAPR'
