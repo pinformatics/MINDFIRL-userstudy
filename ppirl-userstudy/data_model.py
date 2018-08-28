@@ -338,7 +338,7 @@ class DataPairList(object):
             self._data.append(DataPair(data_pairs[i], data_pairs[i+1]))
             pair_num = int(data_pairs[i][0])
             location = i/2
-            self._id_hash[pair_num] = location
+            self._id_hash[pair_num] = int(location)
         self.idx = 0
 
         self._size = len(self._data)
@@ -384,6 +384,7 @@ class DataPairList(object):
 
 
     def get_data_pair(self, pair_num):
+        pair_num = int(pair_num)
         if pair_num not in self._id_hash:
             return None
         return self._data[self._id_hash[pair_num]]

@@ -90,10 +90,10 @@ def show_record_linkage_task():
         r.set(current_page_key, current_page)
 
     pairs_formatted = working_data.get_data_display(data_mode)[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
-    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    data = list(zip(pairs_formatted[0::2], pairs_formatted[1::2]))
     icons = working_data.get_icons()[config.DATA_PAIR_PER_PAGE*current_page:config.DATA_PAIR_PER_PAGE*(current_page+1)]
     ids_list = working_data.get_ids()[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
-    ids = zip(ids_list[0::2], ids_list[1::2])
+    ids = list(zip(ids_list[0::2], ids_list[1::2]))
 
     # KAPR - K-Anonymity privacy risk
     KAPR_key = str(session['user_id']) + '_KAPR'
@@ -175,10 +175,10 @@ def show_record_linkage_next():
         is_last_page = 1
 
     pairs_formatted = working_data.get_data_display(data_mode)[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
-    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    data = list(zip(pairs_formatted[0::2], pairs_formatted[1::2]))
     icons = working_data.get_icons()[config.DATA_PAIR_PER_PAGE*current_page:config.DATA_PAIR_PER_PAGE*(current_page+1)]
     ids_list = working_data.get_ids()[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
-    ids = zip(ids_list[0::2], ids_list[1::2])
+    ids = list(zip(ids_list[0::2], ids_list[1::2]))
 
     # set the user-display-status as masked for all cell
     for id1 in ids_list:
@@ -231,10 +231,10 @@ def show_record_linkage_open():
         return jsonify(ret)
     
     pairs_formatted = working_data.get_data_display(data_mode)[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
-    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    data = list(zip(pairs_formatted[0::2], pairs_formatted[1::2]))
     icons = working_data.get_icons()[config.DATA_PAIR_PER_PAGE*current_page:config.DATA_PAIR_PER_PAGE*(current_page+1)]
     ids_list = working_data.get_ids()[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
-    ids = zip(ids_list[0::2], ids_list[1::2])
+    ids = list(zip(ids_list[0::2], ids_list[1::2]))
 
     page_content = render_template('record_linkage_next.html', 
         data=data, 
@@ -355,10 +355,10 @@ def show_main_section(section_num=2):
         r.set(current_page_key, current_page)
 
     pairs_formatted = working_data.get_data_display(data_mode)[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
-    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    data = list(zip(pairs_formatted[0::2], pairs_formatted[1::2]))
     icons = working_data.get_icons()[config.DATA_PAIR_PER_PAGE*current_page:config.DATA_PAIR_PER_PAGE*(current_page+1)]
     ids_list = working_data.get_ids()[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
-    ids = zip(ids_list[0::2], ids_list[1::2])
+    ids = list(zip(ids_list[0::2], ids_list[1::2]))
 
     # KAPR - K-Anonymity privacy risk
     KAPR_key = str(session['user_id']) + '_KAPR'
@@ -448,10 +448,10 @@ def show_main_section_next(section_num=2):
         is_last_page = 1
     print current_page, page_size, is_last_page
     pairs_formatted = working_data.get_data_display(data_mode)[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
-    data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
+    data = list(zip(pairs_formatted[0::2], pairs_formatted[1::2]))
     icons = working_data.get_icons()[config.DATA_PAIR_PER_PAGE*current_page:config.DATA_PAIR_PER_PAGE*(current_page+1)]
     ids_list = working_data.get_ids()[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
-    ids = zip(ids_list[0::2], ids_list[1::2])
+    ids = list(zip(ids_list[0::2], ids_list[1::2]))
 
     KAPR_key = str(session['user_id']) + '_KAPR'
     if current_page%6 == 0:
