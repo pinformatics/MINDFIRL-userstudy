@@ -92,12 +92,9 @@ $(function() {
             $user_data += $data + ";";
 
             get_summitted_answers();
-            // function stateChange(newState) {
-            //     setTimeout(function(){
-            //         if(newState == -1){alert('VIDEO HAS STOPPED');}
-            //     }, 5000);
-            // }
-            post($SCRIPT_ROOT+'/save_data', $user_data, "post");
+            setTimeout(post($SCRIPT_ROOT+'/save_data', $user_data, "post"), 5000);
+            
+            // post($SCRIPT_ROOT+'/save_data', $user_data, "post");
             $user_data = "";
 
             $(window).off("beforeunload");
@@ -192,7 +189,7 @@ $(function() {
                         $('#button_next_rl').attr("disabled", false);
                     }
                     else {
-                        $('#button_next_rl').prop('disabled', true);
+                        $('#button_next_rl').attr('disabled', true);
                         $('#button_next_rl').css("display", "none");
                         $('#button_next').css("display", "inline");
                     }
