@@ -260,7 +260,7 @@ def show_main_section_guide(section_num=2):
     section_num = int(section_num)
     last_section = section_num - 1
 
-
+    print ">>>>>>>>>>>><<<<<<<<<<<<<"
 
     # grading last section
     user_data = r.get(user_data_key)
@@ -268,8 +268,7 @@ def show_main_section_guide(section_num=2):
     print(data)
     result = ud.grade_final_answer(data, get_main_section_data(session['user_id'], last_section))
 
-    print ">>>>>>>>>>>><<<<<<<<<<<<<"
-    print result
+    
     # print user_data_key
     # print data
    
@@ -433,7 +432,8 @@ def show_main_section_next(section_num=2):
     section_num = int(r.get(session['user_id']+'_main_section_num'))
     working_data = get_main_section_data(session['user_id'], section_num)
 
-    page_size = int(r.get(str(session['user_id']) + '_page_size_section' + str(section_num)))
+    # page_size = int(r.get(str(session['user_id']) + '_page_size_section' + str(section_num)))
+    page_size = 3
     current_page = int(r.get(str(session['user_id'])+'_current_page_section' + str(section_num)))+1
     if current_page >= page_size or (current_page+1)*6 > working_data.size():
         ret = {

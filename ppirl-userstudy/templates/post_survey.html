@@ -34,7 +34,7 @@
         <li>
             Did you feel like your decision-making was affected by the limited disclosure and click-to-access method? Please explain.<br>
             <textarea name="limited_disclosure_thoughts" rows="4" cols="50"></textarea>
-        </li><br>
+        </li>
 
         <h3>Meter and Budget</h3>
         <li>
@@ -74,16 +74,23 @@
             </ul>
         </li><br>
 
+        <h3>Practical use</h3>
+        <li>
+            Do you think researchers would be confident in using this system to link their data? Why or why not?    
+            <br>
+            <textarea name="researchers_useful" rows="4" cols="50"></textarea>
+        </li><br> 
+
         <h3>Comparison to what you do now with full access to data</h3>
         <li>
             Do you have full access to all data when you link data now? <br>
             <input type="radio" id="full_data_access_1" name="full_data_access" value="yes"> Yes &nbsp;&nbsp;
             <input type="radio" id="full_data_access_2" name="full_data_access" value="no"> No &nbsp;&nbsp; <br>
-            If yes, briefly describe how you link data now.<br>
+            Briefly describe how you link data now.<br>
             <textarea name="" rows="4" cols="50"></textarea>
         </li><br>
         <li>
-            Compared to what you use now with full access to the data, <strong>how much privacy protection</strong>, to the subject of the data, do you think this system provides?<br>
+            Compared to what you use now with full access to the data, <strong>how much privacy protection</strong> to the subject of the data, do you think this system provides?<br>
             <select name="privacy_protection_compare">
                 <option value="0">Please select</option>
                 <option value="Much more protection">Much more protection</option>
@@ -137,7 +144,7 @@
             <textarea name="complementary_method" rows="4" cols="50"></textarea>
         </li><br>
         <li>
-            Compared to encryption based privacy preserving record linkage, <strong>how much privacy protection</strong>, to the subject of the data, do you think this system provides?<br>
+            Compared to encryption based privacy preserving record linkage, <strong>how much privacy protection</strong> to the subject of the data, do you think this system provides?<br>
             <select name="ppirl_privacy_protection_compare">
                 <option value="0">Please select</option>
                 <option value="Much more protection">Much more protection</option>
@@ -175,14 +182,7 @@
              </select>
         </li><br>
 
-        <h3>Practical use</h3>
-        <li>
-            Do you think researchers would be confident in using this system to link their data? Why or why not?    
-            <br>
-            <textarea name="researchers_useful" rows="4" cols="50"></textarea>
-        </li><br> 
-
-        <h3>Future contact</h3>
+         <h3>Future contact</h3>
         <li>
             May we contact you to discuss your responses?<br>
             <input type="radio" id="future_contact_y" name="future_contact" value="yes"> Yes &nbsp;&nbsp;
@@ -191,10 +191,11 @@
             <input type="text" id="email_id" name="email">
         </li>
 
-
     </ol>    
 
-    <br><br>
+    <br>
+
+
 
     <div id="div_submit">
         <input type="submit" id="submitComments" name="button_submit" value="Submit" style="margin-left: 300px;" >
