@@ -13,6 +13,7 @@ function post(path, params, method) {
     var request = new XMLHttpRequest();
     request.open("POST", path);
     request.send(formData);
+    // alert('okay')
 }
 
 function reset_choice_panel() {
@@ -91,6 +92,11 @@ $(function() {
             $user_data += $data + ";";
 
             get_summitted_answers();
+            // function stateChange(newState) {
+            //     setTimeout(function(){
+            //         if(newState == -1){alert('VIDEO HAS STOPPED');}
+            //     }, 5000);
+            // }
             post($SCRIPT_ROOT+'/save_data', $user_data, "post");
             $user_data = "";
 
@@ -186,7 +192,7 @@ $(function() {
                         $('#button_next_rl').attr("disabled", false);
                     }
                     else {
-                        $('#button_next_rl').attr("disabled", true);
+                        $('#button_next_rl').prop('disabled', true);
                         $('#button_next_rl').css("display", "none");
                         $('#button_next').css("display", "inline");
                     }
