@@ -15,385 +15,187 @@
 
     <br>
 
-    <div style="font-size: 100%">
+    <div style="font-size: 100%; width: 40%;">
+
+
 
     <form action="post_survey" method="post" name="post_survey_form">
 
-    <div id="div_difficulty" style="width: 700px;">
-        1. Please explain any issues that made it <strong>harder</strong> to make linkage decisions:<br><br>
-        <textarea name="text_area_difficulty" rows="4" cols="90"></textarea>
-    </div>
+    <ol style="line-height: 1.5;">
+        <h3>Overall</h3>
+        <li>
+            What are your overall thoughts on this system and method for the human interaction part of a semi-automated record linkage process?<br>
+            <textarea name="overall_thoughts" rows="4" cols="50"></textarea>
+        </li><br>
+        <li>
+            What do you think about the method of hiding data values and allowing partial disclosure as needed? <br>
+            <textarea name="data_hiding_thoughts" rows="4" cols="50"></textarea>
+        </li><br>
+        <li>
+            Did you feel like your decision-making was affected by the limited disclosure and click-to-access method? Please explain.<br>
+            <textarea name="limited_disclosure_thoughts" rows="4" cols="50"></textarea>
+        </li>
 
-    <br><br>
+        <h3>Meter and Budget</h3>
+        <li>
+            Did you pay attention to the meter? Do you think it would affect your record linking?<br>
+            <textarea name="meter_attention" rows="4" cols="50"></textarea>
+        </li><br>
+        <li>
+            How do you think you would choose to open details?<br>
+            <textarea name="open_details" rows="4" cols="50"></textarea>
+        </li><br>
+        <li>
+            Did you feel limited by the budget?<br>
+            <textarea name="budget_limited" rows="4" cols="50"></textarea>
+        </li>
 
-    <div id="div_easiness" style="width: 700px;">
-        2. Please explain any features that made it <strong>easier</strong> to make linkage decisions:<br><br>
-        <textarea name="text_area_easiness" rows="4" cols="90"></textarea>
-    </div>
+        <h3>Problems and Benefits</h3>
+        <li>
+            Do you have any comments about potential problems with this general approach for hiding and showing data details?<br>
+            <textarea name="problems" rows="4" cols="50"></textarea>
+        </li><br>
+        <li>
+            Do you think the method would affect linkage accuracy?
+            <br>
+            <textarea name="accuracy_affect" rows="4" cols="50"></textarea>
+        </li><br>
+        <li>
+            Do you think there are potential benefits for this method?
+            <br>
+            <textarea name="benefits" rows="4" cols="50"></textarea>
+            <ul>
+                <li>Are there any specific contexts in which this system is especially useful? <br>
+                    <textarea name="contexts_useful" rows="4" cols="50"></textarea>
+                </li>
+                 <li>Do you see any potential benefits for this approach for privacy? <br>
+                    <textarea name="privacy_benefits" rows="4" cols="50"></textarea>
+                </li>
+            </ul>
+        </li><br>
 
-    <br><br>
-    <div id="div_column_difficulty" style="display: inline-block; width: 700px;">
-        3. Please rate how difficult it was to <strong>make decisions</strong> when there was a difference in each column.<br><br>
-        <ol type="a">
-            <li>First Name:
-                <select name="fname_diff" style="position: absolute; left: 200px;">
-                    <option value="0">Please select</option>
-                    <option value="1">1 - Very Difficult</option>
-                    <option value="2">2 - Somewhat Difficult</option>
-                    <option value="3">3 - Slightly Difficult</option>
-                    <option value="4">4 - Not particularly easy or difficult</option>
-                    <option value="5">5 - Slightly Easy</option>
-                    <option value="6">6 - Somewhat Easy</option>
-                    <option value="7">7 - Very Easy</option>
-                </select>
-            </li><br>
-            <li>Last Name:
-                <select name="lname_diff" style="position: absolute; left: 200px;">
-                    <option value="0">Please select</option>
-                    <option value="1">1 - Very Difficult</option>
-                    <option value="2">2 - Somewhat Difficult</option>
-                    <option value="3">3 - Slightly Difficult</option>
-                    <option value="4">4 - Not particularly easy or difficult</option>
-                    <option value="5">5 - Slightly Easy</option>
-                    <option value="6">6 - Somewhat Easy</option>
-                    <option value="7">7 - Very Easy</option>
-                </select>
-            </li><br>
-            <li>DoB:
-                <select name="dob_diff" style="position: absolute; left: 200px;">
-                    <option value="0">Please select</option>
-                    <option value="1">1 - Very Difficult</option>
-                    <option value="2">2 - Somewhat Difficult</option>
-                    <option value="3">3 - Slightly Difficult</option>
-                    <option value="4">4 - Not particularly easy or difficult</option>
-                    <option value="5">5 - Slightly Easy</option>
-                    <option value="6">6 - Somewhat Easy</option>
-                    <option value="7">7 - Very Easy</option>
-                </select>
+        <h3>Practical use</h3>
+        <li>
+            Do you think researchers would be confident in using this system to link their data? Why or why not?    
+            <br>
+            <textarea name="researchers_useful" rows="4" cols="50"></textarea>
+        </li><br> 
 
-            </li><br>
-            <li>ID.:
-                <select name="id_diff" style="position: absolute; left: 200px;">
-                    <option value="0">Please select</option>
-                    <option value="1">1 - Very Difficult</option>
-                    <option value="2">2 - Somewhat Difficult</option>
-                    <option value="3">3 - Slightly Difficult</option>
-                    <option value="4">4 - Not particularly easy or difficult</option>
-                    <option value="5">5 - Slightly Easy</option>
-                    <option value="6">6 - Somewhat Easy</option>
-                    <option value="7">7 - Very Easy</option>
-                </select>
-            </li><br>
-            <li>Race:
-                <select name="race_diff" style="position: absolute; left: 200px;">
-                    <option value="0">Please select</option>
-                    <option value="1">1 - Very Difficult</option>
-                    <option value="2">2 - Somewhat Difficult</option>
-                    <option value="3">3 - Slightly Difficult</option>
-                    <option value="4">4 - Not particularly easy or difficult</option>
-                    <option value="5">5 - Slightly Easy</option>
-                    <option value="6">6 - Somewhat Easy</option>
-                    <option value="7">7 - Very Easy</option>
-                </select>
-            </li><br>
-            <li>Sex:
-                <select name="sex_diff" style="position: absolute; left: 200px;">
-                    <option value="0">Please select</option>
-                    <option value="1">1 - Very Difficult</option>
-                    <option value="2">2 - Somewhat Difficult</option>
-                    <option value="3">3 - Slightly Difficult</option>
-                    <option value="4">4 - Not particularly easy or difficult</option>
-                    <option value="5">5 - Slightly Easy</option>
-                    <option value="6">6 - Somewhat Easy</option>
-                    <option value="7">7 - Very Easy</option>
-                </select>
-            </li>
-        </ol>
-    </div>
+        <h3>Comparison to what you do now with full access to data</h3>
+        <li>
+            Do you have full access to all data when you link data now? <br>
+            <input type="radio" id="full_data_access_1" name="full_data_access" value="yes"> Yes &nbsp;&nbsp;
+            <input type="radio" id="full_data_access_2" name="full_data_access" value="no"> No &nbsp;&nbsp; <br>
+            Briefly describe how you link data now.<br>
+            <textarea name="current_rl_system" rows="4" cols="50"></textarea>
+        </li><br>
+        <li>
+            Compared to what you use now with full access to the data, <strong>how much privacy protection</strong> to the subject of the data, do you think this system provides?<br>
+            <select name="privacy_protection_compare">
+                <option value="0">Please select</option>
+                <option value="Much more protection">Much more protection</option>
+                <option value="More protection">More protection</option>
+                <option value="Same protection">Same protection</option>
+                <option value="Less protection">Less protection</option>
+                <option value="Much less Protection">Much less protection</option>
+                <option value="na">Not applicable</option>
+             </select>
+        </li><br>
 
-    <br><br>
-    <div id="div_column_sotting" style="display: inline-block; width: 700px;">
-        4. Please rate how difficult it was to <strong>spot (detect) a difference in each column.</strong><br><br>
-        <ol type="a">
-            <li>First Name:
-                <select name="fname_spot" style="position: absolute; left: 200px;">
-                    <option value="0">Please select</option>
-                    <option value="1">1 - Very Difficult</option>
-                    <option value="2">2 - Somewhat Difficult</option>
-                    <option value="3">3 - Slightly Difficult</option>
-                    <option value="4">4 - Not particularly easy or difficult</option>
-                    <option value="5">5 - Slightly Easy</option>
-                    <option value="6">6 - Somewhat Easy</option>
-                    <option value="7">7 - Very Easy</option>
-                </select>
-            </li><br>
-            <li>Last Name:
-                <select name="lname_spot" style="position: absolute; left: 200px;">
-                    <option value="0">Please select</option>
-                    <option value="1">1 - Very Difficult</option>
-                    <option value="2">2 - Somewhat Difficult</option>
-                    <option value="3">3 - Slightly Difficult</option>
-                    <option value="4">4 - Not particularly easy or difficult</option>
-                    <option value="5">5 - Slightly Easy</option>
-                    <option value="6">6 - Somewhat Easy</option>
-                    <option value="7">7 - Very Easy</option>
-                </select>
-            </li><br>
-            <li>DoB:
-                <select name="dob_spot" style="position: absolute; left: 200px;">
-                    <option value="0">Please select</option>
-                    <option value="1">1 - Very Difficult</option>
-                    <option value="2">2 - Somewhat Difficult</option>
-                    <option value="3">3 - Slightly Difficult</option>
-                    <option value="4">4 - Not particularly easy or difficult</option>
-                    <option value="5">5 - Slightly Easy</option>
-                    <option value="6">6 - Somewhat Easy</option>
-                    <option value="7">7 - Very Easy</option>
-                </select>
+        <li>
+             Compared to what you use now with full access to the data, how much do you think this system <strong>would affect the linkage accuracy</strong>?<br>
+            <select name="linkage_accuracy_compare">
+                <option value="0">Please select</option>
+                <option value="Much better accuracy">Much better accuracy</option>
+                <option value="Better accuracy">Better accuracy</option>
+                <option value="Same accuracy">Same accuracy</option>
+                <option value="Less accuracy">Less accuracy</option>
+                <option value="Much less accuracy">Much less accuracy</option>
+                <option value="na">Not applicable</option>
+             </select>
+        </li><br>
 
-            </li><br>
-            <li>ID:
-                <select name="id_spot" style="position: absolute; left: 200px;">
-                    <option value="0">Please select</option>
-                    <option value="1">1 - Very Difficult</option>
-                    <option value="2">2 - Somewhat Difficult</option>
-                    <option value="3">3 - Slightly Difficult</option>
-                    <option value="4">4 - Not particularly easy or difficult</option>
-                    <option value="5">5 - Slightly Easy</option>
-                    <option value="6">6 - Somewhat Easy</option>
-                    <option value="7">7 - Very Easy</option>
-                </select>
-            </li><br>
-            <li>Race:
-                <select name="race_spot" style="position: absolute; left: 200px;">
-                    <option value="0">Please select</option>
-                    <option value="1">1 - Very Difficult</option>
-                    <option value="2">2 - Somewhat Difficult</option>
-                    <option value="3">3 - Slightly Difficult</option>
-                    <option value="4">4 - Not particularly easy or difficult</option>
-                    <option value="5">5 - Slightly Easy</option>
-                    <option value="6">6 - Somewhat Easy</option>
-                    <option value="7">7 - Very Easy</option>
-                </select>
-            </li><br>
-            <li>Sex:
-                <select name="sex_spot" style="position: absolute; left: 200px;">
-                    <option value="0">Please select</option>
-                    <option value="1">1 - Very Difficult</option>
-                    <option value="2">2 - Somewhat Difficult</option>
-                    <option value="3">3 - Slightly Difficult</option>
-                    <option value="4">4 - Not particularly easy or difficult</option>
-                    <option value="5">5 - Slightly Easy</option>
-                    <option value="6">6 - Somewhat Easy</option>
-                    <option value="7">7 - Very Easy</option>
-                </select>
-            </li><br>
-        </ol>
-    </div>
+        <li>
+            Compared to what you use now with full access to the data, do you think using this system <strong>would take more time?</strong><br>
+            <select name="time_compare">
+                <option value="0">Please select</option>
+                <option value="Much less time">Much less time</option>
+                <option value="Less time">Less time</option>
+                <option value="Same time<">Same time</option>
+                <option value="More time">More time</option>
+                <option value="Much more time">Much more time</option>
+                <option value="na">Not applicable</option>
+             </select>
+        </li><br>
 
-    <br><br>
-    <div id="div_type_diff" style="display: inline-block; width: 700px;">
-        5. Please rate how difficult it was to <strong>spot (detect) how pairs were different for various types of errors.</strong> <br><br>
-        <ol type="a">
-            <li>Missing:
-                <select name="spot_missing" style="position: absolute; left: 200px;">
-                    <option value="0">Please select</option>
-                    <option value="1">1 - Very Difficult</option>
-                    <option value="2">2 - Somewhat Difficult</option>
-                    <option value="3">3 - Slightly Difficult</option>
-                    <option value="4">4 - Not particularly easy or difficult</option>
-                    <option value="5">5 - Slightly Easy</option>
-                    <option value="6">6 - Somewhat Easy</option>
-                    <option value="7">7 - Very Easy</option>
-                </select>
-            </li><br>
-            <li>Transpose:
-                <select name="spot_transpose" style="position: absolute; left: 200px;">
-                    <option value="0">Please select</option>
-                    <option value="1">1 - Very Difficult</option>
-                    <option value="2">2 - Somewhat Difficult</option>
-                    <option value="3">3 - Slightly Difficult</option>
-                    <option value="4">4 - Not particularly easy or difficult</option>
-                    <option value="5">5 - Slightly Easy</option>
-                    <option value="6">6 - Somewhat Easy</option>
-                    <option value="7">7 - Very Easy</option>
-                </select>
-            </li><br>
-            <li>Insert:
-                <select name="spot_insert" style="position: absolute; left: 200px;">
-                    <option value="0">Please select</option>
-                    <option value="1">1 - Very Difficult</option>
-                    <option value="2">2 - Somewhat Difficult</option>
-                    <option value="3">3 - Slightly Difficult</option>
-                    <option value="4">4 - Not particularly easy or difficult</option>
-                    <option value="5">5 - Slightly Easy</option>
-                    <option value="6">6 - Somewhat Easy</option>
-                    <option value="7">7 - Very Easy</option>
-                </select>
-
-            </li><br>
-            <li>Replace:
-                <select name="spot_replace" style="position: absolute; left: 200px;">
-                    <option value="0">Please select</option>
-                    <option value="1">1 - Very Difficult</option>
-                    <option value="2">2 - Somewhat Difficult</option>
-                    <option value="3">3 - Slightly Difficult</option>
-                    <option value="4">4 - Not particularly easy or difficult</option>
-                    <option value="5">5 - Slightly Easy</option>
-                    <option value="6">6 - Somewhat Easy</option>
-                    <option value="7">7 - Very Easy</option>
-                </select>
-            </li><br>
-            <li>Different:
-                <select name="spot_diff" style="position: absolute; left: 200px;">
-                    <option value="0">Please select</option>
-                    <option value="1">1 - Very Difficult</option>
-                    <option value="2">2 - Somewhat Difficult</option>
-                    <option value="3">3 - Slightly Difficult</option>
-                    <option value="4">4 - Not particularly easy or difficult</option>
-                    <option value="5">5 - Slightly Easy</option>
-                    <option value="6">6 - Somewhat Easy</option>
-                    <option value="7">7 - Very Easy</option>
-                </select>
-            </li><br>
-            <li>Name Swap:
-                <select name="spot_nswap" style="position: absolute; left: 200px;">
-                    <option value="0">Please select</option>
-                    <option value="1">1 - Very Difficult</option>
-                    <option value="2">2 - Somewhat Difficult</option>
-                    <option value="3">3 - Slightly Difficult</option>
-                    <option value="4">4 - Not particularly easy or difficult</option>
-                    <option value="5">5 - Slightly Easy</option>
-                    <option value="6">6 - Somewhat Easy</option>
-                    <option value="7">7 - Very Easy</option>
-                </select>
-            </li><br>
-            <li>Date Swap:
-                <select name="spot_dswap" style="position: absolute; left: 200px;">
-                    <option value="0">Please select</option>
-                    <option value="1">1 - Very Difficult</option>
-                    <option value="2">2 - Somewhat Difficult</option>
-                    <option value="3">3 - Slightly Difficult</option>
-                    <option value="4">4 - Not particularly easy or difficult</option>
-                    <option value="5">5 - Slightly Easy</option>
-                    <option value="6">6 - Somewhat Easy</option>
-                    <option value="7">7 - Very Easy</option>
-                </select>
-            </li><br>
-        </ol>
-    </div>
+        <h3>Comparison to using privacy preserving record linkage</h3>
+        <li>
+            Do you use encryption based privacy-preserving record linkage? <br>
+            <input type="radio" id="ppirl_access_1" name="ppirl_access" value="yes"> Yes &nbsp;&nbsp;
+            <input type="radio" id="ppirl_access_access_2" name="ppirl_access" value="no"> No &nbsp;&nbsp; <br>
+            If yes, briefly describe how you use privacy preserving record linkage now.<br>
+            <textarea name="current_ppirl_system" rows="4" cols="50"></textarea>
+        </li><br>
 
 
-    <br><br>
-    <div id="div_freq" style="width: 700px;">
-        6. Did you take into account the rarity/commonness of the first name and last name when you made linkage decisions?<br><br>
-        <!--&nbsp;&nbsp;&nbsp;&nbsp;-->
-        &nbsp;&nbsp;&nbsp;
-        <input type="radio" id="e1" name="frequency" value="Yes"> Yes &nbsp;&nbsp;
-        <input type="radio" id="e2" name="frequency" value="No"> No
-        <br><br>
-        &nbsp;&nbsp;&nbsp; If yes, why? If not, why not?:
-        <textarea name="freq_dec" rows="4" cols="90"></textarea>
-        <br><br>
-    </div>
+       <li>
+            Do you think this system can be used with privacy preserving record linkage as a complementary method? If so, please describe how.
+            <br>
+            <textarea name="complementary_method" rows="4" cols="50"></textarea>
+        </li><br>
+        <li>
+            Compared to encryption based privacy preserving record linkage, <strong>how much privacy protection</strong> to the subject of the data, do you think this system provides?<br>
+            <select name="ppirl_privacy_protection_compare">
+                <option value="0">Please select</option>
+                <option value="Much more protection">Much more protection</option>
+                <option value="More protection">More protection</option>
+                <option value="Same protection">Same protection</option>
+                <option value="Less protection">Less protection</option>
+                <option value="Much less Protection">Much less protection</option>
+                <option value="na">Not applicable</option>
+             </select>
+        </li><br>
+
+        <li>
+             Compared to encryption based privacy preserving record linkage, how much do you think this system <strong>would affect the linkage accuracy</strong>?<br>
+            <select name="ppirl_linkage_accuracy_compare">
+                <option value="0">Please select</option>
+                <option value="Much better accuracy">Much better accuracy</option>
+                <option value="Better accuracy">Better accuracy</option>
+                <option value="Same accuracy">Same accuracy</option>
+                <option value="Less accuracy">Less accuracy</option>
+                <option value="Much less accuracy">Much less accuracy</option>
+                <option value="na">Not applicable</option>
+             </select>
+        </li><br>
+
+        <li>
+            Compared to encryption based privacy preserving record linkage, do you think using this system <strong>would take more time?</strong><br>
+            <select name="ppirl_time_compare">
+                <option value="0">Please select</option>
+                <option value="Much less time">Much less time</option>
+                <option value="Less time">Less time</option>
+                <option value="Same time<">Same time</option>
+                <option value="More time">More time</option>
+                <option value="Much more time">Much more time</option>
+                <option value="na">Not applicable</option>
+             </select>
+        </li><br>
+
+         <h3>Future contact</h3>
+        <li>
+            May we contact you to discuss your responses?<br>
+            <input type="radio" id="future_contact_y" name="future_contact" value="yes"> Yes &nbsp;&nbsp;
+            <input type="radio" id="future_contact_n" name="future_contact" value="no"> No &nbsp;&nbsp; <br>
+            If yes, please provide email<br>
+            <input type="text" id="email_id" name="email">
+        </li>
+
+    </ol>    
+
+    <br>
 
 
-    <div name="div_int" style="width: 700px;">
-        7. Was there anything you did not understand about the task or interface? Please explain.<br><br>
-        <textarea name="inter_under" rows="4" cols="90"></textarea>
-    </div>
-
-    <br><br>
-    <div id="div_tips" style="width: 800px;">
-        8. Please share any comments or feedback about the user study or ways to improve the interface to support decision making.<br><br>
-        <textarea name="tips" rows="4" cols="90"></textarea>
-    </div>
-
-    {% if umode in ['2', '3', '4'] %}
-    <div>
-            <br><br>
-        <div style="width: 800px;">
-            9. How did you decide which cells to click/open?<br><br>
-            <textarea name="which_cells_open" rows="4" cols="90"></textarea>
-        </div>
-        
-            <br><br>
-        <div style="width: 800px;">
-            10. How attentive were you in opening up only the necessary cells? <br><br>
-            <select name="attention_necessary" style="position: absolute; ">
-                    <option value="0">Please select</option>
-                    <option value="1">1 - I was not paying attention </option>
-                    <option value="2">2 - I tried to pay attention some what</option>
-                    <option value="3">3 - I was paying close attention</option>
-            </select>
-        </div>
-
-    </div>
-
-    {% endif%}
-
-
-    {% if umode in ['3', '4'] %}
-    <div>
-       <br><br><br>
-        <div style="width: 800px;">
-            11. Did the meter influence how much you opened up cells? <br><br>
-            <select name="meter_influence" style="position: absolute; ">
-                    <option value="0">Please select</option>
-                    <option value="1">1 - The meter did not influence me</option>
-                    <option value="2">2 - The meter influenced me somewhat</option>
-                    <option value="3">3 - The meter influence me a lot</option>
-            </select>
-        </div>
-
-        <br><br><br>
-        <div style="width: 800px;">
-            12. Was the meter easy to understand and intuitive?<br><br>
-            <textarea name="meter_understandablity" rows="4" cols="90"></textarea>
-           <!--  <select id="meter_understandablity" style="position: absolute; left: 200px;">
-                    <option value="0">Please select</option>
-                    <option value="1">1 - Not really</option>
-                    <option value="2">2 - A little</option>
-                    <option value="3">3 - Somewhat</option>
-                    <option value="4">4 - Very much</option>
-            </select> -->
-        </div>
-
-        <br><br>
-        <div style="width: 800px;">
-            13. Without the meter how much do you think you would have opened up?<br><br>
-            <textarea name="meter_openingup" rows="4" cols="90"></textarea>
-        </div>
-
-    </div>
-
-    {% endif%}
-
-    {% if umode in ['4'] %}
-    <div>
-            <br><br>
-        <div style="width: 800px;">
-            14. Was the budget (red line) with the meter enough to comfortably make decisions? <br>
-            <img src="/static/images/module_intros/budget_limit.png" style="width: 750px;"></img><br>
-            <textarea name="limit_comfortable" rows="4" cols="90"></textarea>
-        </div>
-        
-            <br><br>
-        <div style="width: 800px;">
-            15. Without the limit (red line), how much <strong>more</strong> would you have opened up than you did?<br><br>
-            <select name="limit_influence" >
-                    <option value="0">Please select</option>
-                    <option value="1">1 - Significantly more</option>
-                    <option value="2">2 - A little more</option>
-                    <option value="3">3 - I would have used about the same budget</option>
-            </select>
-        </div>
-
-    </div>
-
-    {% endif%}        
-
-    <br><br>
 
     <div id="div_submit">
         <input type="submit" id="submitComments" name="button_submit" value="Submit" style="margin-left: 300px;" >

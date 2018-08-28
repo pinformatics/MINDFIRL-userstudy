@@ -260,11 +260,18 @@ def show_main_section_guide(section_num=2):
     section_num = int(section_num)
     last_section = section_num - 1
 
+    print ">>>>>>>>>>>><<<<<<<<<<<<<"
+
     # grading last section
     user_data = r.get(user_data_key)
     data = ud.parse_user_data(user_data)
     print(data)
     result = ud.grade_final_answer(data, get_main_section_data(session['user_id'], last_section))
+
+    
+    # print user_data_key
+    # print data
+   
 
     # saving user data
     performance = {
@@ -292,9 +299,11 @@ def show_main_section_guide(section_num=2):
         }
         r.append(user_data_key, ud.format_user_data(kapr_info))
 
-    next_url = '/main_section/' + str(2)
-
-    return render_template('section2_guide.html', uid=str(session['user_id']), section=section_num, nexturl=next_url)
+    if section_num == 2:
+        next_url = '/main_section/' + str(2)
+        return render_template('section2_guide.html', uid=str(session['user_id']), section=section_num, nexturl=next_url)
+    else:
+        return redirect(url_for('post_survey'))
 
 
 @main_section.route('/main_section/<section_num>')
@@ -340,6 +349,8 @@ def show_main_section(section_num=2):
     else:
         current_page = 0
         page_size = int(math.ceil(1.0*dp_list_size/config.DATA_PAIR_PER_PAGE))
+        # print '>>>>>>>>>>>>>>><<<<<<<<<<<<<<<'
+        # print page_size_key, page_size
         r.set(page_size_key, str(page_size))
         r.set(current_page_key, current_page)
 
@@ -381,7 +392,7 @@ def show_main_section(section_num=2):
     #     next_url = '/main_section_guide/' + str(section_num+1)
     # else:
     #     next_url = '/post_survey'
-    next_url = "/post_survey"
+    next_url = "/main_section_guide/3"
 
 
     # saving user data
@@ -435,7 +446,7 @@ def show_main_section_next(section_num=2):
     is_last_page = 0
     if current_page == page_size - 1:
         is_last_page = 1
-
+    print current_page, page_size, is_last_page
     pairs_formatted = working_data.get_data_display(data_mode)[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
     data = list(zip(pairs_formatted[0::2], pairs_formatted[1::2]))
     icons = working_data.get_icons()[config.DATA_PAIR_PER_PAGE*current_page:config.DATA_PAIR_PER_PAGE*(current_page+1)]

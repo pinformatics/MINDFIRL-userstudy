@@ -8,39 +8,40 @@
 </head>
 <body>
 <div id="demographics">
-    <div  style="width: 1000px; position: absolute; top: 25px;">
+    <div  style="width: 1000px; position: absolute;">
     <!--<h3 style="text-align: center">Survey</h3>-->
 
-    <h4 id="demoinstr" style="margin-left: 500px;text-align: center; font-weight: bold">
+    <h4 id="demoinstr" style="margin-left: 500px;text-align: center; font-weight: bold; width: 740px">
         Please fill out this short questionnaire before you proceed to the study:
     </h4>
+    <br><br>
      
     </div>
 
     <form action="pre_survey" method="post" name="pre_survey_form">
-    <br>
-    <div id="sex" style="position: absolute; left: 0px; width: 740px;  text-align: right; top: 100px;">1. Gender: </div>
-        <div id="sexes" style="position: absolute; left: 750px; top: 100px">
+    <br><br><br><br>
+    <div id="sex" style="position: absolute; left: 0px; width: 740px;  text-align: right;">1. Gender: </div>
+        <div id="sexes" style="position: absolute; left: 750px;">
             <input type="radio" id="s1" name="sex" value="Male"> Male &nbsp;&nbsp;
             <input type="radio" id="s2" name="sex" value="Female"> Female &nbsp;&nbsp;
             <input type="radio" id="s3" name="sex" value="Prefer not to disclose"> Prefer not to disclose
         </div>
-    <br>
+    <br><br>
 
-    <div id="age" style="position: absolute; left:0px; width: 740px;  text-align: right; top: 150px">2. Age:
+    <div id="age" style="position: absolute; left:0px; width: 740px;  text-align: right;">2. Age:
     </div>
-        <div id="ages" style="position: absolute; left: 750px; top: 150px">
+        <div id="ages" style="position: absolute; left: 750px;">
         <input type="number" name="age" min="18" max="100">
         </div>
-    <br>
+    <br><br>
 
-    <svg  height="10px" width="750px" style="position: absolute; left:450px; top: 185px">
+    <svg  height="10px" width="750px" style="position: absolute; left:450px;">
         <line x1="0" y1="5" x2="750" y2="5" style="stroke:grey;stroke-width:1"></line>
     </svg>
 
-    <!-- <div id="occupation" style="position: absolute; left:0px; width: 740px;  text-align: right; top: 200px">3. Occupation:
+    <!-- <div id="occupation" style="position: absolute; left:0px; width: 740px;  text-align: right;">3. Occupation:
     </div>
-        <div id="occupations" style="position: absolute; left: 750px; top: 200px">
+        <div id="occupations" style="position: absolute; left: 750px;">
         <input type="radio" id="o1" name="occupation" value="Student"> Student &nbsp;&nbsp;
         <input type="radio" id="o2" name="occupation" value="Research Staff"> Research Staff &nbsp;&nbsp;
         <input type="radio" id="o3" name="occupation" value="Faculty"> Faculty &nbsp;&nbsp;
@@ -50,11 +51,11 @@
     <br> -->
 
 
-    <div id="div_student" name="div_stud">
-        <div id="current_degree" style="position: absolute; left:0px; width: 740px;  text-align: right;  top: 220px">3.1. Current Degree:
+    <!-- <div id="div_student" name="div_stud"> -->
+        <!-- <div id="current_degree" style="position: absolute; left:0px; width: 740px;  text-align: right; ">3.1. Current Degree:
         </div>
-        <div id="degrees" style="position: absolute; left: 750px; top: 220px">
-            <!-- <input type="radio" id="d1" name="current_degree" value="High School"> High School &nbsp;&nbsp; -->
+        <div id="degrees" style="position: absolute; left: 750px;">
+        
             <input type="radio" id="d2a" name="current_degree" value="Freshman"> Freshman &nbsp;&nbsp;
             <input type="radio" id="d2b" name="current_degree" value="Sophomore"> Sophomore &nbsp;&nbsp;
             <input type="radio" id="d2c" name="current_degree" value="Junior"> Junior &nbsp;&nbsp;
@@ -65,76 +66,77 @@
             <input type="text" id="d6" name="current_degree" >
         </div>
 
-        <div id="department"  style="position: absolute; left: 0px;width: 740px;  text-align: right; top: 280px">3.2. Department:
+        <div id="department"  style="position: absolute; left: 0px;width: 740px;  text-align: right;">3.2. Department:
         </div>
 
         <div>
-            <input type="text" id="dpt" name="dpt" style="position: absolute; left: 750px; top: 280px">
-        </div>
+            <input type="text" id="dpt" name="dpt" style="position: absolute; left: 750px;">
+        </div> -->
 
 
-    </div>
+    <!-- </div> -->
+    
     <br>
-
-    <div id="div_highest_degree" style="position: absolute; left: 0px;width: 740px;  text-align: right;  top: 330px">4. Highest Degree obtained:
+    <div id="div_highest_degree" style="position: absolute; left: 0px;width: 740px;  text-align: right; ">3. Highest Degree obtained:
     </div>
-        <div id="degrees_2" style="position: absolute; left: 750px; top: 330px">
-        <input type="radio" id="h1" name="highest_degree" value="High School"> High School &nbsp;&nbsp;
+        <div id="degrees_2" style="position: absolute; left: 750px;">
+        <!-- <input type="radio" id="h1" name="highest_degree" value="High School"> High School &nbsp;&nbsp; -->
         <input type="radio" id="h2" name="highest_degree" value="Bachelors"> Bachelors &nbsp;&nbsp;
         <input type="radio" id="h3" name="highest_degree" value="Masters"> Masters &nbsp;&nbsp;
         <input type="radio" id="h4" name="highest_degree" value="PhD"> PhD &nbsp;&nbsp;
-        <input type="radio" id="h5" name="highest_degree" value="Other"> Other &nbsp;
-        <input type="text" id="h6" name="highest_degree">
+        <input type="radio" id="h5" name="highest_degree" value="Other" placeholder="Please specify"> Other &nbsp;
+        <input type="text" id="h6" name="highest_degree_txt" placeholder="Please specify">
         </div>
-    <br>
+    <br><br>
 
-    <svg  height="10px" width="750px" style="position: absolute; left:450px; top: 385px">
+    <div id="div_expertise" style="position: absolute; left: 0px;width: 740px;  text-align: right; ">4. What is your field of expertise?
+    </div>
+        <div id="div_expertise2" style="position: absolute; left: 750px;">
+        <input type="radio" id="exp_1" name="expertise" value="Computer science">Computer science &nbsp;&nbsp;
+        <input type="radio" id="exp_2" name="expertise" value="Health informatics">Health informatics &nbsp;&nbsp;
+        <input type="radio" id="exp_3" name="expertise" value="Epidemiology">Epidemiology &nbsp;&nbsp; <br>
+        <input type="radio" id="exp_4" name="expertise" value="Biostatistics/statistics">Biostatistics/statistics &nbsp;&nbsp; 
+        <input type="radio" id="exp_5" name="expertise" value="Health economics">Health economics &nbsp;&nbsp;
+        <input type="radio" id="exp_6" name="expertise" value="Health services research">Health services research &nbsp;&nbsp;<br>
+        <input type="radio" id="exp_7" name="expertise" value="other" placeholder="Please specify">Other &nbsp;&nbsp;
+        <input type="text" id="exp_8" name="expertise_txt" placeholder="Please specify">
+        </div>
+    <br><br><br><br>
+    
+    <div id="div_job_title" style="position: absolute; left: 0px;width: 740px;  text-align: right; ">5. What is your job title?
+    </div>
+        <div id="div_job_title2" style="position: absolute; left: 750px;">
+            <input type="text" id="job_tile_spec" name="job_title">
+        </div>
+    <br><br>
+
+
+    <div id="div_area_work" style="position: absolute; left: 0px;width: 740px;  text-align: right; ">6. Where do you work?
+    </div>
+        <div id="div_area_work2" style="position: absolute; left: 750px;">
+        <!-- <input type="radio" id="h1" name="highest_degree" value="High School"> High School &nbsp;&nbsp; -->
+        <input type="radio" id="area_work_1" name="area_work" value="Academia">Academia &nbsp;&nbsp;
+        <input type="text" id="area_work_7" name="area_work_txt_1" placeholder="what is your primary department?"><br>
+        <input type="radio" id="area_work_2" name="area_work" value="Government Agency">Government Agency &nbsp;&nbsp;
+           <input type="text" id="area_work_8" name="area_work_txt_2" placeholder="Which agency do you work for?"><br>
+        <input type="radio" id="area_work_3" name="area_work" value="Private non-profit research firm">Private non-profit research firm &nbsp;&nbsp;
+           <input type="text" id="area_work_9" name="area_work_txt_3" placeholder="Which company?"><br>
+        <input type="radio" id="area_work_4" name="area_work" value="Private for profit research firm">Private for profit research firm &nbsp;&nbsp;
+           <input type="text" id="area_work_10" name="area_work_txt_4" placeholder="Which company?"><br>
+        <input type="radio" id="area_work_5" name="area_work" value="Other">Other &nbsp;&nbsp;
+        <input type="text" id="area_work_6" name="area_work_txt_5" placeholder="Please specify">
+        </div>
+    <br><br><br><br><br><br><br><br>
+
+    <svg  height="10px" width="750px" style="position: absolute; left:450px; top: 400">
         <line x1="0" y1="5" x2="750" y2="5" style="stroke:grey;stroke-width:1"></line>
     </svg>
-
-    <div id="div_us_age" style="position: absolute; left: 0px;width: 740px;  text-align: right;  top: 400px">5. Length of stay in the US:
-    </div>
-        <div style="position: absolute; left: 750px; top: 400px">
-        <input type="number" name="us_age" id="us_years" min="0" max="100"> Years &nbsp;
-        <input type="number" name="us_age" id="us_months" min="0" max="12"> Months
-        </div>
     <br>
 
-    <div id="div_country"  style="position: absolute; left: 0px;width: 740px;  text-align: right;  top: 450px">
-        6. Country you lived the majority of your life:
+    <div id="div_data" style="position: absolute; left: 400px;width: 340px;  text-align: right; ">
+        7. Rate your experience working with data or doing data analysis, including numerical inspection or descriptive statistics on a scale of 1 to 4:
     </div>
-    <div>
-        <input type="text" id="country_txt" name="country" style="position: absolute; left: 750px; top: 450px">
-    </div>
-    <br>
-
-    <div id="div_english" style="position: absolute; left: 0px;width: 740px;  text-align: right;  top: 500px">
-        7. Is English your first language?
-    </div>
-    <div style="position: absolute; left: 750px; top: 500px">
-        <input type="radio" id="e1" name="english" value="Yes"> Yes &nbsp;&nbsp;
-        <input type="radio" id="e2" name="english" value="No"> No
-    </div>
-    <br>
-
-    <div id="div_color" style="position: absolute; left: 0px;width: 740px;  text-align: right;  top: 550px">
-        8. Do you have any known color blindness?
-    </div>
-    <div style="position: absolute; left: 750px; top: 550px">
-        <input type="radio" id="c1" name="color" value="Yes"> Yes &nbsp;&nbsp;
-        <input type="radio" id="c2" name="color" value="No"> No
-    </div>
-    <br>
-
-    <svg  height="10px" width="750px" style="position: absolute; left:450px; top: 585px">
-        <line x1="0" y1="5" x2="750" y2="5" style="stroke:grey;stroke-width:1"></line>
-    </svg>
-
-    <div id="div_data" style="position: absolute; left: 400px;width: 340px;  text-align: right;  top: 600px">
-        9. Rate your experience working with data or doing data analysis, including numerical inspection or descriptive statistics on a scale of 1 to 10:
-        <!--<br>(1 being very inexperienced and 10 being very experienced)-->
-    </div>
-    <div style="position: absolute; left: 750px; top: 610px">
+    <div style="position: absolute; left: 750px;">
         <select name="data_ana">
             <option value="0">Please select</option>
             <option value="1">1 - No experience</option>
@@ -143,15 +145,75 @@
             <option value="4">4 - Lots of experience</option>
         </select>
     </div>
-    <div  style="position: absolute; left: 0px;width: 740px;  text-align: right;  top: 685px">
-        Briefly explain:
+
+    <br><br><br><br><br>
+
+     <div  style="position: absolute; left: 0px;width: 740px;  text-align: right; ">
+        Briefly describe your experience:
     </div>
-        <textarea name="data_ana_text" rows="4" cols="50" style="position: absolute; left: 750px;  top: 685px"></textarea>
+        <textarea name="data_ana_text" rows="4" cols="50" style="position: absolute; left: 750px; "></textarea>
+    <br><br><br><br><br>
+
+    <div id="div_data_years_exp" style="position: absolute; left: 400px;width: 340px;  text-align: right;">
+        8. How long have you worked with data or doing data analysis, including numerical inspection or descriptive statistics?
+    </div>
+        <div style="position: absolute; left: 750px;">
+        <input type="number" name="data_years_exp" id="data_years_exp_years" min="0" max="100"> Years &nbsp;
+        <input type="number" name="data_months_exp" id="data_years_exp_months" min="0" max="12"> Months
+        </div>
+    <br><br><br><br><br>
+
+
+    <div id="div_rl" style="position: absolute; left: 400px;width: 340px;  text-align: right; ">
+        9. Rate your experience with record linkage on a scale of 1 to 10:
+    </div>
+    <div style="position: absolute; left: 750px;">
+        <input type="number" name="rl_experience" id="rl_exp" min="1" max="10">
+    </div>
+
+    <br><br><br>
+
+     <div  style="position: absolute; left: 0px;width: 740px;  text-align: right; ">
+        Briefly describe your experience:
+    </div>
+        <textarea name="rl_text" rows="4" cols="50" style="position: absolute; left: 750px; "></textarea>
+    <br><br><br><br><br>
+
+    <div id="div_data_years_exp" style="position: absolute; left: 400px;width: 340px;  text-align: right;">
+        8. How long have you been working on record linkage?
+    </div>
+        <div style="position: absolute; left: 750px;">
+        <input type="number" name="rl_years" id="rl_years_n" min="0" max="100"> Years &nbsp;
+        <input type="number" name="rl_months" id="rl_months_n" min="0" max="12"> Months
+        </div>
+    <br><br><br>
+
+
+    <svg  height="10px" width="750px" style="position: absolute; left:450px;">
+        <line x1="0" y1="5" x2="750" y2="5" style="stroke:grey;stroke-width:1"></line>
+    </svg>
     <br>
 
+    <div id="div_color" style="position: absolute; left: 0px;width: 740px;  text-align: right; ">
+        11. Do you have any known color blindness?
+    </div>
+    <div style="position: absolute; left: 750px;">
+        <input type="radio" id="c1" name="color" value="Yes"> Yes &nbsp;&nbsp;
+        <input type="radio" id="c2" name="color" value="No"> No
+    </div>
+    <br><br>
+
+     <div id="div_english" style="position: absolute; left: 0px;width: 740px;  text-align: right; ">
+        12. Is English your first language?
+    </div>
+    <div style="position: absolute; left: 750px;">
+        <input type="radio" id="e1" name="english" value="Yes"> Yes &nbsp;&nbsp;
+        <input type="radio" id="e2" name="english" value="No"> No
+    </div>
+    <br><br>
 
     <div id="div_submit">
-        <input type="submit" id="submitComments" name="button_submit" value="Submit" style="position: absolute; left: 725px;  top: 800px">
+        <input type="submit" id="submitComments" name="button_submit" value="Submit" style="position: absolute; left: 725px; ">
     </div>
 
     </form>
@@ -163,7 +225,13 @@
 <script>
     
    $("#h6").css("visibility","hidden");
-    $("#d6").css("visibility","hidden");
+   $("#d6").css("visibility","hidden");
+   $("#exp_8").css("visibility","hidden");
+   $("#area_work_6").css("visibility", "hidden");
+   $("#area_work_7").css("visibility", "hidden");
+   $("#area_work_8").css("visibility", "hidden");
+   $("#area_work_9").css("visibility", "hidden");
+   $("#area_work_10").css("visibility", "hidden");
 
     $("input[name=current_degree]").click(function(){
         // console.log();
@@ -180,6 +248,36 @@
             $("#h6").css("visibility", "visible")
         } else {
             $("#h6").css("visibility","hidden");
+        }
+    })
+
+    $("input[name=expertise]").click(function(){
+        // console.log();
+        if($(this).attr('id') === "exp_7"){
+            $("#exp_8").css("visibility", "visible")
+        } else {
+            $("#exp_8").css("visibility","hidden");
+        }
+    })
+
+    $("input[name=area_work]").click(function(){
+        // console.log();
+        $("#area_work_6").css("visibility", "hidden");
+        $("#area_work_7").css("visibility", "hidden");
+        $("#area_work_8").css("visibility", "hidden");
+        $("#area_work_9").css("visibility", "hidden");
+        $("#area_work_10").css("visibility", "hidden");
+
+        if($(this).attr('id') === "area_work_1"){
+            $("#area_work_7").css("visibility", "visible")
+        } else if($(this).attr('id') === "area_work_2"){
+            $("#area_work_8").css("visibility", "visible")
+        } else if($(this).attr('id') === "area_work_3"){
+            $("#area_work_9").css("visibility", "visible")
+        } else if($(this).attr('id') === "area_work_4"){
+            $("#area_work_10").css("visibility", "visible")
+        } else if($(this).attr('id') === "area_work_5"){
+            $("#area_work_6").css("visibility", "visible")
         }
     })
 
