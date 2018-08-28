@@ -349,6 +349,8 @@ def show_main_section(section_num=2):
     else:
         current_page = 0
         page_size = int(math.ceil(1.0*dp_list_size/config.DATA_PAIR_PER_PAGE))
+        # print '>>>>>>>>>>>>>>><<<<<<<<<<<<<<<'
+        # print page_size_key, page_size
         r.set(page_size_key, str(page_size))
         r.set(current_page_key, current_page)
 
@@ -432,8 +434,7 @@ def show_main_section_next(section_num=2):
     section_num = int(r.get(session['user_id']+'_main_section_num'))
     working_data = get_main_section_data(session['user_id'], section_num)
 
-    # page_size = int(r.get(str(session['user_id']) + '_page_size_section' + str(section_num)))
-    page_size = 3
+    page_size = int(r.get(str(session['user_id']) + '_page_size_section' + str(section_num)))
     current_page = int(r.get(str(session['user_id'])+'_current_page_section' + str(section_num)))+1
     if current_page >= page_size or (current_page+1)*6 > working_data.size():
         ret = {
@@ -445,7 +446,7 @@ def show_main_section_next(section_num=2):
     is_last_page = 0
     if current_page == page_size - 1:
         is_last_page = 1
-
+    print current_page, page_size, is_last_page
     pairs_formatted = working_data.get_data_display(data_mode)[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = working_data.get_icons()[config.DATA_PAIR_PER_PAGE*current_page:config.DATA_PAIR_PER_PAGE*(current_page+1)]

@@ -181,6 +181,7 @@ $(function() {
                         $('#button_next_rl').attr("disabled", false);
                     }
                     else {
+                        $('#button_next_rl').attr("disabled", true);
                         $('#button_next_rl').css("display", "none");
                         $('#button_next').css("display", "inline");
                     }
