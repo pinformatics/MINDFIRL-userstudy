@@ -75,23 +75,28 @@ function get_summitted_answers() {
 */
 $(function() {
     $('#button_next').bind('click', function() {
-        $('#button_next').attr("disabled", "disabled");
-        
-        // save this click data
-        $type = "type:jumping";
-        $value = "value:" + $THIS_URL;
-        var dt = new Date();
-        $click_timestamp = "timestamp:" + Math.round(dt.getTime()/1000);
-        $url = "url:" + $THIS_URL;
-        $data = [$type, $value, $click_timestamp, $url].join()
-        $user_data += $data + ";";
+         if( !all_questions_answered() ) {
+            alert("Please answer all questions to continue.");
+        }
+        else {
+            $('#button_next').attr("disabled", "disabled");
+            
+            // save this click data
+            $type = "type:jumping";
+            $value = "value:" + $THIS_URL;
+            var dt = new Date();
+            $click_timestamp = "timestamp:" + Math.round(dt.getTime()/1000);
+            $url = "url:" + $THIS_URL;
+            $data = [$type, $value, $click_timestamp, $url].join()
+            $user_data += $data + ";";
 
-        get_summitted_answers();
-        post($SCRIPT_ROOT+'/save_data', $user_data, "post");
-        $user_data = "";
+            get_summitted_answers();
+            post($SCRIPT_ROOT+'/save_data', $user_data, "post");
+            $user_data = "";
 
-        $(window).off("beforeunload");
-        window.location.href = $NEXT_URL;
+            $(window).off("beforeunload");
+            window.location.href = $NEXT_URL;
+        }
     });
 });
 
