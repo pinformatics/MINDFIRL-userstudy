@@ -80,7 +80,7 @@ $(function() {
             alert("Please answer all questions to continue.");
         }
         else {
-            $('#button_next').attr("disabled", "disabled");
+            // $('#button_next').attr("disabled", "disabled");     
             
             // save this click data
             $type = "type:jumping";
@@ -92,9 +92,8 @@ $(function() {
             $user_data += $data + ";";
 
             get_summitted_answers();
-            setTimeout(post($SCRIPT_ROOT+'/save_data', $user_data, "post"), 5000);
-            
-            // post($SCRIPT_ROOT+'/save_data', $user_data, "post");
+            // setTimeout(post($SCRIPT_ROOT+'/save_data', $user_data, "post"), 5000);
+            post($SCRIPT_ROOT+'/save_data', $user_data, "post");
             $user_data = "";
 
             $(window).off("beforeunload");
