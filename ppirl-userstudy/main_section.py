@@ -260,7 +260,7 @@ def show_main_section_guide(section_num=2):
     section_num = int(section_num)
     last_section = section_num - 1
 
-    print ">>>>>>>>>>>><<<<<<<<<<<<<"
+    #print(">>>>>>>>>>>><<<<<<<<<<<<<")
 
     # grading last section
     user_data = r.get(user_data_key)
@@ -268,11 +268,9 @@ def show_main_section_guide(section_num=2):
     print(data)
     result = ud.grade_final_answer(data, get_main_section_data(session['user_id'], last_section))
 
-    
     # print user_data_key
     # print data
    
-
     # saving user data
     performance = {
         'uid': session['user_id'],
@@ -446,7 +444,7 @@ def show_main_section_next(section_num=2):
     is_last_page = 0
     if current_page == page_size - 1:
         is_last_page = 1
-    print current_page, page_size, is_last_page
+    #print(current_page, page_size, is_last_page)
     pairs_formatted = working_data.get_data_display(data_mode)[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
     data = list(zip(pairs_formatted[0::2], pairs_formatted[1::2]))
     icons = working_data.get_icons()[config.DATA_PAIR_PER_PAGE*current_page:config.DATA_PAIR_PER_PAGE*(current_page+1)]
