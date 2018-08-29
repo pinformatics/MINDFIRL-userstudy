@@ -382,7 +382,9 @@ def open_big_cell():
         'mode': ret2['mode'],
         'KAPR': ret2['KAPR'],
         'result': ret2['result'],
-        'new_delta': ret2['new_delta']
+        'cdp': ret2['cdp'],
+        'new_delta': ret2['new_delta'],
+        'new_delta_cdp': ret2['new_delta_cdp']
     }
 
     return jsonify(ret)

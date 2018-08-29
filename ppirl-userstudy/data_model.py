@@ -256,14 +256,14 @@ class DataPair(object):
             display_status - 'M', 'P', or 'F'
         """
         value = ''
-        if display_status == 'M':
+        if display_status in ['M', 'masked']:
             return 0
-        elif display_status == 'F':
+        elif display_status in ['F', 'full']:
             if row_number == 1:
                 value = self._data1_attributes[j]
             else:
                 value = self._data2_attributes[j]
-        elif display_status == 'P':
+        elif display_status in ['P', 'partial']:
             if row_number == 1:
                 value = self._data1_helpers[j]
             else:
@@ -443,6 +443,12 @@ class DataPairList(object):
     def set_kapr_size(self, size=6):
         self._kapr_size = size
 
+    def get_total_characters(self):
+        total_characters = 0
+        for d in self._data:
+            total_characters += (d.get_total_characters(1) + d.get_total_characters(2))
+        return total_characters
+
 
 
 def get_KAPR_for_dp(dataset, data_pair, display_status, M):
@@ -550,6 +556,30 @@ def KAPR_delta(DATASET, data_pair, display_status, M):
     return delta
 
 
+def cdp_delta(data_pair, display_status, current_cd_num, total_characters):
+    """
+    delta for character disclosure percentage
+    data_pair: DataPair object
+    display_status: ['M', 'M', 'M', 'M', 'M', 'M']
+    current_cd_num: current character disclosed number
+    total_characters: total character number for the dataset
+    """
+    delta = list()
+    for i in range(6):
+        state = display_status[i]
+        next_display = data_pair.get_next_display(i, state)[0]
+        cd_pre = data_pair.get_character_disclosed_num(1, i, state) + \
+        data_pair.get_character_disclosed_num(2, i, state)
+        cd_post = data_pair.get_character_disclosed_num(1, i, next_display) + \
+        data_pair.get_character_disclosed_num(2, i, next_display)
+        cdp_pre = 100.0*current_cd_num/total_characters
+        cdp_post = 100.0*((1.0*current_cd_num+cd_post-cd_pre)/total_characters)
+        cdp_increment = cdp_post - cdp_pre
+        id = data_pair.get_ids()[0][i]
+        delta.append((id, cdp_increment))
+    return delta
+
+
 def open_cell(user_key, full_data, working_data, pair_num, attr_num, mode, r, kapr_limit=0):
     """
     openning a clickable cell, full_data is the full database, working_data is the data that need to manually linked.
@@ -572,12 +602,20 @@ def open_cell(user_key, full_data, working_data, pair_num, attr_num, mode, r, ka
     helper2 = helper[1]
 
     attr_display_next = pair.get_next_display(attr_id = attr_id, attr_mode = mode)
+    ret['mode'] = attr_display_next[0]
     
     # TODO: assert the mode is consistent with the display_mode in redis
 
-    """ no character disclosed percentage now
-    for character disclosure percentage, see branch ELSI
-    """
+    # get character disclosed percentage
+    cdp_previous = pair.get_character_disclosed_num(1, attr_id, mode) + pair.get_character_disclosed_num(2, attr_id, mode)
+    cdp_post = pair.get_character_disclosed_num(1, attr_id, ret['mode']) + pair.get_character_disclosed_num(2, attr_id, ret['mode'])
+    cdp_increment = cdp_post - cdp_previous
+    # atom operation! updating character disclosed percentage
+    mindfil_disclosed_characters_key = user_key + '_mindfil_disclosed_characters'
+    r.incrby(mindfil_disclosed_characters_key, cdp_increment)
+    mindfil_total_characters_key = user_key + '_mindfil_total_characters'
+    cdp = 100.0*int(r.get(mindfil_disclosed_characters_key))/int(r.get(mindfil_total_characters_key))
+    ret['cdp'] = round(cdp, 1)
 
     # get K-Anonymity based Privacy Risk
     old_display_status1 = list()
@@ -617,6 +655,8 @@ def open_cell(user_key, full_data, working_data, pair_num, attr_num, mode, r, ka
     # refresh the delta of KAPR
     new_delta_list = KAPR_delta(full_data, pair, new_display_status, 2*working_data.get_kapr_size())
     ret['new_delta'] = new_delta_list
+    new_delta_cdp_list = cdp_delta(pair, new_display_status, int(r.get(mindfil_disclosed_characters_key)), int(r.get(mindfil_total_characters_key)))
+    ret['new_delta_cdp'] = new_delta_cdp_list
 
     return ret
 

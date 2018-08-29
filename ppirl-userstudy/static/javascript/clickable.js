@@ -76,9 +76,9 @@ function get_cell_ajax(current_cell) {
             }
             $KAPR = data.KAPR;
             
-            //var bar_style = 'width:' + data.cdp + '%';
-            //$("#character-disclosed-bar").attr("style", bar_style);
-            //$("#character-disclosed-value").html(data.cdp + "%")
+            var bar_style = 'width:' + data.cdp + '%';
+            $("#character-disclosed-bar").attr("style", bar_style);
+            $("#character-disclosed-value").html(data.cdp + "%")
 
             var bar_style2 = 'width:' + data.KAPR + '%';
             $("#privacy-risk-bar").attr("style", bar_style2);
@@ -86,11 +86,17 @@ function get_cell_ajax(current_cell) {
             
             $("#privacy-risk-delta").attr("style", 'width: 0%');
             $("#privacy-risk-delta-value").html(" ")
+            $("#character-percentage-delta").attr("style", 'width: 0%');
+            $("#character-percentage-delta-value").html(" ");
 
             for(var i = 0; i < 6; i+=1) {
                 var id = data.new_delta[i][0];
                 var new_delta_value = data.new_delta[i][1];
                 $DELTA[id] = new_delta_value;
+
+                id = data.new_delta_cdp[i][0]
+                var new_delta_cdp_value = data.new_delta_cdp[i][1];
+                $DELTA_CDP[id] = new_delta_cdp_value;
             }
 
             // save the user click data
@@ -150,12 +156,17 @@ function get_big_cell_ajax(current_cell1, current_cell2) {
 
             $KAPR = data.KAPR;
             
+            var bar_style = 'width:' + data.cdp + '%';
+            $("#character-disclosed-bar").attr("style", bar_style);
+            $("#character-disclosed-value").html(data.cdp + "%")
             var bar_style2 = 'width:' + data.KAPR + '%';
             $("#privacy-risk-bar").attr("style", bar_style2);
             $("#privacy-risk-value").html(pround(data.KAPR,1) + "%")
             
             $("#privacy-risk-delta").attr("style", 'width: 0%');
             $("#privacy-risk-delta-value").html(" ")
+            $("#character-percentage-delta").attr("style", 'width: 0%');
+            $("#character-percentage-delta-value").html(" ");
 
             for(var i = 0; i < 6; i+=1) {
                 var id = data.new_delta[i][0];
@@ -249,10 +260,17 @@ function refresh_delta() {
             var bar_style = 'width:' + pround(d,2) + '%';
             $("#privacy-risk-delta").attr("style", bar_style);
             $("#privacy-risk-delta-value").html(" + " + pround(d,2) + "%");
+            
+            var cd = $DELTA_CDP[id1]
+            var bar_style_cdp = 'width:' + cd + '%';
+            $("#character-percentage-delta").attr("style", bar_style_cdp);
+            $("#character-percentage-delta-value").html(" + " + cd + "%");
         }
     }, function() {
         $("#privacy-risk-delta").attr("style", 'width: 0%');
-        $("#privacy-risk-delta-value").html(" ")
+        $("#privacy-risk-delta-value").html(" ");
+        $("#character-percentage-delta").attr("style", 'width: 0%');
+        $("#character-percentage-delta-value").html(" ");
     });
 
     $('.clickable_big_cell').hover(function() {

@@ -358,6 +358,13 @@ def show_main_section(section_num=2):
     ids_list = working_data.get_ids()[2*config.DATA_PAIR_PER_PAGE*current_page:2*config.DATA_PAIR_PER_PAGE*(current_page+1)]
     ids = list(zip(ids_list[0::2], ids_list[1::2]))
 
+    # character display percentage
+    total_characters = working_data.get_total_characters()
+    mindfil_total_characters_key = str(session['user_id']) + '_mindfil_total_characters'
+    r.set(mindfil_total_characters_key, total_characters)
+    mindfil_disclosed_characters_key = str(session['user_id']) + '_mindfil_disclosed_characters'
+    r.set(mindfil_disclosed_characters_key, 0)
+
     # KAPR - K-Anonymity privacy risk
     KAPR_key = str(session['user_id']) + '_KAPR'
     if first_flag:
@@ -375,9 +382,11 @@ def show_main_section(section_num=2):
     # get the delta information
     working_data.set_kapr_size(6*3)
     delta = list()
+    delta_cdp = list()
     for i in range(config.DATA_PAIR_PER_PAGE*current_page, config.DATA_PAIR_PER_PAGE*(current_page+1)):
         data_pair = working_data.get_data_pair_by_index(i)
         delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 2*working_data.get_kapr_size())
+        delta_cdp += dm.cdp_delta(data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 0, total_characters)
 
     # load KAPR LIMIT from url parameter
     if ustudy_budget == 'moderate' or ustudy_budget == 'minimum':
@@ -412,7 +421,8 @@ def show_main_section(section_num=2):
         thisurl='/main_section', 
         nexturl=next_url,
         page_number=str(current_page+1), 
-        delta=delta, 
+        delta=delta,
+        delta_cdp=delta_cdp,
         kapr = KAPR,
         kapr_limit = kapr_limit, 
         uid=str(session['user_id']),
@@ -474,6 +484,16 @@ def show_main_section_next(section_num=2):
     for d in delta:
         delta_dict[d[0]] = d[1]
 
+    delta_cdp = list()
+    total_characters = working_data.get_total_characters()
+    for i in range(6, 12):
+        data_pair = working_data.get_data_pair_by_index(i)
+        delta_cdp += dm.cdp_delta(data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 0, total_characters)
+    # make delta to be a dict
+    delta_cdp_dict = dict()
+    for d in delta_cdp:
+        delta_cdp_dict[d[0]] = d[1]
+
     page_content = render_template('record_linkage_next.html', 
         data=data, 
         icons=icons, 
@@ -486,6 +506,7 @@ def show_main_section_next(section_num=2):
         'result': 'success',
         'ustudy_mode': ustudy_mode,
         'delta': delta_dict,
+        'delta_cdp': delta_cdp_dict,
         'is_last_page': is_last_page,
         'page_number': 'page: ' + str(current_page+1),
         'page_content': page_content,
