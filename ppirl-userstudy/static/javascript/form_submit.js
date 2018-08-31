@@ -162,6 +162,7 @@ $(function() {
                     }
                     // update delta
                     $DELTA = data['delta'];
+                    $DELTA_CDP = data['delta_cdp'];
                     // update table content
                     $("#table_content").html(data['page_content']);
                     // update page number

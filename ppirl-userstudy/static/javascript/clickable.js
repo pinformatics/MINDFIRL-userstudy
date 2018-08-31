@@ -78,7 +78,7 @@ function get_cell_ajax(current_cell) {
             
             var bar_style = 'width:' + data.cdp + '%';
             $("#character-disclosed-bar").attr("style", bar_style);
-            $("#character-disclosed-value").html(data.cdp + "%")
+            $("#character-disclosed-value").html(pround(data.cdp,1) + "%")
 
             var bar_style2 = 'width:' + data.KAPR + '%';
             $("#privacy-risk-bar").attr("style", bar_style2);
@@ -158,7 +158,7 @@ function get_big_cell_ajax(current_cell1, current_cell2) {
             
             var bar_style = 'width:' + data.cdp + '%';
             $("#character-disclosed-bar").attr("style", bar_style);
-            $("#character-disclosed-value").html(data.cdp + "%")
+            $("#character-disclosed-value").html(pround(data.cdp,1) + "%")
             var bar_style2 = 'width:' + data.KAPR + '%';
             $("#privacy-risk-bar").attr("style", bar_style2);
             $("#privacy-risk-value").html(pround(data.KAPR,1) + "%")
@@ -264,7 +264,7 @@ function refresh_delta() {
             var cd = $DELTA_CDP[id1]
             var bar_style_cdp = 'width:' + cd + '%';
             $("#character-percentage-delta").attr("style", bar_style_cdp);
-            $("#character-percentage-delta-value").html(" + " + cd + "%");
+            $("#character-percentage-delta-value").html(" + " + pround(cd,2) + "%");
         }
     }, function() {
         $("#privacy-risk-delta").attr("style", 'width: 0%');
@@ -286,10 +286,17 @@ function refresh_delta() {
             var bar_style = 'width:' + pround(d,2) + '%';
             $("#privacy-risk-delta").attr("style", bar_style);
             $("#privacy-risk-delta-value").html(" + " + pround(d,2) + "%");
+
+            var cd = $DELTA_CDP[id1] + $DELTA_CDP[id2]
+            var bar_style_cdp = 'width:' + cd + '%';
+            $("#character-percentage-delta").attr("style", bar_style_cdp);
+            $("#character-percentage-delta-value").html(" + " + pround(cd,2) + "%");
         }
     }, function() {
         $("#privacy-risk-delta").attr("style", 'width: 0%');
-        $("#privacy-risk-delta-value").html(" ")
+        $("#privacy-risk-delta-value").html(" ");
+        $("#character-percentage-delta").attr("style", 'width: 0%');
+        $("#character-percentage-delta-value").html(" ");
     });
 }
 

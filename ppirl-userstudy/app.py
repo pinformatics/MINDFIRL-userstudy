@@ -90,7 +90,7 @@ def index():
             ustudy_budget = 'moderate'
         if ustudy_mode == '5' and ustudy_budget is None:
             ustudy_mode = '4'
-            ustudy_budget = 'minimum'        
+            ustudy_budget = 'minimum'
         if ustudy_budget is None:
             ustudy_budget = '0'
         if not ustudy_mode in ['4', '5']:
@@ -128,6 +128,13 @@ def index():
             # come back user
             ustudy_mode = r.get(user_id+'_ustudy_mode')
             ustudy_budget = r.get(user_id+'_ustudy_budget')
+
+    # display meter option
+    display_mode = '1'
+    if request.args.get("display") is not None:
+        display_mode = request.args.get("display")
+    display_key = str(user_id)+'_display'
+    r.set(display_key, display_mode)
 
     session['user_id'] = str(user_id)
     session[session['user_id'] + '_mode'] = str(ustudy_mode)
@@ -316,6 +323,13 @@ def open_cell():
         working_data.set_kapr_size(6*3)
         full_data = DATASET2
         kapr_limit = float(r.get(str(session['user_id'])+'section'+str(section)+'_kapr_limit'))
+        cdp_limit = float(r.get(str(session['user_id'])+'section'+str(section)+'_kapr_limit'))
+
+        display_mode = int(r.get(session['user_id']+'_display'))
+        if display_mode == 3:
+            kapr_limit = 0
+        else:
+            cdp_limit = 0
 
     id1 = request.args.get('id1')
     id2 = request.args.get('id2')
@@ -323,7 +337,7 @@ def open_cell():
     pair_num = str(id1.split('-')[0])
     attr_num = str(id1.split('-')[2])
     user_key = str(session['user_id'])
-    ret = dm.open_cell(user_key, full_data, working_data, pair_num, attr_num, mode, r, kapr_limit)
+    ret = dm.open_cell(user_key, full_data, working_data, pair_num, attr_num, mode, r, kapr_limit, cdp_limit)
     return jsonify(ret)
 
 

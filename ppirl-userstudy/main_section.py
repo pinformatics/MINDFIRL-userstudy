@@ -315,6 +315,7 @@ def show_main_section(section_num=2):
     ustudy_budget = r.get(session['user_id']+'_ustudy_budget')
     section_num = int(section_num)
     r.set(session['user_id']+'_main_section_num', section_num)
+    display_mode = int(r.get(session['user_id']+'_display'))
 
     data_mode = 'masked'
     if ustudy_mode == 1:
@@ -395,6 +396,12 @@ def show_main_section(section_num=2):
         kapr_limit = float(ustudy_budget)
     r.set(str(session['user_id'])+'section'+str(section_num)+'_kapr_limit', kapr_limit)
 
+    # if we are using cdp limit
+    cdp_limit = 0
+    if display_mode == 3:
+        cdp_limit = dm.get_cdplimit(DATASET, working_data, ustudy_budget)
+        r.set(str(session['user_id'])+'section'+str(section_num)+'_cdp_limit', cdp_limit)
+
     # if section_num+1 <= 10:
     #     next_url = '/main_section_guide/' + str(section_num+1)
     # else:
@@ -428,7 +435,9 @@ def show_main_section(section_num=2):
         uid=str(session['user_id']),
         pair_num_base=6*current_page+1,
         ustudy_mode=ustudy_mode,
-        section_num=section_num
+        section_num=section_num,
+        display_mode=display_mode,
+        cdp_limit=cdp_limit
     )
 
 

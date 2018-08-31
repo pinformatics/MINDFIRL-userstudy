@@ -580,7 +580,7 @@ def cdp_delta(data_pair, display_status, current_cd_num, total_characters):
     return delta
 
 
-def open_cell(user_key, full_data, working_data, pair_num, attr_num, mode, r, kapr_limit=0):
+def open_cell(user_key, full_data, working_data, pair_num, attr_num, mode, r, kapr_limit=0, cdp_limit=0):
     """
     openning a clickable cell, full_data is the full database, working_data is the data that need to manually linked.
     pair_num and attr_num are string
@@ -633,9 +633,15 @@ def open_cell(user_key, full_data, working_data, pair_num, attr_num, mode, r, ka
     KAPRINC = KAPR - old_KAPR
     KAPR_key = user_key + '_KAPR'
     overall_KAPR = 100*(float(r.get(KAPR_key)) + KAPRINC)
+
+
     if kapr_limit > 0.0001 and overall_KAPR > kapr_limit:
         ret['result'] = 'fail'
         ret['KAPR'] = 0
+        return ret
+    if cdp_limit > 0.0001 and cdp > cdp_limit:
+        ret['result'] = 'fail'
+        ret['CDP'] = 0
         return ret
 
     # success! update the display status in redis, update KAPR, get delta for KAPR
@@ -698,3 +704,50 @@ def get_kaprlimit(full_data, working_data, data_mode):
         KAPR += get_KAPR_for_dp(full_data, dp, display_status, 2*working_data.size())
 
     return 100.0*KAPR
+
+
+def get_cdplimit(full_data, working_data, data_mode):
+    total_characters = working_data.get_total_characters()
+    disclosed_characters = 0
+
+    for dp in working_data:
+        display_status = list()
+        if data_mode == 'minimum':
+            for i in range(6):
+                if dd.DATA_MODE_MINIMUM[i] == 'partial':
+                    if dp.has_partial_mode(i):
+                        display_status.append('P')
+                    else:
+                        display_status.append('M')
+                else:
+                    display_status.append(dd.DATA_MODE_MINIMUM[i][0].upper())
+        elif data_mode == 'moderate':
+            for i in range(6):
+                if i == 0:
+                    if dd.DATA_MODE_MINIMUM[i] == 'partial':
+                        if dp.has_partial_mode(i):
+                            display_status.append('P')
+                        else:
+                            display_status.append('M')
+                    else:
+                        display_status.append(dd.DATA_MODE_MINIMUM[i][0].upper())
+                elif i == 4:
+                    display_status.append('F')
+                elif i == 5:
+                    display_status.append('M')
+                else:
+                    if dp.attribute_match(i):
+                        display_status.append('M')
+                    else:
+                        display_status.append('F')
+        else:
+            logging.error('unsupported data mode in get_cdplimit().')
+
+        for attr_id in range(6):
+            disclosed_characters += dp.get_character_disclosed_num(1, attr_id, display_status[attr_id])
+            disclosed_characters += dp.get_character_disclosed_num(2, attr_id, display_status[attr_id])
+
+    #print('-----------------------cdp limit: ' + str(100.0*disclosed_characters/total_characters))
+
+    return 100.0*disclosed_characters/total_characters
+
