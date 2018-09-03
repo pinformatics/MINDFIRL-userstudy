@@ -327,17 +327,17 @@ def show_tutorial_clickable_decision_making_demo():
 @tutorial.route('/tutorial/clickable/budgetmeter')
 @state_machine('show_tutorial_clickable_budgetmeter')
 def show_tutorial_clickable_budgetmeter():
-    return render_template('tutorial/clickable/budgetmeter.html')
+    return render_template('tutorial/clickable/budgetmeter.html', display=int(r.get(session['user_id']+'_display')))
 
 @tutorial.route('/tutorial/clickable/budgetlimit')
 @state_machine('show_tutorial_clickable_budgetlimit')
 def show_tutorial_clickable_budgetlimit():
-    return render_template('tutorial/clickable/budgetlimit.html')
+    return render_template('tutorial/clickable/budgetlimit.html', display=int(r.get(session['user_id']+'_display')))
 
 @tutorial.route('/tutorial/clickable/budgeting')
 @state_machine('show_tutorial_clickable_budgeting')
 def show_tutorial_clickable_budgeting():
-    return render_template('tutorial/clickable/budgeting.html')
+    return render_template('tutorial/clickable/budgeting.html', display=int(r.get(session['user_id']+'_display')))
 
 
 @tutorial.route('/tutorial/clickable/budgetmeter_vid')
