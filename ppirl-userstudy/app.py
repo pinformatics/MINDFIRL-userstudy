@@ -585,15 +585,19 @@ def get_ustudy_setting():
 
 @app.route('/get_cpdlimit_for_data')
 def get_cpdlimit_for_data():
-    data_path = 'data/samples_sections_scrambling/'
+    data_path = 'data/section_2/'
     data_filenames = [os.path.join(data_path, f) for f in os.listdir(data_path) if not f.startswith('.')]
 
+    ret = ''
     for filename in data_filenames:
+        if filename[-1] != 'v':
+            continue
         data = dm.DataPairList(data_pairs = dl.load_data_from_csv(filename))
-        print(filename)
 
         cpd_limit = dm.get_cdplimit(data, data, 'minimum')
-        print(filename + ', minimum: ' + str(cpd_limit))
+        ret += (filename + ', minimum: ' + str(cpd_limit) +'<br/>')
 
         cpd_limit = dm.get_cdplimit(data, data, 'moderate')
-        print(filename + ', moderate: ' + str(cpd_limit))
+        ret += (filename + ', moderate: ' + str(cpd_limit) +'<br/>')
+
+    return ret
