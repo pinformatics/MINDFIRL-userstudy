@@ -749,5 +749,8 @@ def get_cdplimit(full_data, working_data, data_mode):
 
     #print('-----------------------cdp limit: ' + str(100.0*disclosed_characters/total_characters))
 
+    ret = 100.0*disclosed_characters/total_characters
+    print(ret)
+
     return 100.0*disclosed_characters/total_characters
 
