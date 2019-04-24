@@ -162,7 +162,7 @@ def index():
     r.set(str(session['user_id'])+'_ustudy_mode', ustudy_mode)
     r.set(str(session['user_id'])+'_ustudy_budget', ustudy_budget)
 
-    return redirect(url_for(get_url_for_index(index)))
+    return redirect(url_for('tutorial.show_tutorial_clickable_demo'))
 
     
 
