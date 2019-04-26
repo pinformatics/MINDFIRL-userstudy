@@ -2,11 +2,11 @@
 
 {% block content %}
 
-<center><h2>Mindfirl Demo</h2></center>
-
+<center><h2>What is MINDFIRL?</h2></center>
+<br>
 <div>
    <!-- <h5>This is a clickable interface. Essentially, you can click on ANY masked cell to open it up.</h5> -->
-   <h5>You can click on masked cells to see more.</h5>
+   <h5>At first, MINDFIRL hides all identifiers from researchers. The symbols help researchers understand if two records have the same or different values. If they are different, MINDFIRL gives clues to help researchers understand how they are different without seeing the hidden values. If researchers need even more information to match records accurately, they can click on a value to reveal some information.</h5>
    <br>
    <!-- <img src="static/images/tutorial/clickable.gif" style="border-width: 10px; border-style: solid;"> -->
    <video controls autoplay="autoplay"  id="vid" style="border-width: 3px; border-style: solid;">
@@ -16,7 +16,9 @@
 
 <br><br>
 
-<h5>Go ahead and try opening a few cells!</h5>
+<center><h2>Try it?</h2></center>
+
+<br>
 
 {% include "./tutorial/clickable/table.html" %}
 
@@ -24,6 +26,6 @@
 
 <h3>Legend</h3>
 
-<img src="/static/images/tutorial/clickable/icons_privacy.png" height="500px">
+<img src="/static/images/tutorial/clickable/legend.jpg" height="300px">
         
 {% endblock %}
