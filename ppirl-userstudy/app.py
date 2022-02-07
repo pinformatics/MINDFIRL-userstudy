@@ -21,7 +21,7 @@ app = Flask(__name__)
 app.config['SENDGRID_API_KEY'] = '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'
 #app.config['SENDGRID_API_KEY'] = os.environ.get('SENDGRID_API_KEY')
 app.config['SENDGRID_DEFAULT_FROM'] = 'mindfil.ppirl@gmail.com'
-#mail = SendGrid(app)
+mail = SendGrid(app)
 
 
 """
@@ -61,10 +61,10 @@ DATA_PAIR_LIST = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/ppirl.
 @app.route('/')
 @app.route('/survey_link')
 def show_survey_link():
-    #try:
-     #   mail.send_email(from_email=MAIL_SENDER, to_email=MAIL_RECEIVER, subject='Aim 3 start', text='Start')
-    #except Exception as e:
-     #   print(e)
+    try:
+        mail.send_email(from_email=MAIL_SENDER, to_email=MAIL_RECEIVER, subject='Aim 3 start', text='Start')
+    except Exception as e:
+        print(e)
     
     pairs_formatted = DATA_PAIR_LIST.get_data_display('masked')[0:12]
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
@@ -110,10 +110,10 @@ def save_survey():
                 value = f.get(variable).encode('utf8')
                 resps += variable + ','.encode('utf8') + '"'.encode('utf8') + value + '"'.encode('utf8') + ";".encode('utf8') 
     
-    #try:
-     #   mail.send_email(from_email=MAIL_SENDER,to_email=MAIL_RECEIVER,subject='Aim 3 survey',text=resps)
-    #except Exception as e:
-     #   print(e)
+    try:
+        mail.send_email(from_email=MAIL_SENDER,to_email=MAIL_RECEIVER,subject='Aim 3 survey',text=resps)
+    except Exception as e:
+        print(e)
 
     survey_key = 'survey_' + str(time.time())
     r.set(survey_key, str(f))
