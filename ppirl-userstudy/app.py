@@ -51,9 +51,7 @@ app = Flask(__name__)
 # mail = Mail(app)
 
 if 'DYNO' in os.environ:
-    print('11111')
     r = redis.from_url(os.environ.get("REDIS_URL"))
-    print('22222')
 else:
     r = redis.Redis(host='localhost', port=6379, db=0)
 
@@ -68,29 +66,34 @@ def show_survey_link():
 ###    except Exception as e:
 ###        print(e)
     
+    print('111')
     pairs_formatted = DATA_PAIR_LIST.get_data_display('masked')[0:12]
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = DATA_PAIR_LIST.get_icons()[0:6]
     ids_list = DATA_PAIR_LIST.get_ids()[0:12]
     ids = zip(ids_list[0::2], ids_list[1::2])
     session['user_cookie'] = hashlib.sha224("salt12138" + str(time.time()) + '.' + str(randint(1,10000))).hexdigest()
+    print('222')
 
     total_characters = DATA_PAIR_LIST.get_total_characters()
     mindfil_total_characters_key = session['user_cookie'] + '_mindfil_total_characters'
     r.set(mindfil_total_characters_key, total_characters)
     mindfil_disclosed_characters_key = session['user_cookie'] + '_mindfil_disclosed_characters'
     r.set(mindfil_disclosed_characters_key, 0)
+    print('333')
 
 
     # KAPR - K-Anonymity privacy risk
     KAPR_key = session['user_cookie'] + '_KAPR'
     r.set(KAPR_key, 0)
+    print('444')
 
     # set the user-display-status as masked for all cell
     for id1 in ids_list:
         for i in range(6):
             key = session['user_cookie'] + '-' + id1[i]
             r.set(key, 'M')
+    print('555')
 
     # get the delta information
     delta = list()
