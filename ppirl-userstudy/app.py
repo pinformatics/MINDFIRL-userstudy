@@ -99,6 +99,7 @@ def show_survey_link():
         data_pair = DATA_PAIR_LIST.get_data_pair_by_index(i)
         delta += dm.KAPR_delta(DATASET, data_pair, ['M', 'M', 'M', 'M', 'M', 'M'])
         delta_cdp += dm.cdp_delta(data_pair, ['M', 'M', 'M', 'M', 'M', 'M'], 0, total_characters)
+    print('33333')
     return render_template('survey_link.html', data=data, icons=icons, ids=ids, title='Privacy Perserving Interactive Record Linkage (PPIRL)', thisurl='/record_linkage', page_number=16, delta=delta, delta_cdp=delta_cdp)
 
 @app.route("/save_survey", methods=['POST'])
@@ -145,6 +146,7 @@ def save_survey():
     # response = sg.client.mail.send.post(request_body=data)
     # msg = Message(subject='Aim 3 Survey', body=resps, recipients=[MAIL_RECEIVER])
     # mail.send(msg)
+    print('44444')
 
     return "Thank you!"
 
@@ -229,6 +231,7 @@ def open_cell():
     ret['new_delta'] = new_delta_list
     new_delta_cdp_list = dm.cdp_delta(pair, display_status1, int(r.get(mindfil_disclosed_characters_key)), int(r.get(mindfil_total_characters_key)))
     ret['new_delta_cdp'] = new_delta_cdp_list
+    print('55555')
 
     return jsonify(ret)
 
@@ -240,6 +243,7 @@ def pull_survey():
         user_data = r.get(key)
         ret = ret + 'key: ' + key + ';'
         ret = ret + user_data + '<br/><br/><br/>'
+    print('66666')
     return ret
 
 
