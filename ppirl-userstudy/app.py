@@ -24,11 +24,11 @@ app = Flask(__name__)
 ###mail = SendGrid(app)
 
 
-"""
-SESSION_TYPE = 'redis'
-app.config.from_object(__name__)
-Session(app)
-"""
+
+#SESSION_TYPE = 'redis'
+#app.config.from_object(__name__)
+#Session(app)
+
 
 # app.config.from_pyfile('config.py')
 # app.config.update(dict(
