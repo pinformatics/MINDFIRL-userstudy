@@ -55,6 +55,7 @@ if 'DYNO' in os.environ:
 else:
     r = redis.Redis(host='localhost', port=6379, db=0)
 
+print(r)
 DATASET = dl.load_data_from_csv('data/section2.csv')
 DATA_PAIR_LIST = dm.DataPairList(data_pairs = dl.load_data_from_csv('data/ppirl.csv'))
 
