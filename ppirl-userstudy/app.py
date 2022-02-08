@@ -52,6 +52,8 @@ app = Flask(__name__)
 
 if 'DYNO' in os.environ:
     r = redis.from_url(os.environ.get("REDIS_URL"))
+    print('111_test_111')
+    print(r)
 else:
     r = redis.Redis(host='localhost', port=6379, db=0)
 
@@ -66,21 +68,21 @@ def show_survey_link():
 ###    except Exception as e:
 ###        print(e)
     
-    print('111')
     pairs_formatted = DATA_PAIR_LIST.get_data_display('masked')[0:12]
     data = zip(pairs_formatted[0::2], pairs_formatted[1::2])
     icons = DATA_PAIR_LIST.get_icons()[0:6]
     ids_list = DATA_PAIR_LIST.get_ids()[0:12]
     ids = zip(ids_list[0::2], ids_list[1::2])
     session['user_cookie'] = hashlib.sha224("salt12138" + str(time.time()) + '.' + str(randint(1,10000))).hexdigest()
-    print('222')
 
     total_characters = DATA_PAIR_LIST.get_total_characters()
-    print('3331')
     mindfil_total_characters_key = session['user_cookie'] + '_mindfil_total_characters'
-    print('3332')
+    print('111_test_222')
+    print(r)
     r.set(mindfil_total_characters_key, total_characters)
-    print('3333')
+    print('111_test_333')
+    print(r)
+    print('111_test_444')
     mindfil_disclosed_characters_key = session['user_cookie'] + '_mindfil_disclosed_characters'
     print('3334')
     r.set(mindfil_disclosed_characters_key, 0)
