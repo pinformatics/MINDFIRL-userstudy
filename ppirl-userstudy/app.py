@@ -11,7 +11,7 @@ import logging
 import data_loader as dl
 import data_display as dd
 import data_model as dm
-from flask_sendgrid import SendGrid
+###from flask_sendgrid import SendGrid
 # from flask_mail import Mail, Message
 # from config import *
 
