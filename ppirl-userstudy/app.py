@@ -53,6 +53,7 @@ app = Flask(__name__)
 if 'DYNO' in os.environ:
     print('11111')
     r = redis.from_url(os.environ.get("REDIS_URL"))
+    print('22222')
 else:
     r = redis.Redis(host='localhost', port=6379, db=0)
 
