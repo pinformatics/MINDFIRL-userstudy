@@ -76,11 +76,15 @@ def show_survey_link():
     print('222')
 
     total_characters = DATA_PAIR_LIST.get_total_characters()
+    print('3331')
     mindfil_total_characters_key = session['user_cookie'] + '_mindfil_total_characters'
+    print('3332')
     r.set(mindfil_total_characters_key, total_characters)
+    print('3333')
     mindfil_disclosed_characters_key = session['user_cookie'] + '_mindfil_disclosed_characters'
+    print('3334')
     r.set(mindfil_disclosed_characters_key, 0)
-    print('333')
+    print('3335')
 
 
     # KAPR - K-Anonymity privacy risk
