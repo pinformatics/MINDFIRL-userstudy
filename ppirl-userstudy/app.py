@@ -116,7 +116,8 @@ def show_instruction_encrypted_mode():
 @app.route('/instructions/ppirl')
 @state_machine('show_instruction_ppirl')
 def show_instruction_ppirl():
-    return render_template('instruction_ppirl.html')
+    #return render_template('instruction_ppirl.html')
+    return redirect("https://vidal.tamu.edu/mindfirl-userstudy")
 
 
 @app.route('/practice/base_mode')
