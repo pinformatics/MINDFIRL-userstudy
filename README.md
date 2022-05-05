@@ -1,4 +1,4 @@
 Deployed
-  http://ppirl2.herokuapp.com/
+  https://mindfil4.herokuapp.com/introduction
 
 ppirl-userstudy/config.py
